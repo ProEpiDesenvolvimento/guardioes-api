@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
 
   add_foreign_key "contents", "apps"
   add_foreign_key "public_hospitals", "apps"
-=======
+
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
