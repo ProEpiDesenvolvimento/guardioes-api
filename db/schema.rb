@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_13_120928) do
+ActiveRecord::Schema.define(version: 2019_02_14_112940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,19 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
+  create_table "households", force: :cascade do |t|
+    t.string "description"
+    t.date "birthdate"
+    t.string "country"
+    t.string "gender"
+    t.string "race"
+    t.string "kinship"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_households_on_user_id"
+  end
+
   create_table "jwt_blacklist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "created_at", null: false
@@ -70,6 +83,42 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["app_id"], name: "index_public_hospitals_on_app_id"
+  end
+
+  create_table "surveys", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "household_id"
+    t.float "latitude"
+    t.float "longitude"
+    t.date "bad_since"
+    t.boolean "had_traveled"
+    t.string "where_had_traveled"
+    t.text "symptom"
+    t.string "event_title"
+    t.text "event_description"
+    t.boolean "event_confirmed_cases"
+    t.integer "event_confirmed_cases_number"
+    t.boolean "event_confirmed_deaths"
+    t.integer "event_confirmed_deaths_number"
+    t.string "street"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["household_id"], name: "index_surveys_on_household_id"
+    t.index ["user_id"], name: "index_surveys_on_user_id"
+  end
+
+  create_table "symptoms", force: :cascade do |t|
+    t.string "description"
+    t.string "code"
+    t.integer "priority"
+    t.text "details"
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_symptoms_on_app_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -91,5 +140,9 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
   end
 
   add_foreign_key "contents", "apps"
+  add_foreign_key "households", "users"
   add_foreign_key "public_hospitals", "apps"
+  add_foreign_key "surveys", "households"
+  add_foreign_key "surveys", "users"
+  add_foreign_key "symptoms", "apps"
 end
