@@ -176,6 +176,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   bootsnap (>= 1.1.0)
   byebug
+  devise
   devise-jwt
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
