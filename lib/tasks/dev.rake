@@ -16,14 +16,30 @@ namespace :dev do
     end
 
     show_spinner("Creating App 'Guardiões da Saúde'...") do
-      App.create!(
-          app_name: "Guardiões da Saúde",
-          owner_country: "Brazil"
-      )
+      15.times do 
+        App.create!(
+            app_name: Faker::App.name,
+            owner_country: Faker::Address.country
+        )
+      end
     end
 
-    show_spinner("Creating 100 example users...") do
-      100.times do |i|
+    show_spinner("Creating example admins for each App...") do
+      15.times do 
+        Admin.create!(
+          email: Faker::Internet.email,
+          password: "123456",
+          first_name: Faker::Name.first_name,
+          last_name: Faker::Name.last_name,
+          is_god: [true, false].sample,
+          app_id: App.all.sample.id
+        )
+      end
+    end
+
+    show_spinner("Creating 50 example users...") do
+      lord_of_the_rings_race = ["Dwarf", "Elf", "Human", "Balrog", "Men", "Hobbit", "Orc", "Ents"]
+      50.times do |i|
         User.create!(
             user_name: Faker::Name.name,
             email: Faker::Internet.email,
@@ -31,7 +47,7 @@ namespace :dev do
             birthdate: Faker::Date.birthday(18, 65),
             country: Faker::Address.country,
             gender: Faker::Gender.type,
-            race: "human",
+            race: lord_of_the_rings_race.sample,
             is_professional: false,
             app: App.all.first
         )
@@ -75,7 +91,7 @@ namespace :dev do
             description:Faker::Company.name,
             latitude: Faker::Address.latitude ,
             longitude: Faker::Address.longitude,
-            kind: Faker::Movies::StarWars.character,
+            public_hospital_type: Faker::Movies::StarWars.character,
             phone: Faker::PhoneNumber.phone_number,
             details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
             app: App.all.first 
