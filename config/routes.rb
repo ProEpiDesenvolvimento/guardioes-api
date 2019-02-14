@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :surveys
+  resources :symptoms
+  resources :households
   resources :public_hospitals
   resources :contents
   resources :apps

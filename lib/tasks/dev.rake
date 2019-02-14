@@ -38,31 +38,31 @@ namespace :dev do
     end
     end
 
-    # show_spinner("Inserting Kinships on created users...") do
-      # kinships = %w(Pai, Mãe, Filho, Conjuge)
+    show_spinner("Inserting Kinships on created users...") do
+      kinships = %w(Pai, Mãe, Filho, Conjuge)
     
-      # User.all.each do |user|
-      #     3.times do
-      #         household = Household.create!(
-      #             description: Faker::Name.name,
-      #             birthdate: Faker::Date.birthday(18, 65),
-      #             country: Faker::Address.country,
-      #             gender: ["male", "female"].sample,
-      #             race: "human",
-      #             kinship: kinships.sample
-      #         )
-      #         user.households << household
-      #         user.save!
-      #     end
-      # end
-    # end
+      User.all.each do |user|
+          3.times do
+              household = Household.create!(
+                  description: Faker::Name.name,
+                  birthdate: Faker::Date.birthday(18, 65),
+                  country: Faker::Address.country,
+                  gender: ["male", "female"].sample,
+                  race: "human",
+                  kinship: kinships.sample
+              )
+              user.households << household
+              user.save!
+          end
+      end
+    end
    
 
     show_spinner("Creating 10 example content...") do
       10.times do |j|
         Content.create!(
             title: Faker::Movies::LordOfTheRings.character,
-            type: Faker::Music.genre,
+            content_type: Faker::Music.genre,
             body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
             app: App.all.first
         )
@@ -80,9 +80,20 @@ namespace :dev do
             details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
             app: App.all.first 
         )
+
+
       end
     end
 
+
+    show_spinner("Creating survey...") do
+        Survey.create!(
+            user: User.all.first,
+            latitude: 40.741934119747704,
+            longitude: -73.98951017150449,
+            symptom: ["febre", "dor no corpo"]
+        )
+    end
   end
 
   def show_spinner(start_msg, end_msg = "done")
@@ -96,5 +107,4 @@ namespace :dev do
     yield
     spinner.success(pastel.green("#{end_msg}"))
   end
-
 end
