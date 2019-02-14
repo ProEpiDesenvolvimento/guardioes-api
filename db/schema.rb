@@ -12,43 +12,8 @@
 
 ActiveRecord::Schema.define(version: 2019_02_13_120928) do
 
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-
-  create_table "apps", force: :cascade do |t|
-    t.string "app_name", default: "", null: false
-    t.string "owner_country", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "contents", force: :cascade do |t|
-    t.string "title", default: "", null: false
-    t.text "body", default: "", null: false
-    t.string "type", default: "", null: false
-    t.bigint "app_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_id"], name: "index_contents_on_app_id"
-  end
-
-  create_table "public_hospitals", force: :cascade do |t|
-    t.string "description"
-    t.float "latitude"
-    t.float "longitude"
-    t.string "type"
-    t.string "phone"
-    t.text "details"
-    t.bigint "app_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_id"], name: "index_public_hospitals_on_app_id"
-  end
-
-  add_foreign_key "contents", "apps"
-  add_foreign_key "public_hospitals", "apps"
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -70,11 +35,41 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "apps", force: :cascade do |t|
+    t.string "app_name", default: "", null: false
+    t.string "owner_country", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "contents", force: :cascade do |t|
+    t.string "title", default: "", null: false
+    t.text "body", default: "", null: false
+    t.string "type", default: "", null: false
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_contents_on_app_id"
+  end
+
   create_table "jwt_blacklist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "public_hospitals", force: :cascade do |t|
+    t.string "description"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "type"
+    t.string "phone"
+    t.text "details"
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_public_hospitals_on_app_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -95,5 +90,6 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-
+  add_foreign_key "contents", "apps"
+  add_foreign_key "public_hospitals", "apps"
 end
