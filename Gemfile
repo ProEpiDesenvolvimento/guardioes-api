@@ -3,6 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.3'
 
+# A terminal spinner for tasks that have non-deterministic time frame.
+gem 'tty-spinner'
+# Terminal output styling with intuitive and clean API that doesn't monkey patch String class.
+gem 'pastel'
+# A library for generating fake data such as names, addresses, and phone numbers.
+gem 'faker'
 # Devise Auth token
 gem 'devise-jwt'
 gem 'devise'

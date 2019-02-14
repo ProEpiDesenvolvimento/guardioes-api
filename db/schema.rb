@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_02_13_120928) do
+=======
+ActiveRecord::Schema.define(version: 2019_02_14_115550) do
+>>>>>>> db5f03915270821fe76e7ce09e90819aeb6f4afa
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +35,11 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
+=======
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_admins_on_app_id"
+>>>>>>> db5f03915270821fe76e7ce09e90819aeb6f4afa
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
@@ -45,7 +54,7 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
   create_table "contents", force: :cascade do |t|
     t.string "title", default: "", null: false
     t.text "body", default: "", null: false
-    t.string "type", default: "", null: false
+    t.string "content_type", default: "", null: false
     t.bigint "app_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -86,10 +95,16 @@ ActiveRecord::Schema.define(version: 2019_02_13_120928) do
     t.boolean "is_professional", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "contents", "apps"
   add_foreign_key "public_hospitals", "apps"
+  add_foreign_key "admins", "apps"
+  add_foreign_key "contents", "apps"
+  add_foreign_key "public_hospitals", "apps"
+  add_foreign_key "users", "apps"
 end
