@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :public_hospitals
+  resources :contents
+  resources :apps
   get 'users/', to: "user#index"
   get 'admins/', to: "admin#index"
   
