@@ -16,7 +16,6 @@ namespace :dev do
           user_name: Faker::Name.name,
           email: Faker::Internet.email,
           password: "12345678",
-          password_confirmation: "12345678",
           birthdate: Faker::Date.birthday(18, 65),
           country: Faker::Address.country,
           gender: Faker::Gender.type,
