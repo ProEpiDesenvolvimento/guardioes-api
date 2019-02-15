@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   resources :public_hospitals
   resources :contents
   resources :apps
-  get 'users/', to: "user#index"
+  resources :users , only: [:index, :show]
   get 'admins/', to: "admin#index"
-  
+
   devise_for :admins,
     path: 'admin/',
     path_names: {
