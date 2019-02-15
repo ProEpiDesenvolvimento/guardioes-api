@@ -15,12 +15,10 @@ services:
       - db
   frontend:
     build: ./client
-    user: "node"
     volumes:
       - ./client:/usr/src/frontend
       - /usr/src/frontend/node_modules
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - backend
-    command: "yarn start"
