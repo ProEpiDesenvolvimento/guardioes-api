@@ -1,0 +1,41 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  household: one
+  latitude: 1.5
+  longitude: 1.5
+  bad_since: 2019-02-14
+  had_traveled: false
+  where_had_traveled: MyString
+  symptom: MyText
+  event: 
+  event_description: MyText
+  event_confirmed_cases: false
+  event_confirmed_cases_number: 1
+  event_confirmed_deaths: false
+  event_confirmed_deaths_number: 1
+  street: MyString
+  city: MyString
+  state: MyString
+  country: MyString
+
+two:
+  user: two
+  household: two
+  latitude: 1.5
+  longitude: 1.5
+  bad_since: 2019-02-14
+  had_traveled: false
+  where_had_traveled: MyString
+  symptom: MyText
+  event: 
+  event_description: MyText
+  event_confirmed_cases: false
+  event_confirmed_cases_number: 1
+  event_confirmed_deaths: false
+  event_confirmed_deaths_number: 1
+  street: MyString
+  city: MyString
+  state: MyString
+  country: MyString
