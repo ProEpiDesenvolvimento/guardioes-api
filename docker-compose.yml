@@ -13,14 +13,3 @@ services:
       - "3001:3001"
     depends_on:
       - db
-  frontend:
-    build: ./client
-    user: "node"
-    volumes:
-      - ./client:/usr/src/frontend
-      - /usr/src/frontend/node_modules
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    command: "yarn start"
