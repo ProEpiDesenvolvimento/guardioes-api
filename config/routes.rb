@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :apps
   get 'users/', to: "user#index"
   get 'admins/', to: "admin#index"
-  
+  resources :user , only: [:index, :show]
   devise_for :admins,
     path: 'admin/',
     path_names: {

@@ -8,4 +8,8 @@ class Admin < ApplicationRecord
          jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
+  
+  validates :user_name, presence: true
+  validates :email, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "only allows valid emails" }
 end
