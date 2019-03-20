@@ -1,4 +1,5 @@
 class Survey < ApplicationRecord
+  acts_as_paranoid
   belongs_to :user
   belongs_to :household, optional:true
   serialize :symptom, Array

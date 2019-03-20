@@ -14,6 +14,9 @@ class UserController < ApplicationController
     render json: @user
   end
 
+  def destroy
+    
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -80,19 +80,27 @@ namespace :dev do
             details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
             app: App.all.first 
         )
-
-
       end
     end
 
+    show_spinner("Creating 5 surveys for each users...") do
+      User.all.each do |u|
+        symptom_arr = [
+          Faker::Food.ingredient, 
+          Faker::Food.sushi, 
+          Faker::Food.fruits, 
+          Faker::Food.vegetables
+        ]
 
-    show_spinner("Creating survey...") do
-        Survey.create!(
-            user: User.all.first,
+        5.times do 
+          Survey.create!(
             latitude: 40.741934119747704,
             longitude: -73.98951017150449,
-            symptom: ["febre", "dor no corpo"]
-        )
+            symptom: symptom_arr,
+            user_id: u.id,
+          )
+        end
+      end
     end
   end
 
