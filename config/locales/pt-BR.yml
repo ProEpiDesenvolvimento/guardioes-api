@@ -1,0 +1,15 @@
+pt-BR:
+  validations:
+    title: "Falha na requisição."
+    email:
+      message: "Somente emails válidos são aceitos."
+  user:
+    validations:
+      password:
+        too_short: "A senha é muito pequena, mínimo de 8 caracteres."
+        too_long: "A senha é muito grande, máximo de 255 caracteres."
+  household:
+    validations:
+      description:
+        too_short: "A descrição deve ter no mínimo 5 caracteres."
+        too_long: "A descrição deve ter no máximo 255 caracteres."

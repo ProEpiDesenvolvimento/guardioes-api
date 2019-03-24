@@ -4,7 +4,6 @@ class HouseholdsController < ApplicationController
   # GET /households
   def index
     @households = Household.all
-
     render json: @households
   end
 

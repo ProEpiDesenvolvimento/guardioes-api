@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.3'
 
+# Repository for collecting Locale data for Ruby on Rails I18n as well as other interesting, Rails related I18n stuff http://rails-i18n.org
+gem 'rails-i18n', '~> 5.1'
 # acts_as_paranoid for Rails 3, 4 and 5
 gem "paranoia", "~> 2.2"
 # A terminal spinner for tasks that have non-deterministic time frame.

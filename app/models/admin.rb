@@ -9,7 +9,7 @@ class Admin < ApplicationRecord
 
   belongs_to :app
   
-  validates :user_name, presence: true
+  validates :first_name, presence: true
   validates :email, presence: true
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "only allows valid emails" }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: I18n.translate("validations.email.message") }
 end

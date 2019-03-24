@@ -1,5 +1,6 @@
 class UserController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_admin!, only: [:index]
+  # before_action :authenticate_user!, except: [:index]
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -15,7 +16,7 @@ class UserController < ApplicationController
   end
 
   def destroy
-    
+    @user.destroy!
   end
 
   private
