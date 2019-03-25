@@ -93,6 +93,7 @@ namespace :dev do
               longitude: -73.98951017150449,
               symptom: ["febre", "dor no corpo"]
             )
+          end
         end
       end
     end

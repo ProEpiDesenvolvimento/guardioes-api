@@ -31,7 +31,7 @@ class Admin < ApplicationRecord
       maximum: 255,
       too_long: I18n.translate("validations.email.too_long"),
       too_short: I18n.translate("validation.email.too_short")
-    }
+    },
     format: { 
       with: URI::MailTo::EMAIL_REGEXP, 
       message: I18n.translate("validations.email.message") 
