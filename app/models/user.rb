@@ -2,16 +2,11 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
+
   has_many :households,
     dependent: :destroy
 
-  validates_presence_of :password,
-                        :user_name,
-                        :email,
-                        :gender,
-                        :race,
-                        :is_professional,
-                        :app_id
+  validates_presence_of :password, :user_name, :email, :gender, :race
 
   has_many :surveys,
     dependent: :destroy
