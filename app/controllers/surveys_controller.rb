@@ -65,6 +65,6 @@ class SurveysController < ApplicationController
         :state, 
         :country,
         symptom: []
-      )
+      ) 
     end
 end

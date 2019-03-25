@@ -1,0 +1,25 @@
+pt-BR:
+  validations:
+    title: "Falha na requisição."
+    email:
+      message: "Insira um formato de email válido."
+      too_long: "Email deve ter no máximo 255 caracteres."
+      too_short: "Email deve ter no mínimo 1 caractere."
+  user:
+    validations:
+      password:
+        too_short: "A senha é muito pequena, mínimo de 8 caracteres."
+        too_long: "A senha é muito grande, máximo de 255 caracteres."
+  household:
+    validations:
+      description:
+        too_short: "A descrição deve ter no mínimo 5 caracteres."
+        too_long: "A descrição deve ter no máximo 255 caracteres."
+  admin:
+    validations:
+      first_name:
+        too_short: "O nome deve ter no mínimo 1 caractere."
+        too_long: "O nome deve ter no máximo 255 caracteres."
+      last_name:
+        too_short: "O sobrenome deve ter no mínimo 1 caractere."
+        too_long: "O sobrenome deve ter no máximo 255 caracteres."
