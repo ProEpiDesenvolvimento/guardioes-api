@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   resources :apps
 
   resources :user do
-    resources :surveys
+    resources :surveys do
+      get "all", to: "surveys#all_surveys"
+    end
     resources :households
   end
   
