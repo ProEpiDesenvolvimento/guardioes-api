@@ -1,7 +1,7 @@
 class SurveysController < ApplicationController
   before_action :set_survey, only: [:show, :update, :destroy]
 
-  # GET /surveys
+  # GET /surveys  
   def index
     @surveys = Survey.all
 

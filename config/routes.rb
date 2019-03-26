@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
-  resources :surveys
   resources :symptoms
-  resources :households
   resources :public_hospitals
   resources :contents
   resources :apps
-  # get 'users/', to: "user#index"
-  # get 'admins/', to: "admin#index"
-  resources :user
+
+  resources :user do
+    resources :surveys do
+      get "all", to: "surveys#all_surveys"
+    end
+    resources :households
+  end
+  
   devise_for :admins,
     path: 'admin/',
     path_names: {

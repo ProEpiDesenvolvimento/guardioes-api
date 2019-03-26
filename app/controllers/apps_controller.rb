@@ -1,4 +1,5 @@
 class AppsController < ApplicationController
+  before_action :authenticate_admin!, except: [:create]
   before_action :set_app, only: [:show, :update, :destroy]
 
   # GET /apps
@@ -15,12 +16,14 @@ class AppsController < ApplicationController
 
   # POST /apps
   def create
-    @app = App.new(app_params)
-
-    if @app.save
-      render json: @app, status: :created, location: @app
-    else
-      render json: @app.errors, status: :unprocessable_entity
+    if params[:access_apps_token] == Rails.application.credentials.access_to_apps || admin_signed_in?
+      @app = App.new(app_params)
+  
+      if @app.save
+        render json: @app, status: :created, location: @app
+      else
+        render json: @app.errors, status: :unprocessable_entity
+      end
     end
   end
 

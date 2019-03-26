@@ -2,6 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
+
   has_many :households,
     dependent: :destroy
 
@@ -15,18 +16,25 @@ class User < ApplicationRecord
 
   validates :user_name,
     presence: true,
-    length: {maximum: 255}
+    length: {
+      in: 1..255,
+      too_long: I18n.translate("user.validations.user_name.too_long"),
+      too_short: I18n.translate("user.validations.user_name.too_short")
+    }
 
   validates :password,
-    presence: true,
+    presence: true,  
     length: {
       in: 8..255,
       too_long: I18n.translate("user.validations.password.too_long"),
       too_short: I18n.translate("user.validations.password.too_short")
     }
   validates :email,
-    presence: true,
-    length: {maximum: 255},
+    presence: true,  
+    length: {
+      in: 1..255,
+      message: "Email deve seguir o formato: example@example.com"
+    },
     format: { with: URI::MailTo::EMAIL_REGEXP, message: I18n.translate("validations.email.message") },
     uniqueness: true
 end
