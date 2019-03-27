@@ -1,9 +1,11 @@
 class HouseholdsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_household, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:index, :create]
 
   # GET /households
   def index
-    @households = Household.all
+    @households = Household.filter_by_user(current_user.id)
     render json: @households
   end
 
@@ -17,7 +19,7 @@ class HouseholdsController < ApplicationController
     @household = Household.new(household_params)
 
     if @household.save
-      render json: @household, status: :created, location: @household
+      render json: @household, status: :created, location: user_household_path(:id => @user)
     else
       render json: @household.errors, status: :unprocessable_entity
     end
@@ -41,6 +43,10 @@ class HouseholdsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_household
       @household = Household.find(params[:id])
+    end
+
+    def set_user
+      @user = User.find(current_user.id)
     end
 
     # Only allow a trusted parameter "white list" through.

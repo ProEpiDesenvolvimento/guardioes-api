@@ -7,15 +7,7 @@ class Survey < ApplicationRecord
   
   serialize :symptom, Array
  
-  validates_presence_of :user_id,
-    :household_id,
-    :latitude,
-    :longitude,
-    :symptom,
-    :street,
-    :city,
-    :state,
-    :country
+  validates_presence_of :user_id, :latitude, :longitude
   
   def address
     [street, city, state, country].compact.join(', ')
@@ -30,4 +22,5 @@ class Survey < ApplicationRecord
     end
   end
  
+  scope :filter_by_user, ->(user) { where(user_id: user) }
 end

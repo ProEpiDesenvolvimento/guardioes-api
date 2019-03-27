@@ -1,9 +1,10 @@
 class ContentsController < ApplicationController
+  before_action :authenticate_admin!
   before_action :set_content, only: [:show, :update, :destroy]
 
   # GET /contents
   def index
-    @contents = Content.all
+    @contents = Content.admin_country(current_admin.app_id)
 
     render json: @contents
   end
@@ -46,6 +47,6 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :body, :type, :app_id)
+      params.require(:content).permit(:title, :body, :content_type, :app_id)
     end
 end
