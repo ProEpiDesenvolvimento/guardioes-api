@@ -1,9 +1,11 @@
 class PublicHospitalsController < ApplicationController
+  before_action :authenticate_admin!, except: [:index, :show]
+  before_action :authenticate_user!, only: [:index, :show]
   before_action :set_public_hospital, only: [:show, :update, :destroy]
 
   # GET /public_hospitals
   def index
-    @public_hospitals = PublicHospital.all
+    @public_hospitals = PublicHospital.filter_hospitals_by_app_id(current_user.app_id)
 
     render json: @public_hospitals
   end

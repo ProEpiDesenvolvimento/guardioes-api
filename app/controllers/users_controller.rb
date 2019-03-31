@@ -1,9 +1,9 @@
-class UserController < ApplicationController
+class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
   before_action :authenticate_user!, except: [:index]
   before_action :set_user, only: [:show, :update, :destroy]
 
-  # GET /users
+  # GET /user
   def index
     @users = User.all
 
@@ -22,7 +22,13 @@ class UserController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      if current_user.id != params[:id]
+        render json: { errors: [
+          detail: I18n.t("user.access_forbiden")
+        ]}
+      else
+        @user = User.find(current_user.id)
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

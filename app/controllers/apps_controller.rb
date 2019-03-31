@@ -1,5 +1,6 @@
 class AppsController < ApplicationController
-  before_action :authenticate_admin!, except: [:create]
+  before_action :authenticate_admin!
+  before_action :authenticate_admin_is_god
   before_action :set_app, only: [:show, :update, :destroy]
 
   # GET /apps
@@ -45,6 +46,12 @@ class AppsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_app
       @app = App.find(params[:id])
+    end
+
+    def authenticate_admin_is_god
+      unless current_admin.is_god
+        render json: { message: I18n.t("admin.not_god")}
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

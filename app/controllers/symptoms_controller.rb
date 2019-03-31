@@ -1,9 +1,10 @@
 class SymptomsController < ApplicationController
+  before_action :authenticate_admin!, except: [:index]
   before_action :set_symptom, only: [:show, :update, :destroy]
 
   # GET /symptoms
   def index
-    @symptoms = Symptom.all
+    @symptoms = Symptom.filter_symptom_by_app_id(current_user.app_id)
 
     render json: @symptoms
   end

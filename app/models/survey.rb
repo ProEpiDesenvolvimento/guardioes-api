@@ -6,17 +6,7 @@ class Survey < ApplicationRecord
   before_validation :reverse_geocode
   
   serialize :symptom, Array
- 
-  validates_presence_of :user_id,
-    :household_id,
-    :latitude,
-    :longitude,
-    :symptom,
-    :street,
-    :city,
-    :state,
-    :country
-  
+   
   def address
     [street, city, state, country].compact.join(', ')
   end
@@ -30,4 +20,5 @@ class Survey < ApplicationRecord
     end
   end
  
+  scope :filter_by_user, ->(user) { where(user_id: user) }
 end

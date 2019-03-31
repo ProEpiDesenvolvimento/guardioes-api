@@ -1,9 +1,11 @@
 class ContentsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
 
   # GET /contents
   def index
-    @contents = Content.all
+    @contents = Content.user_country(current_user.app_id)
 
     render json: @contents
   end
@@ -36,6 +38,8 @@ class ContentsController < ApplicationController
   # DELETE /contents/1
   def destroy
     @content.destroy
+
+    head :no_content
   end
 
   private
@@ -46,6 +50,6 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :body, :type, :app_id)
+      params.require(:content).permit(:title, :body, :content_type, :app_id)
     end
 end

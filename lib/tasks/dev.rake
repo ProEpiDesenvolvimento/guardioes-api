@@ -1,31 +1,47 @@
 namespace :dev do
-  desc "Configura ambiente de desenvolvimento e produção"
-  if Rails.env.development?
-    task setup_dev: :environment do
-      puts "Configuring Development environment"
-  
-      show_spinner("Dropping db...") do 
-        %x(rails db:drop)
-      end
-      
-      show_spinner("Creating db...") do 
-        %x(rails db:create)
-      end    
-      
-      show_spinner("Migrating db...") do 
-        %x(rails db:migrate)
-      end
-  
-      show_spinner("Creating App 'Guardiões da Saúde'...") do
+  desc "TODO"
+  task setup: :environment do
+    puts "Configuring Development environment"
+
+    show_spinner("Dropping db...") do 
+      %x(rails db:drop)
+    end
+    
+    show_spinner("Creating db...") do 
+      %x(rails db:create)
+    end
+    
+    show_spinner("Migrating db...") do 
+      %x(rails db:migrate)
+    end
+
+    show_spinner("Creating Apps...") do
+      1..50.times do
         App.create!(
-            app_name: "Guardiões da Saúde",
-            owner_country: "Brazil"
+            app_name: Faker::Company.name,
+            owner_country: Faker::Address.country
         )
       end
-  
-      show_spinner("Creating 100 example users...") do
-        100.times do |i|
-          User.create!(
+    end
+
+    show_spinner("Creating admins...") do
+      App.all.each do |app|
+        2.times do
+          Admin.create!(
+            email: Faker::Internet.email,
+            password: "12345678",
+            first_name: Faker::Name.first_name,
+            last_name: Faker::Name.last_name,
+            is_god: [true, false].sample,
+            app_id: app.id
+          )
+        end
+      end
+    end
+
+    show_spinner("Creating 100 example users...") do
+      100.times do |i|
+        User.create!(
             user_name: Faker::Name.name,
             email: Faker::Internet.email,
             password: "12345678",
@@ -35,26 +51,24 @@ namespace :dev do
             race: "human",
             is_professional: false,
             app: App.all.first
+        )
+    end
+    end
+
+    show_spinner("Inserting Kinships on created users...") do
+      kinships = ["Pai", "Mãe", "Filho", "Conjuge"]
+    
+      User.all.each do |user|
+        3.times do
+          Household.create!(
+            description: Faker::Name.name,
+            birthdate: Faker::Date.birthday(18, 65),
+            country: Faker::Address.country,
+            gender: ["male", "female"].sample,
+            race: "human",
+            kinship: kinships.sample,
+            user_id: user.id
           )
-      end
-      end
-  
-      show_spinner("Inserting Kinships on created users...") do
-        kinships = %w(Pai, Mãe, Filho, Conjuge)
-      
-        User.all.each do |user|
-          3.times do
-            household = Household.create!(
-              description: Faker::Name.name,
-              birthdate: Faker::Date.birthday(18, 65),
-              country: Faker::Address.country,
-              gender: ["male", "female"].sample,
-              race: "human",
-              kinship: kinships.sample
-            )
-            user.households << household
-            user.save!
-          end
         end
       end
      
@@ -65,9 +79,8 @@ namespace :dev do
             title: Faker::Movies::LordOfTheRings.character,
             content_type: Faker::Music.genre,
             body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
-            app: App.all.first
-          )
-        end
+            app_id: App.all.sample.id
+        )
       end
     
       show_spinner("Creating 50 example Public Hospitals...") do
@@ -79,22 +92,8 @@ namespace :dev do
             kind: Faker::Movies::StarWars.character,
             phone: Faker::PhoneNumber.phone_number,
             details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
-            app: App.all.first 
-          )  
-        end
-      end
-  
-      show_spinner("Creating survey...") do
-        User.all.each do |u|
-          1..5.times do
-            Survey.create!(
-              user: u.id,
-              latitude: 40.741934119747704,
-              longitude: -73.98951017150449,
-              symptom: ["febre", "dor no corpo"]
-            )
-          end
-        end
+            app_id: App.all.sample.id 
+        )
       end
     end
   end
@@ -108,15 +107,14 @@ namespace :dev do
         )
       end
 
-      show_spinner("Criando Administrador do CENTEIAS...") do
-        Admin.create(
-          email: "proepi.desenvolvimento@gmail.com",
-          first_name: "System",
-          last_name: "Administrator",
-          password: "!ProEpiDev_1",
-          is_god: true,
-          app_id: App.first.id
-        )
+        2.times do 
+          Survey.create!(
+            latitude: 40.741934119747704,
+            longitude: -73.98951017150449,
+            symptom: symptom_arr,
+            user_id: u.id,
+          )
+        end
       end
     end
   end

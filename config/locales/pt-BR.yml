@@ -4,6 +4,7 @@ pt-BR:
     email:
       message: "Somente emails válidos são aceitos. Ex: exemplo@exemplo.com"
   admin:
+    not_god: "Você não tem autorização para acessar essa área, por favor entre em contato com a ProEpi."
     validations:
     first_name:
       too_short: "Nome deve ter no mínimo 1 caractere."
@@ -16,6 +17,7 @@ pt-BR:
       too_short: "Email deve ter no mínimo 1 caractere."
       too_long: "Email deve ter no máximo 255 caracteres."      
   user:
+    access_forbiden: "Você não pode acessar esse recurso, ele pertence a outro usuário"
     validations:
       password:
         too_short: "A senha é muito pequena, mínimo de 8 caracteres."

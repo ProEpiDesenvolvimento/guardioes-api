@@ -4,11 +4,11 @@ Rails.application.routes.draw do
   resources :contents
   resources :apps
 
-  resources :user do
-    resources :surveys do
-      get "all", to: "surveys#all_surveys"
-    end
+  get "surveys/all_surveys", to: "surveys#all_surveys"
+
+  resources :users do
     resources :households
+    resources :surveys
   end
   
   devise_for :admins,
