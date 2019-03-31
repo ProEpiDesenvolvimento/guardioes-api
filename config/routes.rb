@@ -6,8 +6,7 @@ Rails.application.routes.draw do
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
 
-  resources :user
-  resources :user do
+  resources :users do
     resources :households
     resources :surveys
   end
