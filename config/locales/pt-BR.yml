@@ -17,6 +17,7 @@ pt-BR:
       too_short: "Email deve ter no mínimo 1 caractere."
       too_long: "Email deve ter no máximo 255 caracteres."      
   user:
+    access_forbiden: "Você não pode acessar esse recurso, ele pertence a outro usuário"
     validations:
       password:
         too_short: "A senha é muito pequena, mínimo de 8 caracteres."
