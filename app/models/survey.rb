@@ -6,9 +6,7 @@ class Survey < ApplicationRecord
   before_validation :reverse_geocode
   
   serialize :symptom, Array
- 
-  validates_presence_of :user_id, :latitude, :longitude
-  
+   
   def address
     [street, city, state, country].compact.join(', ')
   end

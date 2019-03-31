@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_23_171637) do
+ActiveRecord::Schema.define(version: 2019_03_29_183234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,14 +95,10 @@ ActiveRecord::Schema.define(version: 2019_03_23_171637) do
     t.float "latitude"
     t.float "longitude"
     t.date "bad_since"
-    t.boolean "had_traveled"
-    t.string "where_had_traveled"
     t.text "symptom"
     t.string "event_title"
     t.text "event_description"
-    t.boolean "event_confirmed_cases"
     t.integer "event_confirmed_cases_number"
-    t.boolean "event_confirmed_deaths"
     t.integer "event_confirmed_deaths_number"
     t.string "street"
     t.string "city"
@@ -111,6 +107,9 @@ ActiveRecord::Schema.define(version: 2019_03_23_171637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "traveled_to"
+    t.string "contact_with_symptom"
+    t.string "went_to_hospital"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["user_id"], name: "index_surveys_on_user_id"

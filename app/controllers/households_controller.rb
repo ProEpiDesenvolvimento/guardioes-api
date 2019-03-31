@@ -17,6 +17,7 @@ class HouseholdsController < ApplicationController
   # POST /households
   def create
     @household = Household.new(household_params)
+    @household.user_id = @user.id
 
     if @household.save
       render json: @household, status: :created, location: user_household_path(:id => @user)

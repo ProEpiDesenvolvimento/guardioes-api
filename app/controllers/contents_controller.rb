@@ -1,10 +1,11 @@
 class ContentsController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate_user!
+  before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
 
   # GET /contents
   def index
-    @contents = Content.admin_country(current_admin.app_id)
+    @contents = Content.user_country(current_user.app_id)
 
     render json: @contents
   end
@@ -37,6 +38,8 @@ class ContentsController < ApplicationController
   # DELETE /contents/1
   def destroy
     @content.destroy
+
+    head :no_content
   end
 
   private
