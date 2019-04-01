@@ -1,6 +1,6 @@
 class AddWentToHospitalToSurveys < ActiveRecord::Migration[5.2]
   def self.up
-    add_column :surveys, :went_to_hospital, :string
+    add_column :surveys, :went_to_hospital, :boolean
   end
 
   def self.down
