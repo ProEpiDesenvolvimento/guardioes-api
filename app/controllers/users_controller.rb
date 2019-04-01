@@ -15,6 +15,16 @@ class UsersController < ApplicationController
     render json: @user
   end
 
+    # PATCH/PUT /apps/1
+    def update
+      if @user.update(user_params)
+        render json: @user
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
+    end
+  
+
   def destroy
     @user.destroy!
   end
