@@ -22,10 +22,10 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      if current_user.id != params[:id]
+      if current_user.id.to_s != params[:id].to_s
         render json: { errors: [
           detail: I18n.t("user.access_forbiden")
-        ]}
+        ]}, status: :unprocessable_entity
       else
         @user = User.find(current_user.id)
       end

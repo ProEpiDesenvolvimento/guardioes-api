@@ -52,7 +52,7 @@ namespace :dev do
             is_professional: false,
             app: App.all.first
         )
-    end
+      end
     end
 
     show_spinner("Inserting Kinships on created users...") do
@@ -71,35 +71,37 @@ namespace :dev do
           )
         end
       end
+    end
      
   
-      show_spinner("Creating 10 example content...") do
-        10.times do |j|
-          Content.create!(
-            title: Faker::Movies::LordOfTheRings.character,
-            content_type: Faker::Music.genre,
-            body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
-            app_id: App.all.sample.id
-        )
+    show_spinner("Creating 10 example content...") do
+      10.times do |j|
+        Content.create!(
+          title: Faker::Movies::LordOfTheRings.character,
+          content_type: Faker::Music.genre,
+          body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
+          app_id: App.all.sample.id
+      )
       end
-    
-      show_spinner("Creating 50 example Public Hospitals...") do
-        50.times do |k|
-          PublicHospital.create!(
-            description:Faker::Company.name,
-            latitude: Faker::Address.latitude ,
-            longitude: Faker::Address.longitude,
-            kind: Faker::Movies::StarWars.character,
-            phone: Faker::PhoneNumber.phone_number,
-            details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
-            app_id: App.all.sample.id 
-        )
+    end
+  
+    show_spinner("Creating 50 example Public Hospitals...") do
+      50.times do |k|
+        PublicHospital.create!(
+          description:Faker::Company.name,
+          latitude: Faker::Address.latitude ,
+          longitude: Faker::Address.longitude,
+          kind: Faker::Movies::StarWars.character,
+          phone: Faker::PhoneNumber.phone_number,
+          details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
+          app_id: App.all.sample.id 
+      )
       end
     end
   end
 
-  if Rails.env.production?
-    task create_prod: :environment do
+  task create_prod: :environment do
+    if Rails.env.production?
       show_spinner("Criando Aplicativo do Brasil...") do 
         App.create(
           owner_country: "Brasil",
@@ -107,14 +109,13 @@ namespace :dev do
         )
       end
 
-        2.times do 
-          Survey.create!(
-            latitude: 40.741934119747704,
-            longitude: -73.98951017150449,
-            symptom: symptom_arr,
-            user_id: u.id,
-          )
-        end
+      2.times do 
+        Survey.create!(
+          latitude: 40.741934119747704,
+          longitude: -73.98951017150449,
+          symptom: symptom_arr,
+          user_id: u.id,
+        )
       end
     end
   end
