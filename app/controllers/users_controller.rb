@@ -23,19 +23,18 @@ class UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-
-
+  
   def destroy
     @user.destroy!
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+  # Use callbacks to share common setup or constraints between actions.
   def set_user
-    # if current_user.id.to_s != params[:id].to_s
+    # if current_user.id != params[:id]
     #   render json: { errors: [
     #     detail: I18n.t("user.access_forbiden")
-    #   ]}, status: :unprocessable_entity
+    #   ]}
     # else
     #   @user = User.find(current_user.id)
     # end
@@ -44,6 +43,6 @@ class UsersController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id)
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password)
   end
 end

@@ -108,8 +108,8 @@ ActiveRecord::Schema.define(version: 2019_04_01_162546) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "traveled_to"
-    t.boolean "contact_with_symptom"
-    t.boolean "went_to_hospital"
+    t.string "contact_with_symptom"
+    t.string "went_to_hospital"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["user_id"], name: "index_surveys_on_user_id"
