@@ -8,7 +8,7 @@ class UserSerializer < ActiveModel::Serializer
   has_many :households 
   # has_many :surveys
 
- link(:self) {user_path(object.id) }
+
 
 
   def attributes(*args)
