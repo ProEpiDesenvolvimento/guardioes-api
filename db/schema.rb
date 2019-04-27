@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_29_183234) do
+ActiveRecord::Schema.define(version: 2019_04_01_162546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,8 +108,8 @@ ActiveRecord::Schema.define(version: 2019_03_29_183234) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "traveled_to"
-    t.string "contact_with_symptom"
-    t.string "went_to_hospital"
+    t.boolean "contact_with_symptom"
+    t.boolean "went_to_hospital"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["user_id"], name: "index_surveys_on_user_id"
@@ -141,7 +141,12 @@ ActiveRecord::Schema.define(version: 2019_03_29_183234) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+<<<<<<< HEAD
     t.datetime "deleted_atf"
+=======
+    t.datetime "deleted_at"
+    t.string "picture"
+>>>>>>> development
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
