@@ -6,10 +6,10 @@ Rails.application.routes.draw do
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
 
-  # resources :users do
-  #   resources :households
-  #   resources :surveys
-  # end
+  resources :users do
+    resources :households
+    resources :surveys
+  end
 
   resources :users, only: [:update]
   
