@@ -34,7 +34,8 @@ Rails.application.routes.draw do
       },
       controllers: {
         sessions: "session",
-        registrations: "registration"
+        registrations: "registration",
+        # passwords: "passwords"
       }
 
     root to: "admin#index"
