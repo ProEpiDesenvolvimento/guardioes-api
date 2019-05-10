@@ -1,6 +1,6 @@
 class AppsController < ApplicationController
   before_action :authenticate_admin!
-  before_action :authenticate_admin_is_god
+  before_action :authenticate_admin_is_god, except: :update
   before_action :set_app, only: [:show, :update, :destroy]
 
   # GET /apps
