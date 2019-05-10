@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   #   resources :surveys
   # end
 
-  resources :users, only: [:update]
+  resources :users, only: [:update] do
+    resources :surveys
+  end
   
   devise_for :admins,
     path: 'admin/',

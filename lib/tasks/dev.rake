@@ -18,8 +18,8 @@ namespace :dev do
     show_spinner("Creating Apps...") do
       1..50.times do
         App.create!(
-            app_name: Faker::Company.name,
-            owner_country: Faker::Address.country
+          app_name: Faker::Company.name,
+          owner_country: Faker::Address.country
         )
       end
     end
@@ -52,7 +52,7 @@ namespace :dev do
             is_professional: false,
             app: App.all.first
         )
-    end
+      end
     end
 
     show_spinner("Inserting Kinships on created users...") do
