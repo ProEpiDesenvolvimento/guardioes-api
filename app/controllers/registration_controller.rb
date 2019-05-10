@@ -1,42 +1,64 @@
 class RegistrationController < Devise::RegistrationsController
+  before_action :set_app, only: :create
   respond_to :json
   
   def create
-    build_resource(sign_up_params)
-    resource.save
+    # if sign_up_params[:residence].blank?
+    #   # build_resource(sign_up_params)
+    #   # resource.save
+  
+    #   # render_resource(resource)
 
-    render_resource(resource)
+    #   puts "\n\n\n\n\n\n\n"
+    #   puts "Sem residence"
+    #   params[:residence]
+    #   params[:user]
+    #   puts sign_up_params[:user_name]
+    #   puts "\n\n\n\n\n\n\n"
+    # else
+    #   name = sign_up_params[:residence]
+    #   app = App.create!(app_name: name, owner_country: name)
+    #   new_sign_up_params = sign_up_params.merge(app_id: app.id)
+
+      build_resource(@new_sign_up_params)
+      resource.save
+  
+      render_resource(resource)
+
+      # render json: {data: "fds"}, status: 200
+
+      # puts "\n\n"
+      # puts @new_sign_up_params
+      # puts "\n\n"
+    # end
   end
 
-  # def update
-  #   new_params = params.require(:user).permit(:email, :username, :current_password, :password, :password_confirmation)
-  #   change_password = true
-  #   if params[:user][:password].blank?
-  #     params[:user].delete("password")
-  #     params[:user].delete("password_confirmation")
-  #     new_params = params.require(:user).permit(:email, :username)
-  #     change_password = false
-  #   end
-
-  #   @user = User.find(current_user.id)
-  #   is_valid = false
-
-  #   if change_password
-  #     is_valid = @user.update_with_password(new_params)
-  #   else
-  #     is_valid = @user.update_without_password(new_params)
-  #   end
-
-  #   if is_valid
-  #     set_flash_message :notice, :updated
-  #     sign_in @user, :bypass => true
-  #     redirect_to after_update_path_for(@user)
-  #   else
-  #     render "edit"
-  #   end
-  # end
-
   private
+  def set_app
+    if params[:user][:residence].blank?
+      find_app = App.where(app_name: params[:user][:country])
+
+      if find_app.blank?
+        name = params[:user][:country]
+        app = App.create!(app_name: name, owner_country: name)
+
+        @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
+      else
+        @new_sign_up_params = sign_up_params.merge(app_id: find_app.first.id).except(:residence)
+      end
+    else
+      find_app = App.where(app_name: params[:user][:residence])
+
+      if find_app.blank?
+        name = params[:user][:residence]
+        app = App.create!(app_name: name, owner_country: name)
+
+        @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
+      else
+        @new_sign_up_params = sign_up_params.merge(app_id: find_app.first.id).except(:residence)
+      end
+    end
+  end
 
   def sign_up_params
     if params[:user]
@@ -49,6 +71,7 @@ class RegistrationController < Devise::RegistrationsController
         :race,
         :is_professional,
         :password,
+        :residence,
         :app_id
       )
     elsif params[:admin]
