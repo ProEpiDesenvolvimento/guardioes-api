@@ -44,18 +44,11 @@ class UsersController < ApplicationController
   end
 
   def set_user_update
-    # if current_user.id != params[:id]
-    #   render json: { errors: [
-    #     detail: I18n.t("user.access_forbiden")
-    #   ]}
-    # else
-    #   @user = User.find(current_user.id)
-    # end
     @user = User.find(update_params[:id])
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password)
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture)
   end
 
   def update_params
