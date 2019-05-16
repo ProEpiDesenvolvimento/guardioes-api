@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_162546) do
+ActiveRecord::Schema.define(version: 2019_05_13_143726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,15 @@ ActiveRecord::Schema.define(version: 2019_04_01_162546) do
     t.index ["app_id"], name: "index_public_hospitals_on_app_id"
   end
 
+  create_table "rumors", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "confirmed_cases"
+    t.integer "confirmed_deaths"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "surveys", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "household_id"
@@ -96,10 +105,6 @@ ActiveRecord::Schema.define(version: 2019_04_01_162546) do
     t.float "longitude"
     t.date "bad_since"
     t.text "symptom"
-    t.string "event_title"
-    t.text "event_description"
-    t.integer "event_confirmed_cases_number"
-    t.integer "event_confirmed_deaths_number"
     t.string "street"
     t.string "city"
     t.string "state"
