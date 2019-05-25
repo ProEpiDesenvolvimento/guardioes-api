@@ -29,6 +29,7 @@ class User < ApplicationRecord
       too_long: I18n.translate("user.validations.password.too_long"),
       too_short: I18n.translate("user.validations.password.too_short")
     }
+
   validates :email,
     presence: true,  
     length: {
