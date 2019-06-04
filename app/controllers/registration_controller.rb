@@ -18,10 +18,6 @@ class RegistrationController < Devise::RegistrationsController
         name = params[:user][:country]
         app = App.create!(app_name: name, owner_country: name)
 
-#        @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
-#      else
-#        @new_sign_up_params = sign_up_params.merge(app_id: find_app.first.id).except(:residence)
-
         puts "\n New Sign up Params App doesn't exist \n\n\n"
         puts @new_sign_up_params
         @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
@@ -57,6 +53,7 @@ class RegistrationController < Devise::RegistrationsController
         :race,
         :is_professional,
         :password,
+        :residence,
         :app_id
       )
     elsif params[:admin]
