@@ -56,7 +56,8 @@ class RegistrationController < Devise::RegistrationsController
         :is_professional,
         :password,
         :residence,
-        :app_id
+        :app_id,
+        :picture
       )
     elsif params[:admin]
       params.require(:admin).permit(

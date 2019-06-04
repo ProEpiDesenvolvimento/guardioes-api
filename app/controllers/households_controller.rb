@@ -52,6 +52,6 @@ class HouseholdsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def household_params
-      params.require(:household).permit(:description, :birthdate, :country, :gender, :race, :kinship, :user_id)
+      params.require(:household).permit(:description, :birthdate, :country, :gender, :race, :kinship, :user_id, :picture)
     end
 end

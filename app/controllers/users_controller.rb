@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
   before_action :authenticate_user!, except: [:index]
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :destroy]
+  before_action :set_user_update, only: [:update]
 
   # GET /user
   def index
@@ -17,7 +18,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /apps/1
   def update
-    if @user.update(user_params)
+    if @user.update(update_params)
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -41,8 +42,15 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def set_user_update
+    @user = User.find(update_params[:id])
+  end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password)
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture)
+  end
+
+  def update_params
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id)
   end
 end
