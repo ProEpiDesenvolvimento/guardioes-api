@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id
+  attributes :id, :user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :picture, :app_id
 
   belongs_to :app do
     link(:app) {app_url(object.app.id)}
@@ -8,7 +8,7 @@ class UserSerializer < ActiveModel::Serializer
   has_many :households 
   # has_many :surveys
 
- link(:self) {user_path(object.id) }
+
 
 
   def attributes(*args)
