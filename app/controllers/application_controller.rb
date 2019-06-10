@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
           status: '400',
           title: I18n.translate("validations.title"),
           detail: resource.errors,
-          code: '100'
+          code: resource
         }
       ]
     }, status: :bad_request
