@@ -1,12 +1,19 @@
 class RegistrationController < Devise::RegistrationsController
-  before_action :set_app
+  before_action :set_app, only: :create, if: -> { params[:user] }
   respond_to :json
   
   def create
-    build_resource(@new_sign_up_params)
-    resource.save
-
-    render_resource(resource)
+    if params[:user]
+      build_resource(@new_sign_up_params)
+      resource.save
+  
+      render_resource(resource)
+    else
+      build_resource(@sign_up_params)
+      resource.save
+  
+      render_resource(resource)
+    end
   end
 
   private
@@ -59,7 +66,8 @@ class RegistrationController < Devise::RegistrationsController
         :app_id,
         :picture
       )
-    elsif params[:admin]
+    else
+      puts "\n\nCheguei aqui \n\n\n"
       params.require(:admin).permit(
         :email,
         :password,
