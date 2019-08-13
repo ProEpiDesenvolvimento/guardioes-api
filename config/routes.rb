@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :symptoms
   resources :public_hospitals
+  post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
   resources :apps
   resources :rumors
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
     resources :households
     resources :surveys
   end
+  post "render_user_by_filter",to: "users#query_by_param"
 
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
