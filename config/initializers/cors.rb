@@ -5,13 +5,13 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-# Rails.application.config.middleware.insert_before 0, Rack::Cors do
-#   allow do
-#     origins 'http://localhost:3000'
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins 'painel.gds.proepi.org.br'
 
-#     resource '*',
-#       headers: :any, 
-#       methods: [:get, :post, :put, :patch, :delete, :options, :head],
-#       expose: [:authorization]
-#   end
-# end
+    resource '*',
+      headers: :any, 
+      methods: :any,
+      expose: [:authorization]
+  end
+end

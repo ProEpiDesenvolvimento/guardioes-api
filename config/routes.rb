@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :public_hospitals
   resources :contents
   resources :apps
+  resources :rumors
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
 
@@ -11,7 +12,10 @@ Rails.application.routes.draw do
     resources :surveys
   end
 
-  resources :rumors
+  scope "/user" do 
+    post "reset_password", to: "users#reset_password"
+  end
+
   
   devise_for :admins,
     path: 'admin/',

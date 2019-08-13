@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!, except: [:index, :reset_password]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
 
@@ -23,6 +23,16 @@ class UsersController < ApplicationController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
+  end
+
+  def reset_password
+    @user = User.find_by_email(params[:email])
+
+    if @user.present?
+      @user.send_reset_password_instructions
+    end
+
+    render json: :no_content, status: :ok
   end
   
   def destroy
