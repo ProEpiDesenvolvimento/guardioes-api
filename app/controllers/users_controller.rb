@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_admin!, only: [:index]
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_admin!, only: [:index, :query_by_param]
+  before_action :authenticate_user!, except: [:index, :query_by_param]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
 
@@ -30,6 +30,25 @@ class UsersController < ApplicationController
     @user.destroy!
   end
 
+  def query_by_param
+    param_to_search = params[:param_to_search]
+    param_content = params[:param_content]
+    if param_to_search == "gender"
+      @users = User.where(gender: param_content)
+    elsif param_to_search == "race"
+      @users = User.where(race: param_content)
+    elsif param_to_search == "is_professional"
+      @users = User.where(is_professional: param_content)
+    elsif param_to_search == "country"
+      @users = User.where(country: param_content)
+    elsif param_to_search == "name"
+      @users = User.where(user_name: param_content)
+    end
+    
+    render json: @users
+  end
+
+  
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
