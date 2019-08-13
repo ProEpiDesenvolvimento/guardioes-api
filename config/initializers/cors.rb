@@ -10,8 +10,8 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins 'painel.gds.proepi.org.br'
 
     resource '*',
-      headers: :any, 
-      methods: :any,
-      expose: [:authorization]
+      headers: [:authorization], 
+      methods: [:get, :post, :put, :patch, :delete],
+      expose: "Authorization"
   end
 end
