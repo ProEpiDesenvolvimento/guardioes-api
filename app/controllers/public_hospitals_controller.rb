@@ -26,6 +26,10 @@ class PublicHospitalsController < ApplicationController
     end
   end
 
+  def render_public_hospital_admin
+    render json: PublicHospital.where(app_id: params[:app_id])
+  end
+
   # PATCH/PUT /public_hospitals/1
   def update
     if @public_hospital.update(public_hospital_params)
@@ -48,6 +52,6 @@ class PublicHospitalsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def public_hospital_params
-      params.require(:public_hospital).permit(:description, :latitude, :longitude, :type, :phone, :details, :app_id)
+      params.require(:public_hospital).permit(:description, :latitude, :longitude, :phone, :details, :app_id)
     end
 end
