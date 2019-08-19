@@ -24,16 +24,6 @@ module Myapp
 
     config.action_mailer.default_url_options = { host: 'http://painel.gds.proepi.org.br' }
 
-    use Rack::Cors do
-      allow do
-        origins 'painel.gds.proepi.org.br'
-    
-        resource '*',
-          headers: [:authorization], 
-          methods: [:get, :post, :put, :patch, :delete],
-          expose: "Authorization"
-      end
-    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
