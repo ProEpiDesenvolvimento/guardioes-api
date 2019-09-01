@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "dashboard", to: 'dashboard#index'
+  
   resources :symptoms
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
