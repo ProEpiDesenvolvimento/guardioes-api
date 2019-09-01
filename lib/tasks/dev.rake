@@ -84,6 +84,14 @@ namespace :dev do
         )
       end
     end
+
+    show_spinner("Creating 100 symptoms...") do
+      10.times do |j|
+        Symptom.create!(
+          description: 
+        )
+      end
+    end
   
     show_spinner("Creating 50 example Public Hospitals...") do
       50.times do |k|
