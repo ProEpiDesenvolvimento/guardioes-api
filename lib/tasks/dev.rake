@@ -16,7 +16,7 @@ namespace :dev do
     end
 
     show_spinner("Creating Apps...") do
-      1..50.times do
+      1..20.times do
         App.create!(
           app_name: Faker::Company.name,
           owner_country: Faker::Address.country
@@ -85,11 +85,17 @@ namespace :dev do
       end
     end
 
-    show_spinner("Creating 100 symptoms...") do
-      10.times do |j|
-        Symptom.create!(
-          description: 
-        )
+    show_spinner("Creating 10 symptoms...") do
+      App.all.each do |a|
+        10.times do |j|
+          Symptom.create!(
+            description: Faker::Name.name,
+            code: Faker::Number.number,
+            priority: rand(0..10),
+            details: Faker::Quotes::Shakespeare.as_you_like_it_quote,
+            app_id: a.id
+          )
+        end
       end
     end
   
@@ -108,12 +114,18 @@ namespace :dev do
     end
 
     show_spinner("Creating 5 surveys for each users...") do
+      sample1 = Symptom.all.sample.description
+      sample2 = Symptom.all.sample.description
+
       User.all.each do |u|
         symptom_arr = [
-          Faker::Food.ingredient, 
-          Faker::Food.sushi, 
-          Faker::Food.fruits, 
-          Faker::Food.vegetables
+          sample1,
+          sample1,
+          sample1,
+          sample2,
+          sample2,
+          Symptom.all.sample.description,
+          Symptom.all.sample.description
         ]
 
         2.times do 
