@@ -16,7 +16,7 @@ namespace :dev do
     end
 
     show_spinner("Creating Apps...") do
-      1..50.times do
+      1..20.times do
         App.create!(
           app_name: Faker::Company.name,
           owner_country: Faker::Address.country
@@ -82,6 +82,20 @@ namespace :dev do
           body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
           app_id: App.all.sample.id
       )
+      end
+    end
+
+    show_spinner("Creating 10 symptoms...") do
+      App.all.each do |a|
+        10.times do |j|
+          Symptom.create!(
+            description: Faker::Name.name,
+            code: Faker::Number.number,
+            priority: rand(0..10),
+            details: Faker::Quotes::Shakespeare.as_you_like_it_quote,
+            app_id: a.id
+          )
+        end
       end
     end
   

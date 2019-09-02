@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "dashboard", to: 'dashboard#index'
+  
   resources :symptoms
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
@@ -40,7 +42,8 @@ Rails.application.routes.draw do
       },
       controllers: {
         sessions: "session",
-        registrations: "registration"
+        registrations: "registration",
+        # passwords: "passwords"
       }
 
     root to: "admin#index"
