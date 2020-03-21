@@ -1,5 +1,6 @@
 class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
+  before_action :create_admin, if: -> { params[:admin] }
   respond_to :json
   
   def create
@@ -50,6 +51,12 @@ class RegistrationController < Devise::RegistrationsController
       end
     end
   end
+
+  def create_admin
+    if params[:admin]
+      @sign_up_params = sign_up_params
+    end
+  end 
 
   def sign_up_params
     if params[:user]
