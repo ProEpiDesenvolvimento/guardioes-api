@@ -4,4 +4,16 @@ class AdminController < ApplicationController
     @admins = Admin.all
     render json: @admins
   end
+
+  private
+  def admin_params
+    params.require(:admin).permit(
+        :email,
+        :password,
+        :first_name,
+        :last_name,
+        :is_god,
+        :app_id
+      )
+  end 
 end
