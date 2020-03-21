@@ -22,22 +22,4 @@ class DashboardController < ApplicationController
       all_surveys: all_surveys
     }, status: :ok  
   end
-
-
-  ss = []
-  surveys = Survey.all
-  surveys.each do |survey|
-    survey.symptom.each do |symp|
-      if ss.length > 0
-        ss.each do |list|
-          if !list.key?(symp)
-            ss.append({"#{symp}": 0})
-          end
-        end
-      else
-        ss.append({"#{symp}": 0})
-      end
-    end
-  end
-  puts ss
 end
