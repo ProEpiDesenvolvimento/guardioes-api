@@ -134,7 +134,7 @@ GEM
     pg (1.1.4)
     public_suffix (3.0.3)
     puma (3.12.0)
-    rack (2.0.6)
+    rack (2.2.2)
     rack-cors (1.0.2)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
