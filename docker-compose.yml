@@ -1,0 +1,22 @@
+version: '3.6'
+services:
+  webserver:
+    image: nginx
+    ports:
+      - "80:80"
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+  web:
+    build: .
+    volumes:
+      - .:/myapp
+    working_dir: /myapp
+    command: puma
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres@db
