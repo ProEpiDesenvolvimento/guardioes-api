@@ -1,0 +1,43 @@
+pt-BR:
+  validations:
+    title: "Falha na requisição."
+    email:
+      message: "Somente emails válidos são aceitos. Ex: exemplo@exemplo.com"
+  admin:
+    not_god: "Você não tem autorização para acessar essa área, por favor entre em contato com a ProEpi."
+    validations:
+    first_name:
+      too_short: "Nome deve ter no mínimo 1 caractere."
+      too_long: "Nome deve ter no máximo 255 caracteres."
+    last_name:
+      too_short: "Sobrenome deve ter no mínimo 1 caractere."
+      too_long: "Sobrenome deve ter no máximo 255 caracteres."
+    email:
+      message: "Somente emails válidos são aceitos."
+      too_short: "Email deve ter no mínimo 1 caractere."
+      too_long: "Email deve ter no máximo 255 caracteres."      
+  user:
+    access_forbiden: "Você não pode acessar esse recurso, ele pertence a outro usuário"
+    validations:
+      password:
+        too_short: "A senha é muito pequena, mínimo de 8 caracteres."
+        too_long: "A senha é muito grande, máximo de 255 caracteres."
+      user_name:
+        too_short: "Nome de usuário é muito pequeno, mínimo de 8 caracteres."
+        too_long: "Nome de usuário é muito grande, máximo de 255 caracteres." 
+      email:
+        too_short: "Email de usuário é muito pequeno, mínimo de 8 caracteres."
+        too_long: "Email de usuário é muito grande, máximo de 255 caracteres."              
+  household:
+    validations:
+      description:
+        too_short: "A descrição deve ter no mínimo 5 caracteres."
+        too_long: "A descrição deve ter no máximo 255 caracteres."
+  admin:
+    validations:
+      first_name:
+        too_short: "O nome deve ter no mínimo 1 caractere."
+        too_long: "O nome deve ter no máximo 255 caracteres."
+      last_name:
+        too_short: "O sobrenome deve ter no mínimo 1 caractere."
+        too_long: "O sobrenome deve ter no máximo 255 caracteres."
