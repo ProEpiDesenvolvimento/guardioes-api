@@ -1,6 +1,0 @@
-# Don't merge these files
-/Dockerfile merge=ours
-/client/Dockerfile merge=ours
-
-/docker-compose.yml merge=ours
-/config/credentials.yml.enc merge=ours
