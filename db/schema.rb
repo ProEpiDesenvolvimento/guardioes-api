@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_30_175247) do
+ActiveRecord::Schema.define(version: 2020_03_30_184532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,16 @@ ActiveRecord::Schema.define(version: 2020_03_30_175247) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["app_id"], name: "index_contents_on_app_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "description"
+    t.string "kind"
+    t.string "details"
+    t.bigint "manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["manager_id"], name: "index_groups_on_manager_id"
   end
 
   create_table "households", force: :cascade do |t|
@@ -172,6 +182,7 @@ ActiveRecord::Schema.define(version: 2020_03_30_175247) do
 
   add_foreign_key "admins", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "groups", "managers"
   add_foreign_key "households", "users"
   add_foreign_key "managers", "apps"
   add_foreign_key "public_hospitals", "apps"
