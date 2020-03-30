@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_30_184532) do
+ActiveRecord::Schema.define(version: 2020_03_30_201304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,6 +174,9 @@ ActiveRecord::Schema.define(version: 2020_03_30_184532) do
     t.bigint "app_id"
     t.datetime "deleted_at"
     t.string "picture"
+    t.string "identification_code"
+    t.string "state"
+    t.string "city"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
