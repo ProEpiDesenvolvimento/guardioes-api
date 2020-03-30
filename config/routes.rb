@@ -29,6 +29,18 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+    devise_for :managers,
+    path: 'manager/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
     devise_for :users,
       path: "/user",
       path_names: {
