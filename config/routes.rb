@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :managers
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
@@ -20,6 +19,18 @@ Rails.application.routes.draw do
   
   devise_for :admins,
     path: 'admin/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
+    devise_for :managers,
+    path: 'manager/',
     path_names: {
       sign_in: "login",
       sign_out: "logout",

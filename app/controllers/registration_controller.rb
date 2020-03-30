@@ -1,6 +1,7 @@
 class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
+  before_action :create_manager, if: -> { params[:manager] }
   respond_to :json
   
   def create
@@ -90,8 +91,9 @@ class RegistrationController < Devise::RegistrationsController
         :app_id
       )
     else
-      params.require(:admin).permit(
+      params.require(:manager).permit(
         :email,
+        :name,
         :password,
         :app_id
       )
