@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :managers
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms

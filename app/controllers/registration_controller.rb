@@ -58,6 +58,12 @@ class RegistrationController < Devise::RegistrationsController
     end
   end 
 
+  def create_manager
+    if params[:manager]
+      @sign_up_params = sign_up_params
+    end
+  end 
+
   def sign_up_params
     if params[:user]
       params.require(:user).permit(
@@ -73,7 +79,7 @@ class RegistrationController < Devise::RegistrationsController
         :app_id,
         :picture
       )
-    else
+    elsif params[:admin]
       puts "\n\nCheguei aqui \n\n\n"
       params.require(:admin).permit(
         :email,
@@ -83,6 +89,13 @@ class RegistrationController < Devise::RegistrationsController
         :is_god,
         :app_id
       )
+    else
+      params.require(:admin).permit(
+        :email,
+        :password,
+        :app_id
+      )
     end
   end
+
 end
