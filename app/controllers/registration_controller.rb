@@ -81,7 +81,8 @@ class RegistrationController < Devise::RegistrationsController
         :picture,
         :state,
         :city,
-        :identification_code
+        :identification_code,
+        :group_id
       )
     elsif params[:admin]
       puts "\n\nCheguei aqui \n\n\n"
