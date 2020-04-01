@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   post "render_user_by_filter",to: "users#query_by_param"
 
   resources :rumors
-  
+
   devise_for :admins,
     path: 'admin/',
     path_names: {
@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+    resources :managers
     devise_for :managers,
     path: 'manager/',
     path_names: {
