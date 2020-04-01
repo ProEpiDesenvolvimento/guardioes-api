@@ -1,4 +1,5 @@
 class RegistrationController < Devise::RegistrationsController
+  before_action :authenticate_admin!, only: [:create_manager]
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
   before_action :create_manager, if: -> { params[:manager] }
