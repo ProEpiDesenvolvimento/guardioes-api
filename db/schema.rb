@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_194906) do
+ActiveRecord::Schema.define(version: 2020_03_30_202546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,16 @@ ActiveRecord::Schema.define(version: 2019_05_15_194906) do
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
+  create_table "groups", force: :cascade do |t|
+    t.string "description"
+    t.string "kind"
+    t.string "details"
+    t.bigint "manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["manager_id"], name: "index_groups_on_manager_id"
+  end
+
   create_table "households", force: :cascade do |t|
     t.string "description"
     t.date "birthdate"
@@ -75,6 +85,21 @@ ActiveRecord::Schema.define(version: 2019_05_15_194906) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "managers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_managers_on_app_id"
+    t.index ["email"], name: "index_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
   end
 
   create_table "public_hospitals", force: :cascade do |t|
@@ -149,18 +174,26 @@ ActiveRecord::Schema.define(version: 2019_05_15_194906) do
     t.bigint "app_id"
     t.datetime "deleted_at"
     t.string "picture"
+    t.string "identification_code"
+    t.string "state"
+    t.string "city"
+    t.bigint "group_id"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "admins", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "groups", "managers"
   add_foreign_key "households", "users"
+  add_foreign_key "managers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "users"
   add_foreign_key "symptoms", "apps"
   add_foreign_key "users", "apps"
+  add_foreign_key "users", "groups"
 end

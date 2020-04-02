@@ -13,7 +13,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
   
   belongs_to :app
-
+  #belongs_to :group
+  
   validates :user_name,
     presence: true,
     length: {

@@ -4,7 +4,7 @@ class App < ApplicationRecord
   has_many :symptoms
   has_many :public_hospitals
   has_many :contents
-
+  has_many :managers
   validates :app_name,
     presence: true,
     length: {

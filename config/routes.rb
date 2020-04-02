@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :groups
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
@@ -16,13 +17,28 @@ Rails.application.routes.draw do
   end
   post "render_user_by_filter",to: "users#query_by_param"
 
+
+  resources :rumors
+
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
   end
 
-  
   devise_for :admins,
     path: 'admin/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
+    resources :managers
+    devise_for :managers,
+    path: 'manager/',
     path_names: {
       sign_in: "login",
       sign_out: "logout",
