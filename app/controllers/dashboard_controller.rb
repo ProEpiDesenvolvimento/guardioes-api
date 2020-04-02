@@ -4,7 +4,8 @@ class DashboardController < ApplicationController
     users = User.all.group_by { |u| Date::MONTHNAMES[u.created_at.month] }
     apps = App.all
     surveys = Survey.all.group_by { |s| s.city }
-    surveys_week = Survey.all.group("DATE_TRUNC('week', created_at)").count
+    # surveys_week = Survey.all.group("DATE_TRUNC('week', created_at)").count
+    surveys_week = Survey.all.group_by { |s| s.created_at.end_of_week }
     symptoms = Symptom.all
 
     all_users = User.all.length

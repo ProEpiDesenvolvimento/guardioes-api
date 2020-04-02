@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
   resources :apps
+  resources :rumors
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
 
@@ -16,7 +17,12 @@ Rails.application.routes.draw do
   end
   post "render_user_by_filter",to: "users#query_by_param"
 
+
   resources :rumors
+
+  scope "/user" do 
+    post "reset_password", to: "users#reset_password"
+  end
 
   devise_for :admins,
     path: 'admin/',
