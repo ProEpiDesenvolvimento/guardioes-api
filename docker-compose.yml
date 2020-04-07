@@ -30,6 +30,7 @@ services:
     environment:
       - discovery.type=single-node
     volumes:
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - esdata:/usr/share/elasticsearch/data
 
   kibana:
