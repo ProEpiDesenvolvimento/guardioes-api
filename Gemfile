@@ -11,6 +11,8 @@ gem "paranoia", "~> 2.2"
 gem 'tty-spinner'
 # Terminal output styling with intuitive and clean API that doesn't monkey patch String class.
 gem 'pastel'
+# AccessGranted is a multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
+gem 'access-granted', '~> 1.1.0'
 # Devise Auth token
 gem 'devise-jwt'
 # Active Model Serializer
