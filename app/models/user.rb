@@ -13,7 +13,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
-
   searchkick
 
   validates :user_name,
@@ -31,6 +30,7 @@ class User < ApplicationRecord
       too_long: I18n.translate("user.validations.password.too_long"),
       too_short: I18n.translate("user.validations.password.too_short")
     }
+
   validates :email,
     presence: true,  
     length: {

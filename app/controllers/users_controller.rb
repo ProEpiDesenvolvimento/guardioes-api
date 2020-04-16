@@ -24,8 +24,17 @@ class UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-  
 
+  def reset_password
+    @user = User.find_by_email(params[:email])
+
+    if @user.present?
+      @user.send_reset_password_instructions
+    end
+
+    render json: :no_content, status: :ok
+  end
+  
   def destroy
     @user.destroy!
   end
@@ -67,7 +76,7 @@ class UsersController < ApplicationController
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture)
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture, :ciy, :identification_code, :state, :group_id, :risk_group)
   end
 
   def update_params

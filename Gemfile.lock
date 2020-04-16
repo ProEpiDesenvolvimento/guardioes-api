@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    access-granted (1.1.2)
     actioncable (5.2.2)
       actionpack (= 5.2.2)
       nio4r (~> 2.0)
@@ -247,6 +248,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  access-granted (~> 1.1.0)
   active_model_serializers (~> 0.10.0)
   bootsnap (>= 1.1.0)
   byebug
