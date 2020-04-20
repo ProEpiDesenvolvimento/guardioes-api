@@ -40,6 +40,12 @@ class SurveysController < ApplicationController
     @survey.destroy
   end
 
+  def weekly_surveys
+    @surveys = Survey.where("created_at >= ?", 1.week.ago.utc)
+
+    render json: @surveys
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_survey
