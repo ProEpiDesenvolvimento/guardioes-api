@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   resources :rumors
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
-
+  get "surveys/week", to: "surveys#weekly_surveys"
+  
   resources :users do
     resources :households
     resources :surveys
