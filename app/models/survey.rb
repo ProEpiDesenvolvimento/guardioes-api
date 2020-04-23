@@ -4,15 +4,13 @@ class Survey < ApplicationRecord
   belongs_to :user
   belongs_to :household, optional:true
   before_validation :reverse_geocode
-
+  
   serialize :symptom, Array
-
-  searchkick
-
+   
   def address
     [street, city, state, country].compact.join(', ')
   end
-
+  
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     if geo = results.first
       obj.city    = geo.city
@@ -21,6 +19,6 @@ class Survey < ApplicationRecord
       obj.state   = geo.state
     end
   end
-
+ 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 end
