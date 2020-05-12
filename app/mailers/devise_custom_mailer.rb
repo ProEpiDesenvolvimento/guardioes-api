@@ -7,7 +7,7 @@ class DeviseCustomMailer < Devise::Mailer
       SendgridMailer.send(
         resource.unconfirmed_email ? resource.unconfirmed_email : resource.email,
         { "confirmAccountUrl": confirmation_path },
-        "d-6c95b4755a2a4aabae5291ab9695c49b"
+        ""
       )
     end
 
@@ -17,7 +17,7 @@ class DeviseCustomMailer < Devise::Mailer
         SendgridMailer.send(
             resource.email,
             { "Url": reset_path },
-            "d-6c95b4755a2a4aabae5291ab9695c49b"
+            "d-19452e288ce940868a08c4873bcd8311"
         )
     end
 
