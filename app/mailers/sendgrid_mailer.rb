@@ -14,8 +14,8 @@ class SendgridMailer
           }
         ],
         "from": {
-          "email": "repaytech@gmail.com",
-          "name": "Repay"
+          "email": "proepi.desenvolvimento@gmail.com",
+          "name": "Proepi"
         },
         "template_id": template_id
       }
@@ -28,4 +28,4 @@ class SendgridMailer
       end
     end
   end
-  
+   
