@@ -13,10 +13,13 @@ class DeviseCustomMailer < Devise::Mailer
 
     def reset_password_instructions(resource, token, _options = {})
         reset_path = 'gds://password/' + resource.reset_password_token
-      
+        puts reset_path
         SendgridMailer.send(
             resource.email,
-            { "Url": reset_path },
+            { 
+              "code": resource.aux_code,
+              "reset_token": resource.reset_password_token
+            },
             "d-19452e288ce940868a08c4873bcd8311"
         )
     end

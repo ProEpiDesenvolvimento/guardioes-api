@@ -27,14 +27,14 @@ class UsersController < ApplicationController
   
   def email_reset_password
     @user = User.find_by_email(params[:email])
-
+    code = rand(36**4).to_s(36)
+    @user.update_attribute(aux_code, code)
     @user.send_reset_password_instructions if @user.present?
-
     render json: {reset_password_token: @user.reset_password_token}, status: :ok
   end
 
   def reset_password
-    @user = User.where(reset_password_token: params[:reset_password_token]).first
+    @user = User.where(aux_code: params[:code]).first
     if @user.present?
       if @user.reset_password(params[:password], params[:password_confirmation])
         render json: {error: false, message: "Senha redefinida com sucesso"}, status: :ok
