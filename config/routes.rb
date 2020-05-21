@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :syndromes
   resources :groups
   get "dashboard", to: 'dashboard#index'
   

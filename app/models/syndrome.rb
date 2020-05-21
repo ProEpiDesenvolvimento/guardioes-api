@@ -1,0 +1,2 @@
+class Syndrome < ApplicationRecord
+end
