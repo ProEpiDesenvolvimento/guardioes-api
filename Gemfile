@@ -32,6 +32,7 @@ gem 'searchkick'
 # gem 'bcrypt', '~> 3.1.7'
 # Complete Ruby geocoding solution. http://www.rubygeocoder.com
 gem 'geocoder'
+gem 'sendgrid-ruby'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
