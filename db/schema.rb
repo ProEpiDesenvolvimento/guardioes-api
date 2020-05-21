@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_143307) do
+ActiveRecord::Schema.define(version: 2020_05_21_201920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2020_05_19_143307) do
     t.bigint "app_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "source_link"
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
