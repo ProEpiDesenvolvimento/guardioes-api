@@ -16,7 +16,7 @@ namespace :dev do
     end
 
     show_spinner("Creating Apps...") do
-      1..50.times do
+      1..20.times do
         App.create!(
           app_name: Faker::Company.name,
           owner_country: Faker::Address.country
@@ -72,58 +72,64 @@ namespace :dev do
         end
       end
     end
-   
-
+     
+  
     show_spinner("Creating 10 example content...") do
       10.times do |j|
         Content.create!(
-            title: Faker::Movies::LordOfTheRings.character,
-            content_type: Faker::Music.genre,
-            body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
-            app_id: App.all.sample.id
-        )
+          title: Faker::Movies::LordOfTheRings.character,
+          content_type: Faker::Music.genre,
+          body: Faker::Lorem.paragraph([1,2,3,4].sample, false, [1,2,3,4].sample),
+          app_id: App.all.sample.id
+      )
       end
     end
 
-    #show_spinner("Creating 100 symptoms...") do
-     # 10.times do |j|
-      #  Symptom.create!(
-       #   description: 
-       # )
-      #end
-    #end
+    show_spinner("Creating 10 symptoms...") do
+      App.all.each do |a|
+        10.times do |j|
+          Symptom.create!(
+            description: Faker::Name.name,
+            code: Faker::Number.number,
+            priority: rand(0..10),
+            details: Faker::Quotes::Shakespeare.as_you_like_it_quote,
+            app_id: a.id
+          )
+        end
+      end
+    end
   
     show_spinner("Creating 50 example Public Hospitals...") do
       50.times do |k|
         PublicHospital.create!(
-            description:Faker::Company.name,
-            latitude: Faker::Address.latitude ,
-            longitude: Faker::Address.longitude,
-            kind: Faker::Movies::StarWars.character,
-            phone: Faker::PhoneNumber.phone_number,
-            details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
-            app_id: App.all.sample.id 
-        )
+          description:Faker::Company.name,
+          latitude: Faker::Address.latitude ,
+          longitude: Faker::Address.longitude,
+          kind: Faker::Movies::StarWars.character,
+          phone: Faker::PhoneNumber.phone_number,
+          details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
+          app_id: App.all.sample.id 
+      )
       end
     end
+  end
 
-    show_spinner("Creating 5 surveys for each users...") do
-      User.all.each do |u|
-        symptom_arr = [
-          Faker::Food.ingredient, 
-          Faker::Food.sushi, 
-          Faker::Food.fruits, 
-          Faker::Food.vegetables
-        ]
+  task create_prod: :environment do
+    if Rails.env.production?
+      show_spinner("Criando Aplicativo do Brasil...") do 
+        App.create(
+          owner_country: "Brasil",
+          app_name: "Guardiões da Saúde"
+        )
+      end
 
-        2.times do 
-          Survey.create!(
-            latitude: 40.741934119747704,
-            longitude: -73.98951017150449,
-            symptom: symptom_arr,
-            user_id: u.id,
-          )
-        end
+      2.times do 
+        Survey.create!(
+          latitude: 40.741934119747704,
+          longitude: -73.98951017150449,
+          symptom: symptom_arr,
+          user_id: u.id,
+        )
       end
     end
   end
