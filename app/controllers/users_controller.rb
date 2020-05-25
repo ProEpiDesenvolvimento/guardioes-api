@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index, :query_by_param]
-  before_action :authenticate_user!, except: [:index, :query_by_param]
+  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
 
@@ -24,6 +24,37 @@ class UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
+  
+  def email_reset_password
+    @user = User.find_by_email(params[:email])
+    code = rand(36**4).to_s(36)
+    @user.update_attribute(:aux_code, code)
+    @user.send_reset_password_instructions if @user.present?
+    render json: {message: "Email enviado com sucesso"}, status: :ok
+  end
+
+  def show_reset_token
+    user = User.where(aux_code: params[:code]).first
+    if user.present?
+      render json: {reset_password_token: user.reset_password_token}, status: :ok
+    else
+      render json: {error: true, message: "Codigo invalido"}, status: :bad_request
+    end
+  end
+
+  def reset_password
+    @user = User.where(reset_password_token: params[:reset_password_token]).first
+    if @user.present?
+      if @user.reset_password(params[:password], params[:password_confirmation])
+        render json: {error: false, message: "Senha redefinida com sucesso"}, status: :ok
+      else
+        render json: {error: true, data: @user.errors}, status: :bad_request
+      end
+    else
+      render json: {error: true, message: "Token invalido"}, status: :bad_request
+    end
+  end
+
 
   def reset_password
     @user = User.find_by_email(params[:email])

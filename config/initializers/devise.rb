@@ -28,7 +28,8 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = "ProEpi"
+  config.mailer_sender = 'Proepi proepi.desenvolvimento@gmail.com'
+  config.mailer = 'DeviseCustomMailer'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
