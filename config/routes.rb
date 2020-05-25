@@ -10,7 +10,10 @@ Rails.application.routes.draw do
 
   get "surveys/all_surveys", to: "surveys#all_surveys"
   get "surveys/week", to: "surveys#weekly_surveys"
-  
+
+  post "email_reset_password", to: "users#email_reset_password"
+  post "show_reset_token", to: "users#show_reset_token"
+  post "reset_password", to: "users#reset_password"
   resources :users do
     resources :households
     resources :surveys

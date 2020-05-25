@@ -1,6 +1,25 @@
-example_id                        | status | run_time        |
---------------------------------- | ------ | --------------- |
-./spec/models/app_spec.rb[1:1]    | passed | 0.00754 seconds |
-./spec/models/app_spec.rb[1:2]    | passed | 0.04146 seconds |
-./spec/request/app_spec.rb[1:1:1] | failed | 0.07116 seconds |
-./spec/request/app_spec.rb[1:1:2] | failed | 0.02516 seconds |
+example_id                                            | status  | run_time        |
+----------------------------------------------------- | ------- | --------------- |
+./spec/controllers/groups_controller_spec.rb[1:1:1]   | pending | 0.00266 seconds |
+./spec/controllers/groups_controller_spec.rb[1:2:1]   | pending | 0.00347 seconds |
+./spec/controllers/groups_controller_spec.rb[1:3:1:1] | pending | 0.01858 seconds |
+./spec/controllers/groups_controller_spec.rb[1:3:1:2] | pending | 0.04344 seconds |
+./spec/controllers/groups_controller_spec.rb[1:3:2:1] | pending | 0.00288 seconds |
+./spec/controllers/groups_controller_spec.rb[1:4:1:1] | pending | 0.0026 seconds  |
+./spec/controllers/groups_controller_spec.rb[1:4:1:2] | pending | 0.00331 seconds |
+./spec/controllers/groups_controller_spec.rb[1:4:2:1] | pending | 0.00259 seconds |
+./spec/controllers/groups_controller_spec.rb[1:5:1]   | pending | 0.00301 seconds |
+./spec/models/app_spec.rb[1:1]                        | passed  | 0.04353 seconds |
+./spec/models/app_spec.rb[1:2]                        | passed  | 0.00662 seconds |
+./spec/models/group_spec.rb[1:1]                      | pending | 0.00006 seconds |
+./spec/models/manager_spec.rb[1:1]                    | pending | 0.00001 seconds |
+./spec/models/rumor_spec.rb[1:1]                      | pending | 0.00001 seconds |
+./spec/request/app_spec.rb[1:1:1]                     | failed  | 0.3059 seconds  |
+./spec/request/app_spec.rb[1:1:2]                     | failed  | 0.09658 seconds |
+./spec/requests/groups_spec.rb[1:1:1]                 | passed  | 0.06872 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:1]          | passed  | 0.00285 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:2]          | passed  | 0.00225 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:3]          | passed  | 0.00198 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:4]          | passed  | 0.00184 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:5]          | passed  | 0.01557 seconds |
+./spec/routing/groups_routing_spec.rb[1:1:6]          | passed  | 0.00183 seconds |
