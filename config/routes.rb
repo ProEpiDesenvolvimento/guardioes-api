@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :school_units
+  post "upload_by_file", to: 'school_units#upload_by_file'
+  
   resources :groups
   get "dashboard", to: 'dashboard#index'
   
