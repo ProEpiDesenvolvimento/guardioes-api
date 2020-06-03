@@ -55,6 +55,17 @@ class UsersController < ApplicationController
     end
   end
 
+
+  def reset_password
+    @user = User.find_by_email(params[:email])
+
+    if @user.present?
+      @user.send_reset_password_instructions
+    end
+
+    render json: :no_content, status: :ok
+  end
+  
   def destroy
     @user.destroy!
   end

@@ -3,6 +3,7 @@ class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
   before_action :create_manager, if: -> { params[:manager] }
+
   respond_to :json
   
   def create
@@ -60,11 +61,13 @@ class RegistrationController < Devise::RegistrationsController
     end
   end 
 
+
   def create_manager
     if params[:manager]
       @sign_up_params = sign_up_params
     end
   end 
+
 
   def sign_up_params
     if params[:user]
@@ -105,5 +108,4 @@ class RegistrationController < Devise::RegistrationsController
       )
     end
   end
-
 end

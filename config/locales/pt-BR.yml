@@ -33,3 +33,11 @@ pt-BR:
       description:
         too_short: "A descrição deve ter no mínimo 5 caracteres."
         too_long: "A descrição deve ter no máximo 255 caracteres."
+  admin:
+    validations:
+      first_name:
+        too_short: "O nome deve ter no mínimo 1 caractere."
+        too_long: "O nome deve ter no máximo 255 caracteres."
+      last_name:
+        too_short: "O sobrenome deve ter no mínimo 1 caractere."
+        too_long: "O sobrenome deve ter no máximo 255 caracteres."
