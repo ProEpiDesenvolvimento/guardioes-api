@@ -41,13 +41,14 @@ class SchoolUnitsController < ApplicationController
   def upload_by_file
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # open spreadsheet
     headers = data.row(9)
-    puts data.sheets
+    # puts data.sheets
 
     data.each_with_pagename do |name, sheet|
-      p sheet.row(1)
-      sheet.each(code: 'COD_SEEC', address: 'ENDEREÇO', description: 'UNIDADE ESCOLAR', cep: 'CEP', phone: 'FONE', fax: 'FAX', email: 'EMAIL') do |school_unit_data|
+      # p sheet.row(1)
+      sheet.each_with_index(code: 'COD_SEEC', address: 'ENDEREÇO', description: 'UNIDADE ESCOLAR', cep: 'CEP', phone: 'FONE', fax: 'FAX', email: 'EMAIL') do |school_unit_data, idx|
           next if school_unit_data[:code] == nil
-          puts school_unit_data.inspect
+          next if school_unit_data[:code] == "COD_SEEC"
+          # puts school_unit_data.inspect
           school_unit = SchoolUnit.new(
             code: school_unit_data[:code],
             description: school_unit_data[:description],
