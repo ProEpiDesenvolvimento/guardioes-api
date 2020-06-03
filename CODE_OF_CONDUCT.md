@@ -1,6 +1,6 @@
-# Código de Condulta
+# Código de Conduta
 
-## Nossa condulta
+## Nossa conduta
 
 Todos são bem vindos ao projeto Guardiões da Saúde API. Damos as boas vindas a novos contribuidores e mantenedores do projeto. Nossa comunidade é 
 livre de qualquer tipo de preconceitos e julgamentos como: experiência, idade, tamanho, deficiência, etnia, identidade de gênero, 
@@ -29,7 +29,7 @@ Os mantenedores do projeto são responsáveis por esclarecer os padrões aceitá
 forma apropriada e justa com responsabilidade.
 
 Os mantenedores do projeto tem o direito e a responsabilidade de remover, editar ou rejeitar comentários, commits, código, 
-edições na wiki, issues, e outras contribuições que não sigam esse código de condulta, ou até mesmo o banimento temporário ou 
+edições na wiki, issues, e outras contribuições que não sigam esse código de conduta, ou até mesmo o banimento temporário ou 
 permanente de qualquer contribuidor por comportamentos inapropriados, ameaça ou ofensa.
 
 ## Execução
@@ -39,7 +39,7 @@ Todos os reportes serão revisados e investigados e serão respondidos de forma 
 mantenedores são obrigados a manter a confidencialidade da pessoas pessoas que realizarem os reportes. Mais detalhes de 
 outras políticas podem ser colocadas separadamente e futuramente.
 
-Os mantenedores do projeto que não seguirem o código de condulta de boa fé podem ser temporariamente ou permanentemente 
+Os mantenedores do projeto que não seguirem o código de conduta de boa fé podem ser temporariamente ou permanentemente 
 afastados se assim determinado por outros mantenedores.
 
 ## Mantenedores
