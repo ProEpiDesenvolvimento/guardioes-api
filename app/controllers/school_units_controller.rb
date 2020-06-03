@@ -39,29 +39,29 @@ class SchoolUnitsController < ApplicationController
   end
 
   def upload_by_file
-    data = Roo::Spreadsheet.open(params[:file]) # open spreadsheet
-    headers = data.row(1)
+    data = Roo::Spreadsheet.open(params[:file], extension: :xls) # open spreadsheet
+    headers = data.row(9)
+    puts data.sheets
 
-    data.each_with_index do |row, idx|
-      next if idx == 0 # skip header  # create hash from headers and cells
-      school_unit_data = Hash[[headers, row].transpose]  if school_unit.exists?(code: school_unit_data['COD_SEEC'])
-        puts "school_unit with name '#{school_unit_data['UNIDADE ESCOLAR']}' already exists"
-      next
-      end
-      
-      school_unit = SchoolUnit.new(
-        code: school_unit_data['COD_SEEC'],
-        description: school_unit_data['UNIDADE_ESCOLAR'],
-        address: school_unit_data['ENDEREÇO'],
-        cep: school_unit_data['CEP'],
-        phone: school_unit_data['FONE'],
-        fax: school_unit_data['FAX'],
-        email: school_unit_data['EMAIL']
-      )
-      school_unit.save!
+    data.each_with_pagename do |name, sheet|
+      p sheet.row(1)
+      sheet.each(code: 'COD_SEEC', address: 'ENDEREÇO', description: 'UNIDADE ESCOLAR', cep: 'CEP', phone: 'FONE', fax: 'FAX', email: 'EMAIL') do |school_unit_data|
+          next if school_unit_data[:code] == nil
+          puts school_unit_data.inspect
+          school_unit = SchoolUnit.new(
+            code: school_unit_data[:code],
+            description: school_unit_data[:description],
+            address: school_unit_data[:address],
+            cep: school_unit_data[:cep],
+            phone: school_unit_data[:phone],
+            fax: school_unit_data[:fax],
+            email: school_unit_data[:email]
+           )
+           school_unit.save!
+        end
     end
 
-    render json: {data: data, message: 'Escolas carregadas', error: false}, status: :created
+    render json: {message: 'Escolas carregadas', error: false}, status: :created
   end
 
   private
