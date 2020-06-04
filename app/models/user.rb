@@ -2,7 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
-
+  searchkick
+  
   has_many :households,
     dependent: :destroy
 
@@ -11,12 +12,10 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
-  
+
   belongs_to :app
   #belongs_to :group
-  
   has_one :school_unit
-  
   validates :user_name,
     presence: true,
     length: {
@@ -26,14 +25,15 @@ class User < ApplicationRecord
     }
 
   validates :password,
-    presence: true,  
+    presence: true,
     length: {
       in: 8..255,
       too_long: I18n.translate("user.validations.password.too_long"),
       too_short: I18n.translate("user.validations.password.too_short")
     }
+
   validates :email,
-    presence: true,  
+    presence: true,
     length: {
       in: 1..255,
       message: "Email deve seguir o formato: example@example.com"
