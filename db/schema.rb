@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_27_180520) do
+ActiveRecord::Schema.define(version: 2020_06_04_024321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,11 +195,13 @@ ActiveRecord::Schema.define(version: 2020_05_27_180520) do
     t.bigint "group_id"
     t.boolean "risk_group"
     t.string "aux_code"
+    t.bigint "school_unit_id"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["school_unit_id"], name: "index_users_on_school_unit_id"
   end
 
   add_foreign_key "admins", "apps"
@@ -213,4 +215,5 @@ ActiveRecord::Schema.define(version: 2020_05_27_180520) do
   add_foreign_key "symptoms", "apps"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
+  add_foreign_key "users", "school_units"
 end
