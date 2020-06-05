@@ -8,8 +8,14 @@ services:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_USER: myapp
   web:
-    build: .
+    build: 
+      context: .
+      args:
+        MASTERKEY: ${MASTERKEY}
     volumes:
       - .:/myapp
     working_dir: /myapp
@@ -20,3 +26,4 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
+      MYAPP_DATABASE_PASSWORD: ${PASSWORD}
