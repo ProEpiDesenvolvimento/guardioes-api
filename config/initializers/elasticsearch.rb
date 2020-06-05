@@ -1,1 +1,1 @@
-ENV["ELASTICSEARCH_URL"] = "https://localhost:9200"
+ENV["ELASTICSEARCH_URL"] = "http://elastic:elastic-gds@painel.gds.proepi.org.br:9200"
