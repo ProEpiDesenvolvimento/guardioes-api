@@ -1,5 +1,5 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: %i[render_without_user all_surveys]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
@@ -44,6 +44,12 @@ class SurveysController < ApplicationController
     @surveys = Survey.where("created_at >= ?", 1.week.ago.utc)
 
     render json: @surveys
+  end
+
+  def render_without_user
+    @surveys = Survey.all
+
+    render json: @surveys, each_serializer: SurveyWithoutUserSerializer
   end
 
   private
