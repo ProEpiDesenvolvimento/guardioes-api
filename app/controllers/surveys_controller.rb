@@ -48,7 +48,7 @@ class SurveysController < ApplicationController
 
   def render_without_user
     @surveys = Survey.all
-    
+
     render json: @surveys, each_serializer: SurveyWithoutUserSerializer
   end
 
