@@ -20,5 +20,17 @@ class Survey < ApplicationRecord
     end
   end
  
+  def self.to_csv
+    attributes = %w{id latitude longitude bad_since traveled_to symptom created_at street city state country went_to_hospital contact_with_symptom}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
   scope :filter_by_user, ->(user) { where(user_id: user) }
 end
