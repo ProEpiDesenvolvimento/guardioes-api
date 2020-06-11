@@ -1,5 +1,5 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[render_without_user all_surveys]
+  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
@@ -50,6 +50,16 @@ class SurveysController < ApplicationController
     @surveys = Survey.all
     
     render json: @surveys, each_serializer: SurveyWithoutUserSerializer
+  end
+
+
+  def limited_surveys
+    good_surveys = Survey.where("created_at >= ? AND symptom = ?", 3.day.ago.utc, nil)
+    bad_surveys = Survey.where("created_at >= ? AND symptom != ?", 3.day.ago.utc, nil)
+
+    @surveys = good_surveys + bad_surveys
+
+    render json: @surveys, each_serializer: SurveyForMapSerializer
   end
 
   private
