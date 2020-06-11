@@ -43,7 +43,8 @@ class SurveysController < ApplicationController
   def weekly_surveys
     @surveys = Survey.where("created_at >= ?", 1.week.ago.utc)
 
-    render json: @surveys
+   # render json: @surveys
+    render json: {message: 'survey', error: false}, status: 200
   end
 
   def render_without_user
