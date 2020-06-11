@@ -54,12 +54,9 @@ class SurveysController < ApplicationController
 
 
   def limited_surveys
-    good_surveys = Survey.where("created_at >= ? AND symptom = ?", 3.day.ago.utc, nil)
-    bad_surveys = Survey.where("created_at >= ? AND symptom != ?", 3.day.ago.utc, nil)
+    @surveys = Survey.where("created_at >= ?", 12.hour.ago.utc)
 
-    @surveys = good_surveys + bad_surveys
-
-    render json: @surveys, each_serializer: SurveyForMapSerializer
+    render json: @surveys, root: 'surveys', each_serializer: SurveyForMapSerializer
   end
 
   private
