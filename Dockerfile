@@ -15,7 +15,8 @@ ENV RAILS_LOG_TO_STDOUT true
 
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
-RUN bundle config --global frozen 1
+RUN bundle install
+#RUN bundle config --global frozen 1
 RUN bundle install --without development test
 COPY . /myapp
 

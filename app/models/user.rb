@@ -15,7 +15,9 @@ class User < ApplicationRecord
 
   belongs_to :app
   #belongs_to :group
-
+  has_one :school_unit,
+    dependent: :destroy
+    
   validates :user_name,
     presence: true,
     length: {
