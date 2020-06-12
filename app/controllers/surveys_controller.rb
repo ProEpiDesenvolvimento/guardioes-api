@@ -8,7 +8,7 @@ class SurveysController < ApplicationController
   def index
     @surveys = Survey.filter_by_user(current_user.id)
 
-    render json: @surveys
+    render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
   # GET /all_surveys
@@ -16,7 +16,8 @@ class SurveysController < ApplicationController
     @surveys = Survey.all
     
     render json: @surveys
-  end
+  end 
+  
   # GET /surveys/1
   def show
     render json: @survey
