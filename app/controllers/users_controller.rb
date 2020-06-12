@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     render json: @user
   end
 
-  # PATCH/PUT /apps/1
+  # PATCH/PUT /users/1
   def update
     if @user.update(update_params)
       render json: @user
@@ -92,7 +92,7 @@ class UsersController < ApplicationController
   end
 
   def set_user_update
-    @user = User.find(update_params[:id])
+    @user = User.find(params[:id])
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
