@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
-  searchkick
+  # searchkick
   
   has_many :households,
     dependent: :destroy
@@ -12,15 +12,6 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
-
-  def update(params)
-    params.each { |param|
-      if !update_attribute(param[0], param[1])
-        return false
-      end
-    }
-    return true
-  end
 
   belongs_to :app
   #belongs_to :group
