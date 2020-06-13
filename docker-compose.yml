@@ -21,4 +21,5 @@ services:
     environment:
       DATABASE_URL: postgres://postgres@db
       ELASTICSEARCH_URL: http://localhost:9200
+      MAILER_URL:
 
