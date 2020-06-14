@@ -64,6 +64,20 @@ Isso significa que a API tentou mandar uma mensagem para a base de dados Elastic
 
 Para solucionar, basta levantar uma instância do [guadioes web](https://github.com/proepidesenvolvimento/guardioes-web/) rodando na porta 9200 ou alterar o endereço do elastic no arquivo elasticsearch.rb.
 
+### Testes
+
+Basta escrever
+
+```
+rspec
+```
+
+E caso queria testar um modulo em específico
+
+```
+rspec spec/[pasta]/[arquivo]
+```
+
 ## License & copyright
 
 ProEpi, Associação Brasileira de Profissionais de Epidemiologia de Campo
