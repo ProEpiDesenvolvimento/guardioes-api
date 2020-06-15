@@ -18,10 +18,20 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-    if @user.update(update_params)
+    errors = {}
+    update_params.each do |param|
+      begin
+        @user.update_attribute(param[0], param[1])
+      rescue ActiveRecord::InvalidForeignKey
+        errors[param[0]] = param[1].to_s + ' não foi encontrado'
+      rescue StandardError => msg
+        errors[param[0]] = msg
+      end
+    end
+    if errors.length == 0
       render json: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {errors: errors, user: @user}, status: :unprocessable_entity
     end
   end
   
