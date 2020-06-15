@@ -22,7 +22,7 @@ module Myapp
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
-    config.action_mailer.default_url_options = { host: 'http://painel.gds.proepi.org.br' }
+    config.action_mailer.default_url_options = { host: ENV['MAILER_URL'] }
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
