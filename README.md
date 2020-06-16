@@ -40,6 +40,12 @@ Teste se tudo está funcionando entrando em [http://localhost:3001](http://local
 
 ### Erros
 
+### Key
+
+#### "/config/initializers/devise.rb: undefined method '[]' for nil:NilClass"
+
+Significa que você está tentando levantar o ambiente sem a key citada acima.
+
 #### Postgres
 
 O postgres é uma grande fonte de erros.
