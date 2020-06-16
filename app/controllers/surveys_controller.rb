@@ -1,5 +1,5 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[render_without_user all_surveys]
+  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
@@ -8,7 +8,7 @@ class SurveysController < ApplicationController
   def index
     @surveys = Survey.filter_by_user(current_user.id)
 
-    render json: @surveys
+    render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
   # GET /all_surveys
@@ -16,7 +16,8 @@ class SurveysController < ApplicationController
     @surveys = Survey.all
     
     render json: @surveys
-  end
+  end 
+  
   # GET /surveys/1
   def show
     render json: @survey
@@ -51,6 +52,13 @@ class SurveysController < ApplicationController
     @surveys = Survey.all
 
     render json: @surveys, each_serializer: SurveyWithoutUserSerializer
+  end
+
+
+  def limited_surveys
+    @surveys = Survey.where("created_at >= ?", 12.hour.ago.utc)
+
+    render json: @surveys, root: 'surveys', each_serializer: SurveyForMapSerializer
   end
 
   private
