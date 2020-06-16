@@ -3,6 +3,8 @@ class SurveysController < ApplicationController
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
+  @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
+
   # GET /surveys  
   # GET user related surveys
   def index
@@ -42,10 +44,13 @@ class SurveysController < ApplicationController
   end
 
   def weekly_surveys
-    @surveys = Survey.where("created_at >= ?", 1.week.ago.utc)
+    # Rails.cache.fetch tries to get that key 'week_surveys', if it fails,
+    # it runs the block and sets the cache as the return of the block
+    json = Rails.cache.fetch('week_surveys', expires_in: @WEEK_SURVEY_CACHE_EXPIRATION) do
+      render_to_string json: @surveys = Survey.where("created_at >= ?", 1.week.ago.utc), each_serializer: SurveySerializer
+    end
 
-   # render json: @surveys
-    render json: {message: 'survey', error: false}, status: 200
+    render each_serializer: SurveySerializer, json: json
   end
 
   def render_without_user
