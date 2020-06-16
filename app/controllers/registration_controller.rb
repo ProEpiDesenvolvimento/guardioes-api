@@ -56,7 +56,7 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if params[:admin]
+    if ( params[:admin] && current_admin? )
       @sign_up_params = sign_up_params
     end
   end 
@@ -90,8 +90,7 @@ class RegistrationController < Devise::RegistrationsController
         :school_unit_id,
         :risk_group
       )
-    elsif params[:admin]
-      puts "\n\nCheguei aqui \n\n\n"
+    elsif params[:admin] 
       params.require(:admin).permit(
         :email,
         :password,
