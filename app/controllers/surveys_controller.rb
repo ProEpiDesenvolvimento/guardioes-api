@@ -24,14 +24,24 @@ class SurveysController < ApplicationController
 
   # POST /surveys
   def create
-    @survey = Survey.new(survey_params)
+    @date = DateTime.now.in_time_zone(Time.zone).beginning_of_day
+    @past_surveys = Survey.filter_by_user(current_user.id).where("created_at >= ?", @date)
     
+    @survey = Survey.new(survey_params)
     @survey.user_id = @user.id
 
-    if @survey.save
-      render json: @survey, status: :created, location: user_survey_path(:id => @user)
+    if @past_surveys.length == 2
+      render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
+    elsif @past_surveys[0] && @past_surveys[0].symptom[0] && @survey.symptom[0]
+      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+    elsif @past_surveys[0] && !@past_surveys[0].symptom[0] && !@survey.symptom[0]
+      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
     else
-      render json: @survey.errors, status: :unprocessable_entity
+      if @survey.save
+        render json: @survey, status: :created, location: user_survey_path(:id => @user)
+      else
+        render json: @survey.errors, status: :unprocessable_entity
+      end
     end
   end
 
