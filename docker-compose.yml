@@ -1,20 +1,24 @@
-version: '3'
+version: '3.6'
 services:
+  webserver:
+    image: nginx
+    ports:
+      - "80:80"
   db:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: db
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
     volumes:
       - .:/myapp
+    working_dir: /myapp
+    command: puma
     ports:
-      - "3001:3001"
+      - "3000:3000"
     depends_on:
       - db
-
+    environment:
+      DATABASE_URL: postgres://postgres@db
+      ELASTICSEARCH_URL: http://localhost:9200
+      MAILER_URL:
