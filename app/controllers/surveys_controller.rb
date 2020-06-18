@@ -3,6 +3,9 @@ class SurveysController < ApplicationController
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
+  @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
+  @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
+
   # GET /surveys  
   # GET user related surveys
   def index
@@ -25,14 +28,24 @@ class SurveysController < ApplicationController
 
   # POST /surveys
   def create
-    @survey = Survey.new(survey_params)
+    date = DateTime.now.in_time_zone(Time.zone).beginning_of_day
+    past_surveys = Survey.filter_by_user(current_user.id).where("created_at >= ?", date)
     
+    @survey = Survey.new(survey_params)
     @survey.user_id = @user.id
 
-    if @survey.save
-      render json: @survey, status: :created, location: user_survey_path(:id => @user)
+    if past_surveys.length == 2
+      render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
+    elsif past_surveys[0] && past_surveys[0].symptom[0] && @survey.symptom[0]
+      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+    elsif past_surveys[0] && !past_surveys[0].symptom[0] && !@survey.symptom[0]
+      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
     else
-      render json: @survey.errors, status: :unprocessable_entity
+      if @survey.save
+        render json: @survey, status: :created, location: user_survey_path(:id => @user)
+      else
+        render json: @survey.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -42,10 +55,13 @@ class SurveysController < ApplicationController
   end
 
   def weekly_surveys
-    @surveys = Survey.where("created_at >= ?", 1.week.ago.utc)
+    # Rails.cache.fetch tries to get that key 'week_surveys', if it fails,
+    # it runs the block and sets the cache as the return of the block
+    json = Rails.cache.fetch('week_surveys', expires_in: @WEEK_SURVEY_CACHE_EXPIRATION) do
+      render_to_string json: @surveys = Survey.where("created_at >= ?", 1.week.ago.utc), each_serializer: SurveyForMapSerializer
+    end
 
-   # render json: @surveys
-    render json: {message: 'survey', error: false}, status: 200
+    render json: json, each_serializer: SurveyForMapSerializer
   end
 
   def render_without_user
@@ -54,11 +70,14 @@ class SurveysController < ApplicationController
     render json: @surveys, each_serializer: SurveyWithoutUserSerializer
   end
 
-
   def limited_surveys
-    @surveys = Survey.where("created_at >= ?", 12.hour.ago.utc)
+    # Rails.cache.fetch tries to get that key 'limited_surveys', if it fails,
+    # it runs the block and sets the cache as the return of the block
+    json = Rails.cache.fetch('limited_surveys', expires_in: @LIMITED_SURVEY_CACHE_EXPIRATION) do
+      render_to_string json: @surveys = Survey.where("created_at >= ?", 12.hour.ago.utc), each_serializer: SurveyForMapSerializer
+    end
 
-    render json: @surveys, root: 'surveys', each_serializer: SurveyForMapSerializer
+    render json: json, root: 'surveys', each_serializer: SurveyForMapSerializer
   end
 
   private
