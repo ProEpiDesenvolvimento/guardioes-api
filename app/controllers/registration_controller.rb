@@ -56,8 +56,12 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if params[:admin]
-      @sign_up_params = sign_up_params
+    if ( params[:admin] && current_admin )
+      if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
+        @sign_up_params = nil
+      else
+        @sign_up_params = sign_up_params
+      end
     end
   end 
 
@@ -91,7 +95,6 @@ class RegistrationController < Devise::RegistrationsController
         :risk_group
       )
     elsif params[:admin]
-      puts "\n\nCheguei aqui \n\n\n"
       params.require(:admin).permit(
         :email,
         :password,
