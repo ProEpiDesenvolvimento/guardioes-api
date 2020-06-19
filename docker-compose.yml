@@ -22,3 +22,4 @@ services:
       DATABASE_URL: postgres://postgres@db
       ELASTICSEARCH_URL: http://localhost:9200
       MAILER_URL:
+      GOOGLE_MAPS_API_KEY: AIzaSyBgA7vme-oh1GWhnkNwQUIRECwPAU4wkp4
