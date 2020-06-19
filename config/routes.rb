@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   post "email_reset_password", to: "users#email_reset_password"
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"
+
+  get "/googlemapsapikey", to: "googlemapsapikey#index"
   
   resources :users do
     resources :households
