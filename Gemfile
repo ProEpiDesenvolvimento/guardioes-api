@@ -11,6 +11,8 @@ gem "paranoia", "~> 2.2"
 gem 'tty-spinner'
 # Terminal output styling with intuitive and clean API that doesn't monkey patch String class.
 gem 'pastel'
+# AccessGranted is a multi-role and whitelist based authorization gem for Rails. And it's lightweight (~300 lines of code)!
+gem 'access-granted', '~> 1.1.0'
 # Devise Auth token
 gem 'devise-jwt'
 # Active Model Serializer
@@ -21,6 +23,9 @@ gem 'rails', '~> 5.2.2'
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
+gem "roo", "~> 2.8.0"
+gem 'roo-xls'
+gem 'searchkick'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -29,6 +34,7 @@ gem 'puma', '~> 3.11'
 # gem 'bcrypt', '~> 3.1.7'
 # Complete Ruby geocoding solution. http://www.rubygeocoder.com
 gem 'geocoder'
+gem 'sendgrid-ruby'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
