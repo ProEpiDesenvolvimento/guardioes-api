@@ -16,12 +16,22 @@ class UsersController < ApplicationController
     render json: @user
   end
 
-  # PATCH/PUT /apps/1
+  # PATCH/PUT /users/1
   def update
-    if @user.update(update_params)
+    errors = {}
+    update_params.each do |param|
+      begin
+        @user.update_attribute(param[0], param[1])
+      rescue ActiveRecord::InvalidForeignKey
+        errors[param[0]] = param[1].to_s + ' não foi encontrado'
+      rescue StandardError => msg
+        errors[param[0]] = msg
+      end
+    end
+    if errors.length == 0
       render json: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {errors: errors, user: @user}, status: :unprocessable_entity
     end
   end
   
@@ -54,7 +64,7 @@ class UsersController < ApplicationController
       render json: {error: true, message: "Token invalido"}, status: :bad_request
     end
   end
-
+  
   def destroy
     @user.destroy!
   end
@@ -92,14 +102,27 @@ class UsersController < ApplicationController
   end
 
   def set_user_update
-    @user = User.find(update_params[:id])
+    @user = User.find(params[:id])
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture, :ciy, :identification_code, :state, :group_id, :risk_group)
+    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture, :city, :identification_code, :state, :group_id, :risk_group)
   end
 
   def update_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id)
+    params.require(:user).permit(
+      :user_name,
+      :birthdate,
+      :gender,
+      :race,
+      :is_professional,
+      :residence,
+      :state,
+      :city,
+      :identification_code,
+      :school_unit_id,
+      :risk_group
+    )
   end
+
 end

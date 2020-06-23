@@ -3,6 +3,7 @@ class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
   before_action :create_manager, if: -> { params[:manager] }
+
   respond_to :json
   
   def create
@@ -55,16 +56,22 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if params[:admin]
-      @sign_up_params = sign_up_params
+    if ( params[:admin] && current_admin )
+      if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
+        @sign_up_params = nil
+      else
+        @sign_up_params = sign_up_params
+      end
     end
   end 
+
 
   def create_manager
     if params[:manager]
       @sign_up_params = sign_up_params
     end
   end 
+
 
   def sign_up_params
     if params[:user]
@@ -84,10 +91,10 @@ class RegistrationController < Devise::RegistrationsController
         :city,
         :identification_code,
         :group_id,
+        :school_unit_id,
         :risk_group
       )
     elsif params[:admin]
-      puts "\n\nCheguei aqui \n\n\n"
       params.require(:admin).permit(
         :email,
         :password,
@@ -105,5 +112,4 @@ class RegistrationController < Devise::RegistrationsController
       )
     end
   end
-
 end
