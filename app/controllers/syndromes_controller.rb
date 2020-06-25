@@ -33,7 +33,7 @@ class SyndromesController < ApplicationController
     end
   end
 
-  # DELETE /syndromes/1
+  # DELETE /syndromes/1 
   def destroy
     @syndrome.destroy
   end
@@ -46,6 +46,6 @@ class SyndromesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def syndrome_params
-      params.require(:syndrome).permit(:description, :details)
+      params.require(:syndrome).permit(:description, :details, message_attributes: [ :id, :title, :warning_message, :go_to_hospital_message ])
     end
 end

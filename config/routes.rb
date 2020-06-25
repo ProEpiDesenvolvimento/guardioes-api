@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :messages
   resources :syndromes
   resources :school_units
   post "upload_by_file", to: 'school_units#upload_by_file'
