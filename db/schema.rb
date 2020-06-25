@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_191828) do
+ActiveRecord::Schema.define(version: 2020_06_25_184333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,6 +112,8 @@ ActiveRecord::Schema.define(version: 2020_06_24_191828) do
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "symptom_id"
+    t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end
 
@@ -182,6 +184,10 @@ ActiveRecord::Schema.define(version: 2020_06_24_191828) do
     t.index ["app_id"], name: "index_symptoms_on_app_id"
   end
 
+  create_table "syndrome_symptom_percentages", force: :cascade do |t|
+    t.string "syndrome_symptom_percentage"
+  end
+
   create_table "syndromes", force: :cascade do |t|
     t.string "description"
     t.string "details"
@@ -228,6 +234,7 @@ ActiveRecord::Schema.define(version: 2020_06_24_191828) do
   add_foreign_key "groups", "managers"
   add_foreign_key "households", "users"
   add_foreign_key "managers", "apps"
+  add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
