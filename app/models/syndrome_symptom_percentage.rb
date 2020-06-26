@@ -1,4 +1,3 @@
-class Syndrome::SyndromeSymptomPercentage < ApplicationRecord
-  belongs_to :syndrome
+class SyndromeSymptomPercentage < ApplicationRecord
   belongs_to :symptom
 end

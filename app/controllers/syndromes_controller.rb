@@ -1,6 +1,6 @@
 class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
-
+  before_action :set_symptoms, only: [ :create ]
   # GET /syndromes
   def index
     @syndromes = Syndrome.all
@@ -16,17 +16,9 @@ class SyndromesController < ApplicationController
   # POST /syndromes
   def create
     @syndrome = Syndrome.new(syndrome_params)
-    puts params[:symptoms]
-
-    params[:symptoms] do |symptom|
-      Symptom.find_or_create_by(description: symptom) do |symptomLinked|
-        symptomLinked.description: symptom.description,
-        symptomLinked.code: symptom.code,
-        symptomLinked.details: symptom.details
-      end
-    end
-  
+    
     if @syndrome.save
+      create_nested_symptoms
       render json: @syndrome, status: :created, location: @syndrome
     else
       render json: @syndrome.errors, status: :unprocessable_entity
@@ -48,9 +40,25 @@ class SyndromesController < ApplicationController
   end
 
   private
+
+    def create_nested_symptoms
+      @symptoms.each do |symptom|
+        Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked|
+          symptomLinked.code = symptom[:code],
+          symptomLinked.details = symptom[:details]
+          symptomLinked.priority = symptom[:priority]
+          symptomLinked.syndrome_id = @syndrome.id
+          symptomLinked.app_id = 1
+        end
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_syndrome
       @syndrome = Syndrome.find(params[:id])
+    end
+
+    def set_symptoms
+       @symptoms = params[:symptoms]
     end
 
     # Only allow a trusted parameter "white list" through.
