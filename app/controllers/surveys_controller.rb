@@ -34,13 +34,13 @@ class SurveysController < ApplicationController
     @survey = Survey.new(survey_params)
     @survey.user_id = @user.id
 
-    if past_surveys.length == 2
-      render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
-    elsif past_surveys[0] && past_surveys[0].symptom[0] && @survey.symptom[0]
-      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
-    elsif past_surveys[0] && !past_surveys[0].symptom[0] && !@survey.symptom[0]
-      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
-    else
+    # if past_surveys.length == 2
+    #   render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
+    # elsif past_surveys[0] && past_surveys[0].symptom[0] && @survey.symptom[0]
+    #   render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+    # elsif past_surveys[0] && !past_surveys[0].symptom[0] && !@survey.symptom[0]
+    #   render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+    # else
       if @survey.save
         if @survey.symptom.length > 0
           render json: { survey: @survey, messages: @survey.get_message }, status: :created, location: user_survey_path(:id => @user)
@@ -50,7 +50,7 @@ class SurveysController < ApplicationController
       else
         render json: @survey.errors, status: :unprocessable_entity
       end
-    end
+    # end
   end
 
   # DELETE /surveys/1

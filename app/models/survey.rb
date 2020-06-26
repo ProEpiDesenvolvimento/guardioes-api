@@ -1,6 +1,6 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  searchkick
+  # searchkick
   
   belongs_to :user
   belongs_to :household, optional:true
@@ -22,11 +22,16 @@ class Survey < ApplicationRecord
   end
   
   def get_message
-    @user_symptoms = symptom.map { |symptom| Symptom.where(:description=>symptom)[0] }
+    @user_symptoms = []
+    symptom.map { |symptom|
+      if Symptom.where(:description=>symptom).count > 0
+        @user_symptoms.append(Symptom.where(:description=>symptom)[0])
+      end
+    }
     top_3 = get_top_3_syndromes
     return {
       :top_3 => top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }},
-      :top_syndrome_message => get_top_3_syndromes[0][:syndrome].message,
+      :top_syndrome_message => get_top_3_syndromes[0][:syndrome].message || '',
       :symptom_messages => get_symptoms_messages
     }
   end
@@ -63,7 +68,11 @@ class Survey < ApplicationRecord
         modulus_division += percentage.percentage
       end
     end
-    return sum
+    if modulus_division == 0
+      return 0
+    else
+      return sum/modulus_division
+    end
   end
 
   def get_symptoms_messages
