@@ -43,13 +43,18 @@ class SyndromesController < ApplicationController
 
     def create_nested_symptoms
       @symptoms.each do |symptom|
-        Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked|
+        created_symptom = Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked|
           symptomLinked.code = symptom[:code],
           symptomLinked.details = symptom[:details]
           symptomLinked.priority = symptom[:priority]
           symptomLinked.syndrome_id = @syndrome.id
           symptomLinked.app_id = 1
         end
+        syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
+          percentage: symptom[:percentage],
+          symptom_id: created_symptom.id
+        )
+        created_symptom.syndrome_symptom_percentage = syndrome_symptom_percentage
       end
     end
     # Use callbacks to share common setup or constraints between actions.
