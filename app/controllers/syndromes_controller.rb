@@ -16,7 +16,16 @@ class SyndromesController < ApplicationController
   # POST /syndromes
   def create
     @syndrome = Syndrome.new(syndrome_params)
+    puts params[:symptoms]
 
+    params[:symptoms] do |symptom|
+      Symptom.find_or_create_by(description: symptom) do |symptomLinked|
+        symptomLinked.description: symptom.description,
+        symptomLinked.code: symptom.code,
+        symptomLinked.details: symptom.details
+      end
+    end
+  
     if @syndrome.save
       render json: @syndrome, status: :created, location: @syndrome
     else
@@ -47,13 +56,9 @@ class SyndromesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def syndrome_params
       params.require(:syndrome).permit(
-        :description, 
+        :description,
         :details, 
-        message_attributes: [ 
-          :title, 
-          :warning_message, 
-          :go_to_hospital_message ],
-        symptom_attributes: [ :id ]
+        message_attributes: [  :title, :warning_message, :go_to_hospital_message ], 
         )
     end
 end
