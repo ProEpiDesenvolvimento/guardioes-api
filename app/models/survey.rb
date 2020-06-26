@@ -22,12 +22,11 @@ class Survey < ApplicationRecord
   end
   
   def get_message
+    @user_symptoms = symptom.map { |symptom| Symptom.where(:description=>symptom)[0] }
     top_3 = get_top_3_syndromes
-    @symdromes = Syndrome.all
-    @symptoms = Symptom.all
-    message = {
-      :top_3 => get_top_3_syndromes.map { |syndrome| { name: syndrome.syndrome.name, percentage: symdom.likelyhood }},
-      :top_syndrome_message => get_top_3_syndromes[0].syndrome.message,
+    return {
+      :top_3 => top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }},
+      :top_syndrome_message => get_top_3_syndromes[0][:syndrome].message,
       :symptom_messages => get_symptoms_messages
     }
   end
@@ -38,33 +37,42 @@ class Survey < ApplicationRecord
 
   def get_top_3_syndromes
     syndrome_list = []
-    @syndromes.each do {|syndrome|
-      syndrome_list.append({
-        :syndrome => syndrome,
-        :likelyhood => get_syndrome_score(syndrome)
-      })
-    }
-    syndrome_list.sort_by { |syndrome| syndrome.likelyhood }.reverse
-    return symdrom_list[0..3]
+    syndromes = Syndrome.all
+    syndromes.each do |syndrome|
+      new_syndrome = {
+        syndrome: syndrome,
+        likelyhood: get_syndrome_score(syndrome)
+      }
+      syndrome_list.append(new_syndrome)
+    end
+    syndrome_list = syndrome_list.sort_by { |syndrome| syndrome[:likelyhood] }.reverse
+    return syndrome_list[0..2]
   end
 
-  def get_symdrom_score(symdrom)
+  # Calculated with positive predictive value
+  # https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values
+  def get_syndrome_score(syndrome)
     sum = 0
-    syndrome.symptom.each do { |symptom|
-      if @user_symptoms.include?(symptom)
-        sum += symptom.syndrome_symptom_percentage.percentage
+    modulus_division = 0
+    syndrome.symptoms.each do |symptom|
+      percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome)[0]
+      if percentage
+        if @user_symptoms.include?(symptom)
+            sum += percentage.percentage
+        end
+        modulus_division += percentage.percentage
       end
-    }
+    end
     return sum
   end
 
   def get_symptoms_messages
     messages = []
-    @user_symptoms.each do { |symptom|
-      if @symptoms[:symptom].message
-        messages.append(@symptoms[:symptom].message)
+    @user_symptoms.each do |symptom|
+      unless symptom.message.nil?
+        messages.append(symptom.message)
       end
-    }
+    end
     return messages
   end
 end

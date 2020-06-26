@@ -43,7 +43,6 @@ class SurveysController < ApplicationController
     else
       if @survey.save
         if @survey.symptom.length > 0
-          symptom_messages = SymptomsMessage.new(@survey)
           render json: { survey: @survey, messages: @survey.get_message }, status: :created, location: user_survey_path(:id => @user)
         else
           render json: @survey, status: :created, location: user_survey_path(:id => @user)
