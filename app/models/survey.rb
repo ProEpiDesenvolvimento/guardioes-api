@@ -1,6 +1,6 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  # searchkick
+  searchkick
   
   belongs_to :user
   belongs_to :household, optional:true
