@@ -24,7 +24,7 @@ class Survey < ApplicationRecord
   def get_message
     @user_symptoms = []
     symptom.map { |symptom|
-      if Symptom.where(:description=>symptom).count > 0
+      if Symptom.where(:description=>symptom).any?
         @user_symptoms.append(Symptom.where(:description=>symptom)[0])
       end
     }

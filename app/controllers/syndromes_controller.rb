@@ -15,10 +15,12 @@ class SyndromesController < ApplicationController
 
   # POST /syndromes
   def create
-    @syndrome = Syndrome.new(syndrome_params)
-    
+    @symptoms = syndrome_params[:symptom]
+    @syndrome = Syndrome.new(syndrome_params.except(:symptom))
     if @syndrome.save
-      create_nested_symptoms
+      if !syndrome_params[:symptom].nil?
+        create_symptoms_and_connections
+      end
       render json: @syndrome, status: :created, location: @syndrome
     else
       render json: @syndrome.errors, status: :unprocessable_entity
@@ -27,7 +29,9 @@ class SyndromesController < ApplicationController
 
   # PATCH/PUT /syndromes/1
   def update
-    if @syndrome.update(syndrome_params)
+    @symptoms = syndrome_params[:symptom]
+    if @syndrome.update(syndrome_params.except(:symptom))
+      update_symptoms_and_connections
       render json: @syndrome
     else
       render json: @syndrome.errors, status: :unprocessable_entity
@@ -41,20 +45,43 @@ class SyndromesController < ApplicationController
 
   private
 
-    def create_nested_symptoms
+    def create_symptoms_and_connections
       @symptoms.each do |symptom|
         created_symptom = Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked|
           symptomLinked.code = symptom[:code],
           symptomLinked.details = symptom[:details]
           symptomLinked.priority = symptom[:priority]
-          symptomLinked.syndrome_id = @syndrome.id
-          symptomLinked.app_id = 1
+          symptomLinked.app_id = symptom[:app_id]
         end
         syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
-          percentage: symptom[:percentage],
-          symptom_id: created_symptom.id
+          percentage: symptom[:percentage] || 0,
+          symptom: created_symptom,
+          syndrome: @syndrome
         )
         created_symptom.syndrome_symptom_percentage = syndrome_symptom_percentage
+      end
+    end
+
+    def update_symptoms_and_connections
+      @symptoms.each do |symptom|
+        created_symptom = Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked| # Create or fetch
+          symptomLinked.code = symptom[:code],
+          symptomLinked.details = symptom[:details]
+          symptomLinked.priority = symptom[:priority]
+          symptomLinked.app_id = symptom[:app_id] || 1
+        end
+        if SyndromeSymptomPercentage.where(syndrome: @syndrome, symptom: created_symptom).any?              # If connection exists, update percentage
+          connection = SyndromeSymptomPercentage.where(syndrome:@syndrome,symptom:created_symptom)[0]
+          connection.percentage = symptom[:percentage] || 0
+          connection.save()
+        else                                                                                                # Otherwise, create
+          syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
+            percentage: symptom[:percentage] || 0,
+            symptom: created_symptom,
+            syndrome: @syndrome
+          )
+          created_symptom.syndrome_symptom_percentage = syndrome_symptom_percentage
+        end
       end
     end
     # Use callbacks to share common setup or constraints between actions.
@@ -71,7 +98,8 @@ class SyndromesController < ApplicationController
       params.require(:syndrome).permit(
         :description,
         :details, 
-        message_attributes: [  :title, :warning_message, :go_to_hospital_message ], 
-        )
+        :symptom => [[:description,:code,:percentage,:details,:priority,:app_id]],
+        message_attributes: [  :title, :warning_message, :go_to_hospital_message ]
+      )
     end
 end
