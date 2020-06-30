@@ -1,6 +1,7 @@
 class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
+  before_action :authenticate_admin!, except: %i[ index ]
   # GET /syndromes
   def index
     @syndromes = Syndrome.all
@@ -51,7 +52,7 @@ class SyndromesController < ApplicationController
           symptomLinked.code = symptom[:code],
           symptomLinked.details = symptom[:details]
           symptomLinked.priority = symptom[:priority]
-          symptomLinked.app_id = symptom[:app_id]
+          symptomLinked.app_id = current_admin.app_id
         end
         syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
           percentage: symptom[:percentage] || 0,
