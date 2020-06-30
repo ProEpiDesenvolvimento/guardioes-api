@@ -45,7 +45,20 @@ class SchoolUnitsController < ApplicationController
 
     data.each_with_pagename do |name, sheet|
       # p sheet.row(1)
-      sheet.each_with_index(code: 'COD_SEEC', address: 'ENDEREÇO', description: 'UNIDADE ESCOLAR', cep: 'CEP', phone: 'FONE', fax: 'FAX', email: 'EMAIL') do |school_unit_data, idx|
+      sheet.each_with_index(
+        code: 'COD_SEEC', 
+        address: 'ENDEREÇO', 
+        description: 'UNIDADE ESCOLAR', 
+        cep: 'CEP', 
+        phone: 'FONE', 
+        fax: 'FAX', 
+        email: 'EMAIL',
+        category: 'CATEGORIA',
+        zone: 'ZONA',
+        level: 'TIPO',
+        city: 'RA',
+        state: 'UF',
+        ) do |school_unit_data, idx|
           next if school_unit_data[:code] == nil
           next if school_unit_data[:code] == "COD_SEEC"
           # puts school_unit_data.inspect
@@ -57,6 +70,11 @@ class SchoolUnitsController < ApplicationController
             phone: school_unit_data[:phone],
             fax: school_unit_data[:fax],
             email: school_unit_data[:email]
+            category: school_unit_data[:email],
+            zone: school_unit_data[:zone],
+            level: school_unit_data[:level],
+            city: school_unit_data[:city],
+            state: school_unit_data[:state],
            )
            school_unit.save!
         end
