@@ -1,6 +1,6 @@
 class Symptom < ApplicationRecord
   belongs_to :app
-
+  searchkick
 
   has_one :message
   accepts_nested_attributes_for :message
