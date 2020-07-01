@@ -41,15 +41,15 @@ class SchoolUnitsController < ApplicationController
 
   def upload_by_file
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # open spreadsheet
-    headers = data.row(9)
+    headers = data.row(1)
     # puts data.sheets
 
     data.each_with_pagename do |name, sheet|
       # p sheet.row(1)
       sheet.each_with_index(
         code: 'COD_SEEC', 
+        description: 'UNIDADE ESCOLAR',
         address: 'ENDEREÇO', 
-        description: 'UNIDADE ESCOLAR', 
         cep: 'CEP', 
         phone: 'FONE', 
         fax: 'FAX', 
@@ -71,7 +71,7 @@ class SchoolUnitsController < ApplicationController
             phone: school_unit_data[:phone],
             fax: school_unit_data[:fax],
             email: school_unit_data[:email],
-            category: school_unit_data[:email],
+            category: school_unit_data[:category],
             zone: school_unit_data[:zone],
             level: school_unit_data[:level],
             city: school_unit_data[:city],
@@ -96,14 +96,13 @@ class SchoolUnitsController < ApplicationController
     end
 
     def filtering
-
       case h = params[:filter]
         when -> (h) { !h[:state].nil? }
           school_units = SchoolUnit.where(state: h[:state])
-        when -> (h) { !h[:category].nil? && !h[:level].nil? && !h[:city].nil? }
+        when -> (h) { !h[:category] == "SES-DF" && !h[:level].nil? && !h[:city].nil? }
           school_units = SchoolUnit.where(category: h[:category], level: h[:level], city: h[:city])
-        when -> (h) { !h[:category].nil? && !h[:zone].nil? }
-          school_units = SchoolUnit.where(category: h[:category], level: h[:zone])
+        when -> (h) { (h[:category] == "UnB" || h[:category] == "IFB") && !h[:description].nil? }
+          school_units = SchoolUnit.where(category: h[:category], description: h[:description])
         else
           school_units = SchoolUnit.all
       end
