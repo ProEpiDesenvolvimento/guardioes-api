@@ -42,7 +42,11 @@ class SurveysController < ApplicationController
       render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
     else
       if @survey.save
-        render json: @survey, status: :created, location: user_survey_path(:id => @user)
+        if @survey.symptom.length > 0
+          render json: { survey: @survey, messages: @survey.get_message }, status: :created, location: user_survey_path(:id => @user)
+        else
+          render json: @survey, status: :created, location: user_survey_path(:id => @user)
+        end
       else
         render json: @survey.errors, status: :unprocessable_entity
       end
