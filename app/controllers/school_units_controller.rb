@@ -3,9 +3,10 @@ class SchoolUnitsController < ApplicationController
 
   # GET /school_units
   def index
+
     @school_units = SchoolUnit.all
 
-    render json: @school_units
+    render json: filtering
   end
 
   # GET /school_units/1
@@ -69,7 +70,7 @@ class SchoolUnitsController < ApplicationController
             cep: school_unit_data[:cep],
             phone: school_unit_data[:phone],
             fax: school_unit_data[:fax],
-            email: school_unit_data[:email]
+            email: school_unit_data[:email],
             category: school_unit_data[:email],
             zone: school_unit_data[:zone],
             level: school_unit_data[:level],
@@ -92,5 +93,20 @@ class SchoolUnitsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def school_unit_params
       params.require(:school_unit).permit(:code, :description, :address, :cep, :phone, :fax, :email)
+    end
+
+    def filtering
+
+      case h = params[:filter]
+        when -> (h) { !h[:state].nil? }
+          school_units = SchoolUnit.where(state: h[:state])
+        when -> (h) { !h[:category].nil? && !h[:level].nil? && !h[:city].nil? }
+          school_units = SchoolUnit.where(category: h[:category], level: h[:level], city: h[:city])
+        when -> (h) { !h[:category].nil? && !h[:zone].nil? }
+          school_units = SchoolUnit.where(category: h[:category], level: h[:zone])
+        else
+          school_units = SchoolUnit.all
+      end
+      school_units
     end
 end
