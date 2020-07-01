@@ -1,5 +1,6 @@
 class Household < ApplicationRecord
   acts_as_paranoid
+  searchkick
   
   validates_presence_of :description, 
                         :birthdate, 
