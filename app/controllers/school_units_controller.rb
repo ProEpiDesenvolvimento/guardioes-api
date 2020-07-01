@@ -101,8 +101,8 @@ class SchoolUnitsController < ApplicationController
           school_units = SchoolUnit.where(state: h[:state])
         when -> (h) { !h[:category] == "SES-DF" && !h[:level].nil? && !h[:city].nil? }
           school_units = SchoolUnit.where(category: h[:category], level: h[:level], city: h[:city])
-        when -> (h) { (h[:category] == "UnB" || h[:category] == "IFB") && !h[:description].nil? }
-          school_units = SchoolUnit.where(category: h[:category], description: h[:description])
+        when -> (h) { h[:category] == "UnB" || h[:category] == "IFB" }
+          school_units = SchoolUnit.where(category: h[:category]
         else
           school_units = SchoolUnit.all
       end
