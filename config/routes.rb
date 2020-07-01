@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :school_units, :only => [:new, :create, :edit, :update, :show, :destroy]
-  post "school_units", to: 'school_units#index'
+  post "school_units_list", to: 'school_units#index'
   post "upload_by_file", to: 'school_units#upload_by_file'
   
   resources :groups
