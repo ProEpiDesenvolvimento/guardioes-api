@@ -2,11 +2,18 @@ class SchoolUnitsController < ApplicationController
   before_action :set_school_unit, only: [:show, :update, :destroy]
 
   # GET /school_units
-  def index
+  def index_filtered
 
     @school_units = SchoolUnit.all
 
     render json: filtering
+  end
+
+  def index
+
+    @school_units = SchoolUnit.all
+
+    render json: @school_units
   end
 
   # GET /school_units/1
