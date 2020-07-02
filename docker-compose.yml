@@ -1,5 +1,4 @@
-
-version: '3'
+version: "3"
 services:
   db:
     image: postgres
@@ -9,6 +8,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
+      TZ: "GMT-3"
+      PGTZ: "GMT-3"
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"

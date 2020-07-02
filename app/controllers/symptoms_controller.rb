@@ -47,6 +47,6 @@ class SymptomsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def symptom_params
-      params.require(:symptom).permit(:description, :code, :priority, :details, :app_id)
+      params.require(:symptom).permit(:description, :code, :priority, :details, :app_id, message_attributes: [ :title, :warning_message, :go_to_hospital_message ])
     end
 end
