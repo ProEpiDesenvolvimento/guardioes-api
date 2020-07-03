@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+  resources :messages
+  resources :syndromes
   resources :school_units
+  post "school_units_list", to: 'school_units#index_filtered'
   post "upload_by_file", to: 'school_units#upload_by_file'
   
   resources :groups

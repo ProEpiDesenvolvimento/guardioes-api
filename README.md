@@ -3,6 +3,17 @@
 Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
 
 Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
+## Technologies
+
+Usamos nessa API:
+- [Ruby on Rails](https://rubyonrails.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
+
+
+Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
+
+Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
 
 ## Tecnologias
 
@@ -21,6 +32,7 @@ Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conte
 
 #### Sem logs do rails
 ```
+$docker-compose build 
 $docker-compose up -d
 ```
 #### Com logs do rails
@@ -89,5 +101,3 @@ rspec spec/[pasta]/[arquivo]
 ProEpi, Associação Brasileira de Profissionais de Epidemiologia de Campo
 
 Licensed under the [Apache License 2.0](LICENSE.md).
-
-
