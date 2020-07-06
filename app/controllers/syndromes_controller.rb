@@ -32,7 +32,9 @@ class SyndromesController < ApplicationController
   def update
     @symptoms = syndrome_params[:symptom]
     if @syndrome.update(syndrome_params.except(:symptom))
-      update_symptoms_and_connections
+      if !syndrome_params[:symptom].nil?
+        update_symptoms_and_connections
+      end
       render json: @syndrome
     else
       render json: @syndrome.errors, status: :unprocessable_entity
@@ -81,7 +83,6 @@ class SyndromesController < ApplicationController
             symptom: created_symptom,
             syndrome: @syndrome
           )
-          created_symptom.syndrome_symptom_percentage = syndrome_symptom_percentage
         end
       end
     end
