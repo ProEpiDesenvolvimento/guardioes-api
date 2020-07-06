@@ -117,6 +117,7 @@ class UsersController < ApplicationController
       :race,
       :is_professional,
       :residence,
+      :country,
       :state,
       :city,
       :identification_code,
