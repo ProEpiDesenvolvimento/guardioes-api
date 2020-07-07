@@ -36,6 +36,9 @@ class SymptomsController < ApplicationController
 
   # DELETE /symptoms/1
   def destroy
+    SyndromeSymptomPercentage.where(symptom:@symptom).each do |obj|
+      obj.destroy
+    end
     @symptom.destroy
   end
 
