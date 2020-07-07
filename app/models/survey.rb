@@ -28,12 +28,20 @@ class Survey < ApplicationRecord
         @user_symptoms.append(Symptom.where(:description=>symptom)[0])
       end
     }
+    symptoms_and_syndromes_data = {}
+    symptom_messages = get_symptoms_messages
+    if symptom_messages.any?
+      symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
+    end
     top_3 = get_top_3_syndromes
-    return {
-      :top_3 => top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }},
-      :top_syndrome_message => get_top_3_syndromes[0][:syndrome].message || '',
-      :symptom_messages => get_symptoms_messages
-    }
+    if top_3.any?
+      symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
+      syndrome_message = top_3[0][:syndrome].message
+      if !syndrome_message.nil?
+        symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
+      end
+    end
+    return symptoms_and_syndromes_data
   end
  
   scope :filter_by_user, ->(user) { where(user_id: user) }
@@ -51,6 +59,7 @@ class Survey < ApplicationRecord
       syndrome_list.append(new_syndrome)
     end
     syndrome_list = syndrome_list.sort_by { |syndrome| syndrome[:likelyhood] }.reverse
+    syndrome_list = syndrome_list.select { |syndrome| syndrome[:likelyhood] > 0 }
     return syndrome_list[0..2]
   end
 
