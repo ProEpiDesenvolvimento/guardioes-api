@@ -42,4 +42,10 @@ class User < ApplicationRecord
     },
     format: { with: URI::MailTo::EMAIL_REGEXP, message: I18n.translate("validations.email.message") },
     uniqueness: true
+
+  attribute :household_count, :integer, default: 0
+
+  def update_household_count
+    self.update_attribute(:household_count, self.households.count)
+  end
 end
