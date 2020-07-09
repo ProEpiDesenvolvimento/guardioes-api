@@ -46,6 +46,23 @@ class Survey < ApplicationRecord
  
   scope :filter_by_user, ->(user) { where(user_id: user) }
  
+  # Data that gets sent as fields for elastic indexes
+  def search_data 
+    elastic_data = self.as_json() 
+    elastic_data[:identification_code] = self.user.identification_code
+    elastic_data[:gender] = self.user.gender 
+    elastic_data[:race] = self.user.race 
+    if !self.user.school_unit_id.nil? 
+      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.user.school_unit_id)[0].description 
+    else 
+      elastic_data[:enrolled_in] = nil 
+    end
+    Symptom.all.each do |symptom|
+      elastic_data[symptom.description] = self.symptom.include? symptom.description
+    end
+    return elastic_data 
+  end
+
   private
 
   def get_top_3_syndromes
