@@ -51,7 +51,7 @@ class SyndromesController < ApplicationController
     def create_symptoms_and_connections
       @symptoms.each do |symptom|
         created_symptom = Symptom.find_or_create_by!(description: symptom[:description]) do |symptomLinked|
-          symptomLinked.code = symptom[:code],
+          symptomLinked.code = symptom[:code]
           symptomLinked.details = symptom[:details]
           symptomLinked.priority = symptom[:priority]
           symptomLinked.app_id = current_admin.app_id
@@ -61,7 +61,6 @@ class SyndromesController < ApplicationController
           symptom: created_symptom,
           syndrome: @syndrome
         )
-        created_symptom.syndrome_symptom_percentage = syndrome_symptom_percentage
       end
     end
 
