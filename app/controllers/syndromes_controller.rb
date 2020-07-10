@@ -58,6 +58,7 @@ class SyndromesController < ApplicationController
         end
         syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
           percentage: symptom[:percentage] || 0,
+          ponderation: symptom[:ponderation] || 1,
           symptom: created_symptom,
           syndrome: @syndrome
         )
@@ -75,10 +76,12 @@ class SyndromesController < ApplicationController
         if SyndromeSymptomPercentage.where(syndrome: @syndrome, symptom: created_symptom).any?              # If connection exists, update percentage
           connection = SyndromeSymptomPercentage.where(syndrome:@syndrome,symptom:created_symptom)[0]
           connection.percentage = symptom[:percentage] || 0
+          connection.ponderation = symptom[:ponderation] || 1
           connection.save()
         else                                                                                                # Otherwise, create
           syndrome_symptom_percentage = SyndromeSymptomPercentage.create(
             percentage: symptom[:percentage] || 0,
+            ponderation: symptom[:ponderation] || 1,
             symptom: created_symptom,
             syndrome: @syndrome
           )
@@ -99,7 +102,7 @@ class SyndromesController < ApplicationController
       params.require(:syndrome).permit(
         :description,
         :details, 
-        :symptom => [[:description,:code,:percentage,:details,:priority,:app_id]],
+        :symptom => [[:description,:code,:percentage,:ponderation,:details,:priority,:app_id]],
         message_attributes: [  :title, :warning_message, :go_to_hospital_message ]
       )
     end

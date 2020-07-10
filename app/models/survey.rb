@@ -72,9 +72,9 @@ class Survey < ApplicationRecord
       percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome)[0]
       if percentage
         if @user_symptoms.include?(symptom)
-            sum += percentage.percentage
+            sum += percentage.percentage * percentage.ponderation
         end
-        modulus_division += percentage.percentage
+        modulus_division += percentage.percentage * percentage.ponderation
       end
     end
     if modulus_division == 0
