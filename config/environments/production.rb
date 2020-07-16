@@ -93,7 +93,7 @@ Rails.application.configure do
     :address              => "smtp.gmail.com",
     :port                 => 587,
     :user_name            => ENV['proepi_email'],
-    :password             => ENV['proepi_email_password']
+    :password             => ENV['proepi_email_password'],
     :authentication       => "plain",
     :enable_starttls_auto => true
   }
