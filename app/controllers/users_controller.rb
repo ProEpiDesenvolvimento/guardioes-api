@@ -39,7 +39,9 @@ class UsersController < ApplicationController
     @user = User.find_by_email(params[:email])
     code = rand(36**4).to_s(36)
     @user.update_attribute(:aux_code, code)
-    @user.send_reset_password_instructions if @user.present?
+    if @user.present?
+      UserMailer.reset_password_email(@user)
+    end
     render json: {message: "Email enviado com sucesso"}, status: :ok
   end
 
