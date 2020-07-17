@@ -8,6 +8,6 @@ class UserMailer < ActionMailer::Base
     email.from = 'ProEpi <proepi.desenvolvimento@gmail.com>'
     email.to = user.user_name + ' <' + user.email + '>'
     email.subject = '[Guardiões da Saúde] Redefinir Senha'
-    email.deliver
+    return email
   end
 end
