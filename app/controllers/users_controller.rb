@@ -37,8 +37,10 @@ class UsersController < ApplicationController
   
   def email_reset_password
     @user = User.find_by_email(params[:email])
-    code = rand(36**4).to_s(36)
-    @user.update_attribute(:aux_code, code)
+    aux_code = rand(36**4).to_s(36)
+    reset_password_token = rand(36**10).to_s(36)
+    @user.update_attribute(:aux_code, aux_code)
+    @user.update_attribute(:reset_password_token, reset_password_token)
     if @user.present?
       UserMailer.reset_password_email(@user).deliver
     end
@@ -47,6 +49,7 @@ class UsersController < ApplicationController
 
   def show_reset_token
     user = User.where(aux_code: params[:code]).first
+    puts user.present?
     if user.present?
       render json: {reset_password_token: user.reset_password_token}, status: :ok
     else
