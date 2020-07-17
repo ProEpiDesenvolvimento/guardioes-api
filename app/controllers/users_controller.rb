@@ -49,7 +49,6 @@ class UsersController < ApplicationController
 
   def show_reset_token
     user = User.where(aux_code: params[:code]).first
-    puts user.present?
     if user.present?
       render json: {reset_password_token: user.reset_password_token}, status: :ok
     else
