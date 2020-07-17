@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ActiveRecord::Schema.define(version: 2020_07_15_154709) do
 
-ActiveRecord::Schema.define(version: 2020_07_01_225022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_225022) do
     t.string "picture"
     t.bigint "school_unit_id"
     t.string "identification_code"
+    t.boolean "risk_group"
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
@@ -200,6 +201,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_225022) do
     t.float "percentage"
     t.bigint "symptom_id"
     t.bigint "syndrome_id"
+    t.float "ponderation"
     t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
   end
