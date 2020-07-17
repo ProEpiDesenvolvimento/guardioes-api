@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
   searchkick
-  
+
   has_many :households,
     dependent: :destroy
 
@@ -45,19 +45,18 @@ class User < ApplicationRecord
 
   # Data that gets sent as fields for elastic indexes
   def search_data
-    elastic_data = {}
+    elastic_data = self.as_json(except:['app_id', 'group_id'])
     elastic_data[:app] = self.app.app_name
     if self.group_id.nil?
       elastic_data[:group] = nil
     else
       elastic_data[:group] = Groups.where(id:self.group_id)[0].description
     end
-    if !self.school_unit_id.nil? 
+    if !self.school_unit_id.nil?
       elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
     else 
       elastic_data[:enrolled_in] = nil 
     end
-    elastic_data = self.as_json(except:['app_id', 'group_id'])
     elastic_data[:household_count] = self.households.count
     return elastic_data 
   end

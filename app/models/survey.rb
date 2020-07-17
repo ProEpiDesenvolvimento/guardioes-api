@@ -1,7 +1,7 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
   searchkick
-  
+    
   belongs_to :user
   belongs_to :household, optional:true
   before_validation :reverse_geocode
@@ -47,13 +47,19 @@ class Survey < ApplicationRecord
   scope :filter_by_user, ->(user) { where(user_id: user) }
  
   # Data that gets sent as fields for elastic indexes
-  def search_data 
+  def search_data
+    user = nil
     elastic_data = self.as_json() 
-    elastic_data[:identification_code] = self.user.identification_code
-    elastic_data[:gender] = self.user.gender 
-    elastic_data[:race] = self.user.race 
-    if !self.user.school_unit_id.nil? 
-      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.user.school_unit_id)[0].description 
+    if !self.household_id.nil?
+      user = Household.find(self.household_id)
+    else
+      user = self.user
+    end
+    elastic_data[:identification_code] = user.identification_code
+    elastic_data[:gender] = user.gender 
+    elastic_data[:race] = user.race 
+    if !user.school_unit_id.nil? 
+      elastic_data[:enrolled_in] = SchoolUnit.where(id:user.school_unit_id)[0].description 
     else 
       elastic_data[:enrolled_in] = nil 
     end
