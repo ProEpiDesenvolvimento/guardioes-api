@@ -45,14 +45,14 @@ class User < ApplicationRecord
 
   # Data that gets sent as fields for elastic indexes
   def search_data
-    elastic_data = self.as_json(except:['app_id', 'group_id'])
+    elastic_data = self.as_json(except:['app_id', 'group_id', 'aux_code', 'reset_password_token'])
     elastic_data[:app] = self.app.app_name
-    if self.group_id.nil?
-      elastic_data[:group] = nil
+    if !self.group_id.nil? and Group.where(id:self.group_id).count > 0
+      elastic_data[:group] = Group.where(id:self.group_id)[0].description
     else
-      elastic_data[:group] = Groups.where(id:self.group_id)[0].description
+      elastic_data[:group] = nil
     end
-    if !self.school_unit_id.nil?
+    if !self.school_unit_id.nil? and SchoolUnit.where(id:self.school_unit_id).count > 0
       elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
     else 
       elastic_data[:enrolled_in] = nil 

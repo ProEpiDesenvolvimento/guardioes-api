@@ -58,7 +58,7 @@ class Survey < ApplicationRecord
     elastic_data[:identification_code] = user.identification_code
     elastic_data[:gender] = user.gender 
     elastic_data[:race] = user.race 
-    if !user.school_unit_id.nil? 
+    if !user.school_unit_id.nil? and SchoolUnit.where(id:user.school_unit_id).count > 0
       elastic_data[:enrolled_in] = SchoolUnit.where(id:user.school_unit_id)[0].description 
     else 
       elastic_data[:enrolled_in] = nil 
