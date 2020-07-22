@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :groups
   get "groups/:id/get_path", to: 'groups#get_path'
   get "groups/:id/get_children", to: 'groups#get_children'
+  post "groups/upload_group_file", to: 'groups#upload_group_file'
 
   get "dashboard", to: 'dashboard#index'
   
