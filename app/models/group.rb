@@ -40,7 +40,11 @@ class Group < ApplicationRecord
     return parent.children_label
   end
 
-  def destroy
-    
+  def delete_subtree
+    children.each do |child|
+      puts child.description
+      child.delete_subtree
+    end
+    delete
   end
 end

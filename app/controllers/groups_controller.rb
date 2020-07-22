@@ -43,7 +43,7 @@ class GroupsController < ApplicationController
     render json: path, status: :ok
   end
 
-  # GET /groups/1/get_children_or_child_node
+  # GET /groups/1/get_children
   def get_children
     is_child = @group.children_label == nil
     children = ActiveModel::SerializableResource.new(@group.children).as_json()
@@ -52,7 +52,7 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1
   def destroy
-    @group.destroy
+    @group.delete_subtree
   end
 
   private
