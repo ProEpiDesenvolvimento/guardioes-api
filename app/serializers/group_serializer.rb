@@ -1,4 +1,3 @@
 class GroupSerializer < ActiveModel::Serializer
-  attributes :id, :description, :kind, :details
-  has_one :manager
+  attributes :id, :description, :children_label, :parent_id
 end

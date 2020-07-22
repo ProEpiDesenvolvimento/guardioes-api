@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   post "upload_by_file", to: 'school_units#upload_by_file'
   
   resources :groups
+  get "groups/:id/get_path", to: 'groups#get_path'
+  get "groups/:id/get_children", to: 'groups#get_children'
+
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_154709) do
+ActiveRecord::Schema.define(version: 2020_07_21_173331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,14 +57,16 @@ ActiveRecord::Schema.define(version: 2020_07_15_154709) do
 
   create_table "groups", force: :cascade do |t|
     t.string "description"
-    t.string "kind"
-    t.string "details"
     t.bigint "manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.bigint "parent_id"
+    t.string "label"
+    t.string "children_label"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["manager_id"], name: "index_groups_on_manager_id"
+    t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
 
   create_table "households", force: :cascade do |t|
@@ -201,7 +203,6 @@ ActiveRecord::Schema.define(version: 2020_07_15_154709) do
     t.float "percentage"
     t.bigint "symptom_id"
     t.bigint "syndrome_id"
-    t.float "ponderation"
     t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
   end

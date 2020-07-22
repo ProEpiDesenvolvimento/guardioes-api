@@ -1,7 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :update, :destroy]
-  before_action :authenticate_manager!, except: %i[ index ]
-
+  before_action :set_group, only: [:show, :update, :destroy, :get_path, :get_children]
 
   # GET /groups
   def index
@@ -18,7 +16,6 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-
     if @group.save
       render json: @group, status: :created, location: @group
     else
@@ -35,9 +32,26 @@ class GroupsController < ApplicationController
     end
   end
 
+  # GET /groups/1/get_path
+  def get_path
+    path = []
+    begin
+      path = @group.get_path(false)
+    rescue
+      return render json: "Could not find path", status: :unprocessable_entity
+    end
+    render json: path, status: :ok
+  end
+
+  # GET /groups/1/get_children_or_child_node
+  def get_children
+    is_child = @group.children_label == nil
+    children = ActiveModel::SerializableResource.new(@group.children).as_json()
+    render json: { is_child: is_child, children: children[:groups] }, status: :ok
+  end
+
   # DELETE /groups/1
   def destroy
-    authorize! :destroy, @group
     @group.destroy
   end
 
@@ -49,6 +63,10 @@ class GroupsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def group_params
-      params.require(:group).permit(:description, :kind, :details, :manager_id)
+      params.require(:group).permit(
+        :description, 
+        :children_label,
+        :parent_id
+      )
     end
 end
