@@ -7,9 +7,12 @@ class Group < ApplicationRecord
   #   |             |    |             |
   #  ...           ...  ...           ... 
 
+  # Each group has a manager
   belongs_to :manager, optional: true, class_name: "Manager"
 
+  # Each group has one parent (except for 'root_node', that's why optional is true)
   belongs_to :parent, class_name: "Group", optional: true
+  # Each group has [0..n] children groups
   has_many :children, class_name: "Group", foreign_key: "parent_id"
 
   # Returns tree structure that leads to current group
@@ -36,13 +39,16 @@ class Group < ApplicationRecord
     return path.reverse
   end
 
+  # Returns the label for a given group
+  # For example: label for group New York would be 'City'
   def label
     return parent.children_label
   end
 
+  # Deletes current group and all of it's subtree
+  # If you delete New York expect every node from it to be deleted too
   def delete_subtree
     children.each do |child|
-      puts child.description
       child.delete_subtree
     end
     delete
