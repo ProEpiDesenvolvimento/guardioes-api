@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :update, :destroy, :get_path, :get_children]
+  before_action :set_group, except: [:index,:upload_group_file]
+  before_action :authenticate_manager!, except: [:get_path,:get_children,:index,:show]
 
   # GET /groups
   def index
@@ -15,6 +16,9 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
+    if group_params[:description] == 'root_node'
+      return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
+    end
     @group = Group.new(group_params)
     if @group.save
       render json: @group, status: :created, location: @group
@@ -25,6 +29,9 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
+    if group_params[:description] == 'root_node'
+      return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
+    end
     if @group.update(group_params)
       render json: @group
     else
@@ -64,6 +71,7 @@ class GroupsController < ApplicationController
 
     headers = data.row(1) # First row containing headers for table
     
+    # If rows are not found, return error alongside missing rows
     not_found_columns = validate_mandatory_columns headers
     if not_found_columns.any?
       return render json: {message: 'Mandatory table rows not found', not_found_columns: not_found_columns, error: true}, status: :unprocessable_entity
@@ -74,8 +82,9 @@ class GroupsController < ApplicationController
     # 3 from the 'country, state, city' filting model + the size of custom filters
     filter_size = 3 + filter_columns.length
 
+    rows_to_create = []
+
     data.each_with_pagename do |name, sheet|
-      # Turns sheet data into JSON
       sheet_data = sheet.as_json
 
       sheet.each_with_index(
@@ -85,19 +94,18 @@ class GroupsController < ApplicationController
         cep: 'CEP', 
         phone: 'TELEFONE',
         email: 'EMAIL',
-        country: 'PAIS',
-        state: 'ESTADO',
-        municipality: 'MUNICIPIO'
-      ) do |school_unit_data, idx|
-          # Jump first index
+      ) do |group_data, idx|
+          # Jump table header
           next if idx == 0
 
           # Get row from sheet
           row_data = sheet_data[idx]
 
+          # List of path filters (country, state, municipality, filter_1, filter_2, ...)
+          path_filter_list = (6..6+filter_size-1)
+
           # Check if any filter data is empty and returns error if so
-          skip = false
-          (6..6 + filter_size - 1).each do |i|
+          path_filter_list.each do |i|
             if row_data[i].nil? || row_data[i].empty?
               return render json: {
                 message: 'Filter data is empty',
@@ -108,15 +116,58 @@ class GroupsController < ApplicationController
             end
           end
 
-          print 'ADDING TO GROUPS => '
-          i = 0
-          row_data.each do |data|; print headers[i] + ': ' + data.to_s + ', '; i = i + 1; end;
-          puts ''
+          path = []
+          path_filter_list.each do |i|
+            # If some group is called root_node, a forbidden name, return failure
+            if row_data[i] == 'root_node'
+              return render json: {message: 'You cannot name a group \'root_node\'', error: true}, status: :unprocessable_entity
+            end
+            path << {
+              label: headers[i],
+              description: row_data[i],
+              children_label: headers[i + 1] || nil
+            }
+          end
 
+          row = {
+            metadata: group_data,
+            path: path
+          }
+
+          rows_to_create << row
         end
     end
 
-    render json: {message: 'Escolas carregadas', error: false}, status: :created
+    rows_to_create.each do |r|
+      # Set base group as current_group
+      current_group = Group.find_by_description('root_node')
+      r[:path].each do |p|
+        # Create or add child to the path leading to the child group
+        child = current_group.children.find_by_description(p[:description])
+        if child.nil?
+          new_group = Group.new()
+          new_group.description = p[:description]
+          new_group.children_label = p[:children_label]
+          new_group.parent = current_group
+
+          # If child group, add child group metadata
+          if p[:children_label] == nil
+              new_group.code = r[:code]
+              new_group.address = r[:address]
+              new_group.cep = r[:cep]
+              new_group.phone = r[:phone]
+              new_group.email = r[:email]
+          end
+
+          new_group.save()
+          current_group = new_group
+        else
+          current_group = child
+        end
+      end
+    end
+
+    render json: {message: 'Data loaded', error: false}, status: :created
   end
 
   private

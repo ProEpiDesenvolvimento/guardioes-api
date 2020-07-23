@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_21_173331) do
+ActiveRecord::Schema.define(version: 2020_07_23_004223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,8 +62,12 @@ ActiveRecord::Schema.define(version: 2020_07_21_173331) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.bigint "parent_id"
-    t.string "label"
     t.string "children_label"
+    t.string "code"
+    t.string "address"
+    t.string "cep"
+    t.string "phone"
+    t.string "email"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["manager_id"], name: "index_groups_on_manager_id"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
@@ -106,6 +110,7 @@ ActiveRecord::Schema.define(version: 2020_07_21_173331) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.bigint "app_id"
+    t.string "group_name"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
