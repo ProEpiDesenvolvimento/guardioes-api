@@ -7,8 +7,9 @@ class Group < ApplicationRecord
   #   |             |    |             |
   #  ...           ...  ...           ... 
 
-  # Each group has a manager
-  belongs_to :manager, optional: true, class_name: "Manager"
+  # Each group has [0..n] managers
+  has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
+  has_many :managers, :through => :manager_group_permission 
 
   # Each group has one parent (except for 'root_node', that's why optional is true)
   belongs_to :parent, class_name: "Group", optional: true
@@ -50,6 +51,9 @@ class Group < ApplicationRecord
   def delete_subtree
     children.each do |child|
       child.delete_subtree
+    end
+    manager_group_permission.each do |m|
+      m.delete
     end
     delete
   end

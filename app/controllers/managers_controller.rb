@@ -1,12 +1,16 @@
 class ManagersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
   before_action :set_app, only: [:index]
-  before_action :check_authenticated_admin_or_manager, only: [:add_manager_permission,:is_manager_permitted, :remove_manager_permission]
+  before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
 
   # GET /managers/
   def index
     render json: @app.managers
+  end
+
+  def show 
+    render json: Manager.find(params[:id])
   end
 
   # GET /managers/:manager_id/:group_id/permit

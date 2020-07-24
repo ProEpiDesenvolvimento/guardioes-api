@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
-  before_action :set_group, except: [:index,:upload_group_file]
-  before_action :authenticate_manager!, except: [:get_path,:get_children,:index,:show]
+  before_action :set_group, except: [:index,:upload_group_file,:create]
+  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:index,:show]
+  before_action :validate_invalid_group_name, only: [:create,:update]
 
   # GET /groups
   def index
@@ -16,10 +17,8 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
-    if group_params[:description] == 'root_node'
-      return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
-    end
     @group = Group.new(group_params)
+    return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if @group.save
       render json: @group, status: :created, location: @group
     else
@@ -29,9 +28,7 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    if group_params[:description] == 'root_node'
-      return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
-    end
+    return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if @group.update(group_params)
       render json: @group
     else
@@ -64,6 +61,9 @@ class GroupsController < ApplicationController
 
   # POST /groups/upload_group_file/
   def upload_group_file
+    if current_manager.nil?
+      return render json: 'You must be a manager to create new groups'
+    end
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
 
     # Mandatory columns for .xls document to register new institutions
@@ -122,11 +122,25 @@ class GroupsController < ApplicationController
             if row_data[i] == 'root_node'
               return render json: {message: 'You cannot name a group \'root_node\'', error: true}, status: :unprocessable_entity
             end
-            path << {
-              label: headers[i],
-              description: row_data[i],
-              children_label: headers[i + 1] || nil
-            }
+            # i == 'municipality'
+            if i == 8
+              path << {
+                label: headers[i],
+                description: row_data[i],
+                children_label: 'GRUPO'
+              }
+              path << {
+                label: 'GRUPO',
+                description: current_manager.group_name,
+                children_label: headers[i + 1] || nil
+              }
+            else
+              path << {
+                label: headers[i],
+                description: row_data[i],
+                children_label: headers[i + 1] || nil
+              }
+            end
           end
 
           row = {
@@ -137,6 +151,8 @@ class GroupsController < ApplicationController
           rows_to_create << row
         end
     end
+
+    groups_not_created = []
 
     rows_to_create.each do |r|
       # Set base group as current_group
@@ -149,14 +165,20 @@ class GroupsController < ApplicationController
           new_group.description = p[:description]
           new_group.children_label = p[:children_label]
           new_group.parent = current_group
-
+          
           # If child group, add child group metadata
           if p[:children_label] == nil
-              new_group.code = r[:code]
-              new_group.address = r[:address]
-              new_group.cep = r[:cep]
-              new_group.phone = r[:phone]
-              new_group.email = r[:email]
+            new_group.code = r[:code]
+            new_group.address = r[:address]
+            new_group.cep = r[:cep]
+            new_group.phone = r[:phone]
+            new_group.email = r[:email]
+          end
+          
+          if !validate_manager_group_permissions(new_group)
+            current_group = nil
+            groups_not_created << r
+            break
           end
 
           new_group.save()
@@ -165,6 +187,14 @@ class GroupsController < ApplicationController
           current_group = child
         end
       end
+    end
+
+    if groups_not_created.any?
+      return render json: {
+        message: 'Some groups were not created',
+        error: true,
+        groups: groups_not_created
+      }, status: :created
     end
 
     render json: {message: 'Data loaded', error: false}, status: :created
@@ -211,4 +241,25 @@ class GroupsController < ApplicationController
       end
       filter_columns
     end
+
+    def check_authenticated_admin_or_manager
+      if current_admin.nil? && current_manager.nil?
+        return render json: {}, status: :ok
+      end
+    end
+  
+    def validate_manager_group_permissions(group = @group)
+      if current_manager != nil && !current_manager.is_permitted?(group)
+        return false
+      end
+      return true
+    end
+    
+    def validate_invalid_group_name
+      if group_params[:description] == 'root_node'
+        return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
+      end
+    end
 end
+
+# curl -F 'file=@/home/renato/Desktop/sample_groups/UnB Darcy Ribeiro.xls' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwic2NwIjoibWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1NTU1MTI3LCJleHAiOjE1OTgxODQ4NzMsImp0aSI6ImFkYmNhMGU1LWQ2ZjEtNDc3Yi05YzBlLWI4NzEwYjE2YzMyOCJ9.45Ua5QBU5Gpc5RR-tjVNw16-upEjdiK-P0neugT51Bk' http://localhost:3001/groups/upload_group_file
