@@ -181,7 +181,12 @@ class GroupsController < ApplicationController
       params.require(:group).permit(
         :description, 
         :children_label,
-        :parent_id
+        :parent_id,
+        :code,
+        :address,
+        :cep,
+        :phone,
+        :email
       )
     end
 

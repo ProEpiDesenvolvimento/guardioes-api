@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_23_004223) do
+ActiveRecord::Schema.define(version: 2020_07_24_000756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,15 @@ ActiveRecord::Schema.define(version: 2020_07_23_004223) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "manager_group_permissions", force: :cascade do |t|
+    t.bigint "manager_id"
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_manager_group_permissions_on_group_id"
+    t.index ["manager_id"], name: "index_manager_group_permissions_on_manager_id"
   end
 
   create_table "managers", force: :cascade do |t|
@@ -258,6 +267,8 @@ ActiveRecord::Schema.define(version: 2020_07_23_004223) do
   add_foreign_key "groups", "managers"
   add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
+  add_foreign_key "manager_group_permissions", "groups"
+  add_foreign_key "manager_group_permissions", "managers"
   add_foreign_key "managers", "apps"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"

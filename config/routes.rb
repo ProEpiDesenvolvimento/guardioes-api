@@ -28,14 +28,11 @@ Rails.application.routes.draw do
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"
 
-  get "/googlemapsapikey", to: "googlemapsapikey#index"
-  
   resources :users do
     resources :households
     resources :surveys
   end
   post "render_user_by_filter",to: "users#query_by_param"
-
 
   resources :rumors
 
@@ -56,6 +53,9 @@ Rails.application.routes.draw do
     }
 
     resources :managers
+    get 'managers/:manager_id/:group_id', to: 'managers#is_manager_permitted'
+    get 'managers/:manager_id/:group_id/permit', to: 'managers#add_manager_permission'
+    get 'managers/:manager_id/:group_id/unpermit', to: 'managers#remove_manager_permission'
     devise_for :managers,
     path: 'manager/',
     path_names: {
