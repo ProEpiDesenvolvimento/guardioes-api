@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_154709) do
+ActiveRecord::Schema.define(version: 2020_07_25_170816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_154709) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "source_link"
+    t.string "icon"
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
@@ -201,7 +202,6 @@ ActiveRecord::Schema.define(version: 2020_07_15_154709) do
     t.float "percentage"
     t.bigint "symptom_id"
     t.bigint "syndrome_id"
-    t.float "ponderation"
     t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
   end
