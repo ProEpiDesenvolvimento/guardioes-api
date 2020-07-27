@@ -8,8 +8,9 @@ class Manager < ApplicationRecord
   has_many :groups, :through => :manager_group_permission 
 
   def is_permitted?(group)
-    while group.description != 'root_node'
+    loop do
       return true if self.groups.include? group
+      break if group.description == 'root_node'
       group = group.parent
     end
     return false

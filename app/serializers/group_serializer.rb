@@ -5,7 +5,7 @@ class GroupSerializer < ActiveModel::Serializer
     if object.parent == nil
       return nil
     end
-    { name: object.description, id: object.id }
+    { name: object.parent.description, id: object.parent.id }
   end
 
   def managers

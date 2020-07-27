@@ -16,6 +16,11 @@ class Group < ApplicationRecord
   # Each group has [0..n] children groups
   has_many :children, class_name: "Group", foreign_key: "parent_id"
 
+  # Return parent group
+  def self.get_root
+    return Group.find_by_description('root_node')
+  end
+
   # Returns tree structure that leads to current group
   def get_path(string_only = false, labeled = false)
     path = []

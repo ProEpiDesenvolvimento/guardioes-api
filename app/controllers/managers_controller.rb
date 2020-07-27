@@ -13,30 +13,34 @@ class ManagersController < ApplicationController
     render json: Manager.find(params[:id])
   end
 
-  # GET /managers/:manager_id/:group_id/permit
-  def add_manager_permission
-    # Validate either admin or manager with sufficient permissions
-    if current_admin != nil || (current_manager != nil  && current_manager.is_permitted?(@group))
-      ManagerGroupPermission::permit(@manager, @group)
-      return render json: { error: false }, status: :ok
-    end
-    return render json: { error: true, message: 'Not enough permitions' }, status: :ok
-  end
+  # THIS IS A MANAGER MANAGING SYSTEM
+  # For now, as this feature is complex, this is comented. In the future, this will be patched to
+  # be safe.
 
-  # GET /managers/:manager_id/:group_id/unpermit
-  def remove_manager_permission
-    # Validate either admin or manager with sufficient permissions
-    if @manager == current_manager
-      return render json: { error: true, message: 'Cannot unpermit yourself' }, status: :ok
-    end
-    if current_admin != nil || (current_manager != nil  && current_manager.is_permitted?(@group))
-      ManagerGroupPermission.where(group_id: @group.id, manager_id: @manager.id).all.each do |p|
-        p.destroy
-      end
-      return render json: { error: false }, status: :ok
-    end
-    return render json: { error: true, message: 'Not enough permitions' }, status: :ok
-  end
+  # # GET /managers/:manager_id/:group_id/permit
+  # def add_manager_permission
+  #   # Validate either admin or manager with sufficient permissions
+  #   if current_admin != nil || (current_manager != nil  && current_manager.is_permitted?(@group))
+  #     ManagerGroupPermission::permit(@manager, @group)
+  #     return render json: { error: false }, status: :ok
+  #   end
+  #   return render json: { error: true, message: 'Not enough permitions' }, status: :ok
+  # end
+
+  # # GET /managers/:manager_id/:group_id/unpermit
+  # def remove_manager_permission
+  #   # Validate either admin or manager with sufficient permissions
+  #   if @manager == current_manager
+  #     return render json: { error: true, message: 'Cannot unpermit yourself' }, status: :ok
+  #   end
+  #   if current_admin != nil || (current_manager != nil  && current_manager.is_permitted?(@group))
+  #     ManagerGroupPermission.where(group_id: @group.id, manager_id: @manager.id).all.each do |p|
+  #       p.destroy
+  #     end
+  #     return render json: { error: false }, status: :ok
+  #   end
+  #   return render json: { error: true, message: 'Not enough permitions' }, status: :ok
+  # end
 
   # GET /managers/:manager_id/:group_id
   def is_manager_permitted
@@ -46,6 +50,21 @@ class ManagersController < ApplicationController
     else
       return render json: { is_permitted: false, group: @group.get_path(true).join('/') }, status: :ok
     end
+  end
+
+  # GET /managers/:group_id/get_users
+  def get_users_in_manager_group
+
+  end
+
+  # DELETE /managers/:group_id/:user_id/remove_user_from_group
+  def remove_user_in_manager_group
+
+  end
+
+  # DELETE /managers/:group_id/:user_id/add_user_to_group
+  def add_users_in_manager_group
+
   end
 
   private

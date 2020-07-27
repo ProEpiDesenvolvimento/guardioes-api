@@ -156,7 +156,7 @@ class GroupsController < ApplicationController
 
     rows_to_create.each do |r|
       # Set base group as current_group
-      current_group = Group.find_by_description('root_node')
+      current_group = Group::get_root
       r[:path].each do |p|
         # Create or add child to the path leading to the child group
         child = current_group.children.find_by_description(p[:description])
@@ -177,6 +177,7 @@ class GroupsController < ApplicationController
           
           if !validate_manager_group_permissions(new_group)
             current_group = nil
+            r[:reason] = 'Not enough permissions'
             groups_not_created << r
             break
           end
@@ -262,4 +263,4 @@ class GroupsController < ApplicationController
     end
 end
 
-# curl -F 'file=@/home/renato/Desktop/sample_groups/UnB Darcy Ribeiro.xls' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwic2NwIjoibWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1NTU1MTI3LCJleHAiOjE1OTgxODQ4NzMsImp0aSI6ImFkYmNhMGU1LWQ2ZjEtNDc3Yi05YzBlLWI4NzEwYjE2YzMyOCJ9.45Ua5QBU5Gpc5RR-tjVNw16-upEjdiK-P0neugT51Bk' http://localhost:3001/groups/upload_group_file
+# curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwic2NwIjoibWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1NTU1MTI3LCJleHAiOjE1OTgxODQ4NzMsImp0aSI6ImFkYmNhMGU1LWQ2ZjEtNDc3Yi05YzBlLWI4NzEwYjE2YzMyOCJ9.45Ua5QBU5Gpc5RR-tjVNw16-upEjdiK-P0neugT51Bk' -F 'file=@/home/renato/Desktop/sample_groups/UnB FGA.xls' http://localhost:3001/groups/upload_group_file
