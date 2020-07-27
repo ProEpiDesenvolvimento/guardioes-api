@@ -9,7 +9,7 @@ class Group < ApplicationRecord
 
   # Each group has [0..n] managers
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
-  has_many :managers, :through => :manager_group_permission 
+  has_many :group_managers, :through => :manager_group_permission 
 
   # Each group has one parent (except for 'root_node', that's why optional is true)
   belongs_to :parent, class_name: "Group", optional: true

@@ -61,8 +61,8 @@ class GroupsController < ApplicationController
 
   # POST /groups/upload_group_file/
   def upload_group_file
-    if current_manager.nil?
-      return render json: 'You must be a manager to create new groups'
+    if current_group_manager.nil?
+      return render json: 'You must be a group manager to create new groups'
     end
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
 
@@ -131,7 +131,7 @@ class GroupsController < ApplicationController
               }
               path << {
                 label: 'GRUPO',
-                description: current_manager.group_name,
+                description: current_group_manager.group_name,
                 children_label: headers[i + 1] || nil
               }
             else
@@ -157,6 +157,8 @@ class GroupsController < ApplicationController
     rows_to_create.each do |r|
       # Set base group as current_group
       current_group = Group::get_root
+      was_created = false
+      is_valid_manager = true
       r[:path].each do |p|
         # Create or add child to the path leading to the child group
         child = current_group.children.find_by_description(p[:description])
@@ -177,16 +179,22 @@ class GroupsController < ApplicationController
           
           if !validate_manager_group_permissions(new_group)
             current_group = nil
+            is_valid_manager = false
             r[:reason] = 'Not enough permissions'
             groups_not_created << r
             break
           end
 
+          was_created = true
           new_group.save()
           current_group = new_group
         else
           current_group = child
         end
+      end
+      if !was_created && is_valid_manager
+        r[:reason] = 'Already exists'
+        groups_not_created << r
       end
     end
 
@@ -244,13 +252,13 @@ class GroupsController < ApplicationController
     end
 
     def check_authenticated_admin_or_manager
-      if current_admin.nil? && current_manager.nil?
+      if current_admin.nil? && current_group_manager.nil?
         return render json: {}, status: :ok
       end
     end
   
     def validate_manager_group_permissions(group = @group)
-      if current_manager != nil && !current_manager.is_permitted?(group)
+      if current_group_manager != nil && !current_group_manager.is_permitted?(group)
         return false
       end
       return true
@@ -263,4 +271,4 @@ class GroupsController < ApplicationController
     end
 end
 
-# curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwic2NwIjoibWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1NTU1MTI3LCJleHAiOjE1OTgxODQ4NzMsImp0aSI6ImFkYmNhMGU1LWQ2ZjEtNDc3Yi05YzBlLWI4NzEwYjE2YzMyOCJ9.45Ua5QBU5Gpc5RR-tjVNw16-upEjdiK-P0neugT51Bk' -F 'file=@/home/renato/Desktop/sample_groups/UnB FGA.xls' http://localhost:3001/groups/upload_group_file
+# curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwic2NwIjoiZ3JvdXBfbWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1ODkwNDY5LCJleHAiOjE1OTg1MjAyMTUsImp0aSI6Ijk3ZTRhMWZhLTc3MGItNGNiNS1hMDIzLTc4YzcxMzBlM2I4NiJ9.ebZ6GJQd2y1LZ3fZdiX_ijvSv8t6XphywmSq0VU9WtE' -F 'file=@/home/renato/Desktop/sample_groups/UnB FGA.xls' http://localhost:3001/groups/upload_group_file

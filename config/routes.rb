@@ -52,12 +52,13 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
-    resources :managers
-    get 'managers/:manager_id/:group_id', to: 'managers#is_manager_permitted'
-    get 'managers/:manager_id/:group_id/permit', to: 'managers#add_manager_permission'
-    get 'managers/:manager_id/:group_id/unpermit', to: 'managers#remove_manager_permission'
-    devise_for :managers,
-    path: 'manager/',
+    resources :group_managers
+    get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
+    # IN THE FUTURE THE FOLLOWING FUTURES WILL BE IMPLEMENTED
+    # get 'group_managers/:manager_id/:group_id/permit', to: 'group_managers#add_manager_permission'
+    # get 'group_managers/:manager_id/:group_id/unpermit', to: 'group_managers#remove_manager_permission'
+    devise_for :group_managers,
+    path: 'group_manager/',
     path_names: {
       sign_in: "login",
       sign_out: "logout",

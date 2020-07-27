@@ -1,5 +1,5 @@
 class GroupSerializer < ActiveModel::Serializer
-  attributes :id, :description, :children_label, :parent, :managers, :twitter
+  attributes :id, :description, :children_label, :parent, :group_managers, :twitter
 
   def parent
     if object.parent == nil
@@ -8,10 +8,10 @@ class GroupSerializer < ActiveModel::Serializer
     { name: object.parent.description, id: object.parent.id }
   end
 
-  def managers
+  def group_managers
     list = []
-    object.managers.each do |m|
-      list << { manager: m.name, id: m.id }
+    object.group_managers.each do |m|
+      list << { group_manager: m.name, id: m.id }
     end
     list
   end

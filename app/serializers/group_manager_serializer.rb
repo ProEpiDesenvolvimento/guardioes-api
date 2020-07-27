@@ -1,4 +1,4 @@
-class ManagerSerializer < ActiveModel::Serializer
+class GroupManagerSerializer < ActiveModel::Serializer
   attributes :id, :email, :name, :group_name, :group_permissions
 
   def group_permissions
