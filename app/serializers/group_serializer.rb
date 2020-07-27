@@ -1,5 +1,5 @@
 class GroupSerializer < ActiveModel::Serializer
-  attributes :id, :description, :children_label, :parent, :managers
+  attributes :id, :description, :children_label, :parent, :managers, :twitter
 
   def parent
     if object.parent == nil
@@ -14,5 +14,9 @@ class GroupSerializer < ActiveModel::Serializer
       list << { manager: m.name, id: m.id }
     end
     list
+  end
+
+  def twitter
+    object.get_twitter
   end
 end

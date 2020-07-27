@@ -20,7 +20,6 @@ class Group < ApplicationRecord
   def get_path(string_only = false, labeled = false)
     path = []
     current_node = self
-    puts current_node
     while current_node.description != 'root_node'
       if labeled
         if string_only
@@ -38,6 +37,19 @@ class Group < ApplicationRecord
       current_node = current_node.parent
     end
     return path.reverse
+  end
+
+  def get_twitter
+    current_node = self
+    twitter = ''
+    loop do
+      if current_node.twitter != nil
+        twitter = current_node.twitter
+        break
+      end
+      current_node = current_node.parent
+    end
+    return twitter
   end
 
   # Returns the label for a given group
