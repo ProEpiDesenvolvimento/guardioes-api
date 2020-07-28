@@ -9,6 +9,7 @@ class GroupManagersController < ApplicationController
     render json: @app.group_managers
   end
 
+  # GET /group_managers/:id
   def show
     # Validates only admins or the manager can see a certain manager
     if current_admin.nil? && current_group_manager != GroupManager.find(params[:id])
@@ -16,7 +17,13 @@ class GroupManagersController < ApplicationController
     end
     render json: GroupManager.find(params[:id])
   end
-
+  
+  # GET /group_managers/:manager_id/:group_id
+  def is_manager_permitted
+    is_permitted = @manager.is_permitted?(@group)
+    render json: { is_permitted: is_permitted, group: @group.get_path(string_only=true).join('/') }, status: :ok
+  end
+  
   # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
   # For now, as this feature is complex, this is comented. In the future, this will be patched to
   # be safe.
@@ -46,30 +53,20 @@ class GroupManagersController < ApplicationController
   #   return render json: { error: true, message: 'Not enough permitions' }, status: :ok
   # end
 
-  # GET /group_managers/:manager_id/:group_id
-  def is_manager_permitted
-    is_permitted = @manager.is_permitted?(@group)
-    if is_permitted
-      return render json: { is_permitted: true, group: @group.get_path(true).join('/') }, status: :ok
-    else
-      return render json: { is_permitted: false, group: @group.get_path(true).join('/') }, status: :ok
-    end
-  end
+  # # GET /group_managers/:group_id/get_users
+  # def get_users_in_manager_group
 
-  # GET /group_managers/:group_id/get_users
-  def get_users_in_manager_group
+  # end
 
-  end
+  # # DELETE /group_managers/:group_id/:user_id/remove_user_from_group
+  # def remove_user_in_manager_group
 
-  # DELETE /group_managers/:group_id/:user_id/remove_user_from_group
-  def remove_user_in_manager_group
+  # end
 
-  end
+  # # DELETE /group_managers/:group_id/:user_id/add_user_to_group
+  # def add_users_in_manager_group
 
-  # DELETE /group_managers/:group_id/:user_id/add_user_to_group
-  def add_users_in_manager_group
-
-  end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
