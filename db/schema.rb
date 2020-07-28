@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_28_010319) do
+ActiveRecord::Schema.define(version: 2020_07_28_150052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 2020_07_28_010319) do
     t.bigint "school_unit_id"
     t.string "identification_code"
     t.boolean "risk_group"
+    t.integer "group_id"
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"

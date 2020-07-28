@@ -4,7 +4,7 @@ class GroupManagerSerializer < ActiveModel::Serializer
   def group_permissions
     list = []
     object.groups.each do |g|
-      list << { group: g.description, id: g.id }
+      list << { group: g.get_path(string_only=true,labled=false).join('/'), id: g.id }
     end
     list
   end
