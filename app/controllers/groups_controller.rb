@@ -1,7 +1,8 @@
 class GroupsController < ApplicationController
-  before_action :set_group, except: [:index,:upload_group_file,:create]
-  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:index,:show]
+  before_action :set_group, except: [:index,:upload_group_file,:create,:root,:build_country_city_state_groups]
+  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:index,:show,:root]
   before_action :validate_invalid_group_name, only: [:create,:update]
+  before_action :authenticate_admin!, only: [:build_country_city_state_groups]
 
   # GET /groups
   def index
@@ -35,6 +36,16 @@ class GroupsController < ApplicationController
       render json: @group.errors, status: :unprocessable_entity
     end
   end
+  
+  # DELETE /groups/1
+  def destroy
+    @group.delete_subtree
+  end
+
+  # GET /groups/root
+  def root
+    return render json: Group::get_root
+  end
 
   # GET /groups/1/get_path
   def get_path
@@ -51,17 +62,12 @@ class GroupsController < ApplicationController
   def get_children
     is_child = @group.children_label == nil
     children = ActiveModel::SerializableResource.new(@group.children).as_json()
-    render json: { is_child: is_child, children: children[:groups] }, status: :ok
-  end
-
-  # DELETE /groups/1
-  def destroy
-    @group.delete_subtree
+    render json: { label: @group.children_label, is_child: is_child, children: children[:groups] }, status: :ok
   end
 
   # POST /groups/upload_group_file/
-  def upload_group_file
-    if current_group_manager.nil?
+  def upload_group_file(build_country_city_state_model = false)
+    if !build_country_city_state_model && current_group_manager.nil?
       return render json: 'You must be a group manager to create new groups'
     end
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
@@ -86,6 +92,13 @@ class GroupsController < ApplicationController
 
     data.each_with_pagename do |name, sheet|
       sheet_data = sheet.as_json
+      sheet_data.each_with_index do |line, i|
+        line.each_with_index do |text, j|
+          if text.is_a? String
+            sheet_data[i][j] = text.strip
+          end
+        end
+      end
 
       sheet.each_with_index(
         code: 'CODIGO', 
@@ -106,9 +119,16 @@ class GroupsController < ApplicationController
 
           # Check if any filter data is empty and returns error if so
           path_filter_list.each do |i|
-            if row_data[i].nil? || row_data[i].empty?
+            if !build_country_city_state_model && (row_data[i].nil? || row_data[i].empty?)
               return render json: {
                 message: 'Filter data is empty',
+                row: idx,
+                column: headers[i],
+                error: true
+              }, status: :unprocessable_entity
+            elif build_country_city_state_model && (!row_data[i].nil? || !row_data[i].empty?)
+              return render json: {
+                message: 'Filter data is filled',
                 row: idx,
                 column: headers[i],
                 error: true
@@ -123,7 +143,7 @@ class GroupsController < ApplicationController
               return render json: {message: 'You cannot name a group \'root_node\'', error: true}, status: :unprocessable_entity
             end
             # i == 'municipality'
-            if i == 8
+            if i == 8 && !build_country_city_state_model
               path << {
                 label: headers[i],
                 description: row_data[i],
@@ -159,10 +179,17 @@ class GroupsController < ApplicationController
       current_group = Group::get_root
       was_created = false
       is_valid_manager = true
-      r[:path].each do |p|
+      r[:path].each_with_index do |p, i|
         # Create or add child to the path leading to the child group
         child = current_group.children.find_by_description(p[:description])
         if child.nil?
+          if i <= 2 && !build_country_city_state_model
+            current_group = nil
+            is_valid_manager = false
+            r[:reason] = 'Creating a new group for \'' + p[:label] + '\' (' + p[:description] + ') is not allowed'
+            groups_not_created << r
+            break
+          end
           new_group = Group.new()
           new_group.description = p[:description]
           new_group.children_label = p[:children_label]
@@ -175,6 +202,14 @@ class GroupsController < ApplicationController
             new_group.cep = r[:cep]
             new_group.phone = r[:phone]
             new_group.email = r[:email]
+          end
+
+          if !build_country_city_state_model && current_group_manager.twitter != nil
+            new_group.twitter = current_group_manager.twitter
+          end
+
+          if build_country_city_state_model && i == 2
+            new_group.children_label = 'GRUPO'
           end
           
           if !validate_manager_group_permissions(new_group)
@@ -207,6 +242,16 @@ class GroupsController < ApplicationController
     end
 
     render json: {message: 'Data loaded', error: false}, status: :created
+  end
+
+  # POST /groups/build_country_city_state_groups/
+  def build_country_city_state_groups
+    self.upload_group_file(true)
+  end
+
+  # GET /groups/:id/get_twitter
+  def get_twitter
+    render json: @group.get_twitter
   end
 
   private
@@ -270,5 +315,3 @@ class GroupsController < ApplicationController
       end
     end
 end
-
-# curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0Iiwic2NwIjoiZ3JvdXBfbWFuYWdlciIsImF1ZCI6bnVsbCwiaWF0IjoxNTk1ODkwNDY5LCJleHAiOjE1OTg1MjAyMTUsImp0aSI6Ijk3ZTRhMWZhLTc3MGItNGNiNS1hMDIzLTc4YzcxMzBlM2I4NiJ9.ebZ6GJQd2y1LZ3fZdiX_ijvSv8t6XphywmSq0VU9WtE' -F 'file=@/home/renato/Desktop/sample_groups/UnB FGA.xls' http://localhost:3001/groups/upload_group_file

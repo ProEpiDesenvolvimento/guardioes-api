@@ -5,10 +5,13 @@ Rails.application.routes.draw do
   post "school_units_list", to: 'school_units#index_filtered'
   post "upload_by_file", to: 'school_units#upload_by_file'
   
-  resources :groups
+  get "groups/root", to: 'groups#root'
+  post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
+  post "groups/upload_group_file", to: 'groups#upload_group_file'
   get "groups/:id/get_path", to: 'groups#get_path'
   get "groups/:id/get_children", to: 'groups#get_children'
-  post "groups/upload_group_file", to: 'groups#upload_group_file'
+  get "groups/:id/get_twitter", to: 'groups#get_twitter'
+  resources :groups
 
   get "dashboard", to: 'dashboard#index'
   
