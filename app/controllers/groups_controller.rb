@@ -50,12 +50,9 @@ class GroupsController < ApplicationController
   # GET /groups/1/get_path
   def get_path
     path = []
-    begin
-      path = @group.get_path(false)
-    rescue
-      return render json: "Could not find path", status: :unprocessable_entity
-    end
-    render json: path, status: :ok
+    path = @group.get_path(false)
+    path = { "groups": [] } if path.empty?
+    render json: path, status: :ok, each_serializer: GroupSerializer
   end
 
   # GET /groups/1/get_children
@@ -142,7 +139,7 @@ class GroupsController < ApplicationController
             if row_data[i] == 'root_node'
               return render json: {message: 'You cannot name a group \'root_node\'', error: true}, status: :unprocessable_entity
             end
-            # i == 'municipality'
+            # index 8 is 'municipality'
             if i == 8 && !build_country_city_state_model
               path << {
                 label: headers[i],
@@ -175,7 +172,6 @@ class GroupsController < ApplicationController
     groups_not_created = []
 
     rows_to_create.each do |r|
-      # Set base group as current_group
       current_group = Group::get_root
       was_created = false
       is_valid_manager = true
@@ -183,6 +179,7 @@ class GroupsController < ApplicationController
         # Create or add child to the path leading to the child group
         child = current_group.children.find_by_description(p[:description])
         if child.nil?
+          # 0: Country, 1: State, 2: Municipality. Managers may not create these, only use them.
           if i <= 2 && !build_country_city_state_model
             current_group = nil
             is_valid_manager = false
@@ -203,11 +200,13 @@ class GroupsController < ApplicationController
             new_group.phone = r[:phone]
             new_group.email = r[:email]
           end
-
+            
+          # If group manager has a twitter for news, it's set here for the whole instution.
           if !build_country_city_state_model && current_group_manager.twitter != nil
             new_group.twitter = current_group_manager.twitter
           end
 
+          # Children label for municipality is 'GRUPO' 
           if build_country_city_state_model && i == 2
             new_group.children_label = 'GRUPO'
           end
@@ -235,16 +234,18 @@ class GroupsController < ApplicationController
 
     if groups_not_created.any?
       return render json: {
-        message: 'Some groups were not created',
+        message: 'Some or all groups were not created',
         error: true,
         groups: groups_not_created
       }, status: :created
     end
 
-    render json: {message: 'Data loaded', error: false}, status: :created
+    render json: {message: 'All groups created', error: false}, status: :created
   end
 
   # POST /groups/build_country_city_state_groups/
+  # This is used only by admins to build countries, states and municipalities
+  # into database with an .xls file
   def build_country_city_state_groups
     self.upload_group_file(true)
   end

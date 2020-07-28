@@ -1,12 +1,12 @@
 class GroupManager < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
   has_many :groups, :through => :manager_group_permission 
 
+  # Check if a group is permitted by recusively scaling group branch
+  # confering if any of the groups are permitted on the way
   def is_permitted?(group)
     loop do
       return true if self.groups.include? group
