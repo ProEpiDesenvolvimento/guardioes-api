@@ -52,14 +52,14 @@ class GroupsController < ApplicationController
     path = []
     path = @group.get_path(false)
     path = { "groups": [] } if path.empty?
-    render json: path, status: :ok, each_serializer: GroupSerializer
+    render json: path, status: :ok, each_serializer: GroupSimpleSerializer
   end
 
   # GET /groups/1/get_children
   def get_children
     is_child = @group.children_label == nil
-    children = ActiveModel::SerializableResource.new(@group.children).as_json()
-    render json: { label: @group.children_label, is_child: is_child, children: children[:groups] }, status: :ok
+    children = @group.children.each.map {|x| GroupSimpleSerializer.new(x) }
+    render json: { label: @group.children_label, is_child: is_child, children: children }, status: :ok
   end
 
   # POST /groups/upload_group_file/
