@@ -59,7 +59,7 @@ class GroupsController < ApplicationController
   def get_children
     is_child = @group.children_label == nil
     children = @group.children.each.map {|x| GroupSimpleSerializer.new(x) }
-    render json: { label: @group.children_label, is_child: is_child, children: children }, status: :ok
+    render json: { label: @group.children_label, is_child: is_child, require_id: @group.require_id || false, children: children }, status: :ok
   end
 
   # POST /groups/upload_group_file/
@@ -191,6 +191,7 @@ class GroupsController < ApplicationController
           new_group.description = p[:description]
           new_group.children_label = p[:children_label]
           new_group.parent = current_group
+          new_group.require_id = false
           
           # If child group, add child group metadata
           if p[:children_label] == nil
@@ -204,6 +205,11 @@ class GroupsController < ApplicationController
           # If group manager has a twitter for news, it's set here for the whole instution.
           if !build_country_city_state_model && current_group_manager.twitter != nil
             new_group.twitter = current_group_manager.twitter
+          end
+
+          # If group manager requires identification code for users in his groups
+          if !build_country_city_state_model && current_group_manager.require_id == true
+            new_group.require_id = true
           end
 
           # Children label for municipality is 'GRUPO' 
