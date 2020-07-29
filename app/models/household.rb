@@ -22,7 +22,7 @@ class Household < ApplicationRecord
   has_many :surveys, dependent: :destroy
 
   has_one :school_unit
-  has_one :group, optional: true
+  has_one :group
 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 end
