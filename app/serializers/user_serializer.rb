@@ -9,6 +9,9 @@ class UserSerializer < ActiveModel::Serializer
   # has_many :surveys
 
   def group
+    if object.group.nil?
+      return nil
+    end
     object.group.get_path(string_only=true,labled=false).join('/')
   end
 
