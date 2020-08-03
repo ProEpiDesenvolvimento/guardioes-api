@@ -47,6 +47,6 @@ class PreRegistersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def pre_register_params
-      params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :app_id)
+      params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :email, :app_id)
     end
 end
