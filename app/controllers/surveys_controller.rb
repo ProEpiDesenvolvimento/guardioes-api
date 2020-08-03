@@ -1,7 +1,8 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
+  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys index_school_unit]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
+  before_action :set_school_unit, only: [:index_school_unit]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
@@ -14,12 +15,23 @@ class SurveysController < ApplicationController
     render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
-  # GET /all_surveys
+  # GET /surveys/school_unit/1 id of school unit
+  def index_school_unit
+    users = User.where("school_unit_id = ?", @school_unit.id)
+    surveys = []
+    users.each { |user| surveys.concat(Survey.filter_by_user(user.id))}
+    if surveys.empty?
+      render json: {errors: "No surveys was found"}, status: :not_found
+    else
+      render json: surveys
+    end
+  end
+
   def all_surveys
     @surveys = Survey.all
     
     render json: @surveys
-  end 
+  end
   
   # GET /surveys/1
   def show
@@ -85,6 +97,10 @@ class SurveysController < ApplicationController
   end
 
   private
+    def set_school_unit
+      @school_unit = SchoolUnit.find(params[:id])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_survey
       @survey = Survey.find(params[:id])

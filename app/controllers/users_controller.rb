@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index, :query_by_param]
-  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
+  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :index_school_unit]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
+  before_action :set_school_unit, only: [:index_school_unit]
 
   # GET /user
   def index
@@ -14,6 +15,12 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     render json: @user
+  end
+
+  # GET /users/school_unit/1 id of school unit
+  def index_school_unit
+    users = User.where("school_unit_id = ?", @school_unit.id)
+    render json: users
   end
 
   # PATCH/PUT /users/1
@@ -93,6 +100,10 @@ class UsersController < ApplicationController
 
   
   private
+  def set_school_unit
+    @school_unit = SchoolUnit.find(params[:id])
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     # if current_user.id != params[:id]
