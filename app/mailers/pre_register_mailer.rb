@@ -2,7 +2,7 @@ class PreRegisterMailer < ActionMailer::Base
     default from: 'proepi.desenvolvimento@gmail.com'
     layout 'mailer'
   
-    def new_group_request(pre_register)
+    def analyze_email(pre_register)
       @pre_register = pre_register
       email = mail()
       email.from = 'ProEpi <proepi.desenvolvimento@gmail.com>'
