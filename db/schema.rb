@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(version: 2020_07_25_170816) do
     t.float "percentage"
     t.bigint "symptom_id"
     t.bigint "syndrome_id"
+    t.float "ponderation"
     t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
   end
