@@ -84,6 +84,9 @@ class Group < ApplicationRecord
     children.each do |child|
       child.delete_subtree
     end
+    User.where(group_id:id).each do |u|
+      u.update_attribute(:group_id, nil)
+    end
     manager_group_permission.each do |m|
       m.delete
     end

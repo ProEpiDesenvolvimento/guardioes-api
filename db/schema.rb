@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_175316) do
+ActiveRecord::Schema.define(version: 2020_08_05_140936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_175316) do
     t.string "group_name"
     t.string "twitter"
     t.boolean "require_id"
+    t.integer "id_code_length"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_175316) do
     t.string "email"
     t.string "twitter"
     t.boolean "require_id"
+    t.integer "id_code_length"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end

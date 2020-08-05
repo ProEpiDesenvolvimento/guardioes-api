@@ -1,5 +1,5 @@
 class GroupSerializer < ActiveModel::Serializer
-  attributes :id, :description, :children_label, :parent, :require_id
+  attributes :id, :description, :children_label, :parent, :require_id, :id_code_length
 
   def parent
     if object.parent == nil

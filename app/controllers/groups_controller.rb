@@ -192,6 +192,7 @@ class GroupsController < ApplicationController
           new_group.children_label = p[:children_label]
           new_group.parent = current_group
           new_group.require_id = false
+          new_group.id_code_length = false
           
           # If child group, add child group metadata
           if p[:children_label] == nil
@@ -210,6 +211,7 @@ class GroupsController < ApplicationController
           # If group manager requires identification code for users in his groups
           if !build_country_city_state_model && current_group_manager.require_id == true
             new_group.require_id = true
+            new_group.id_code_length = current_group_manager.id_code_length
           end
 
           # Children label for municipality is 'GRUPO' 
