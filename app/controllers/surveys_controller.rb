@@ -17,13 +17,13 @@ class SurveysController < ApplicationController
 
   # GET /surveys/school_unit/1 id of school unit
   def index_school_unit
-    users = User.where("school_unit_id = ?", @school_unit.id)
     surveys = []
-    users.each { |user| surveys.concat(Survey.filter_by_user(user.id))}
-    if surveys.empty?
-      render json: {errors: "No surveys was found"}, status: :not_found
-    else
-      render json: surveys
+    users = User.where("school_unit_id = ?", params[:id]).find_each do |user|
+     surveys = Survey.filter_by_user(user.id)
+    end
+    respond_to do |format|
+      format.html
+      format.csv { send_data surveys.to_csv, filename: "surveys-#{Date.today}.csv" }
     end
   end
 

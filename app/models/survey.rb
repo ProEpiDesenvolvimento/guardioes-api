@@ -8,10 +8,11 @@ class Survey < ApplicationRecord
 
   serialize :symptom, Array
 
+  
   def address
     [street, city, state, country].compact.join(', ')
   end
-
+  
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     if geo = results.first
       obj.city    = geo.city
@@ -24,28 +25,28 @@ class Survey < ApplicationRecord
   def get_message
     @user_symptoms = []
     symptom.map { |symptom|
-      if Symptom.where(:description=>symptom).any?
-        @user_symptoms.append(Symptom.where(:description=>symptom)[0])
-      end
-    }
-    symptoms_and_syndromes_data = {}
-    symptom_messages = get_symptoms_messages
-    if symptom_messages.any?
-      symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
+    if Symptom.where(:description=>symptom).any?
+      @user_symptoms.append(Symptom.where(:description=>symptom)[0])
     end
-    top_3 = get_top_3_syndromes
-    if top_3.any?
-      symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
-      syndrome_message = top_3[0][:syndrome].message
-      if !syndrome_message.nil?
-        symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
-      end
-    end
-    return symptoms_and_syndromes_data
+  }
+  symptoms_and_syndromes_data = {}
+  symptom_messages = get_symptoms_messages
+  if symptom_messages.any?
+    symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
   end
- 
+  top_3 = get_top_3_syndromes
+  if top_3.any?
+    symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
+    syndrome_message = top_3[0][:syndrome].message
+    if !syndrome_message.nil?
+      symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
+    end
+  end
+  return symptoms_and_syndromes_data
+end
+
   scope :filter_by_user, ->(user) { where(user_id: user) }
- 
+
   # Data that gets sent as fields for elastic indexes
   def search_data
     user = nil
@@ -95,7 +96,7 @@ class Survey < ApplicationRecord
       percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome)[0]
       if percentage
         if @user_symptoms.include?(symptom)
-            sum += percentage.percentage
+          sum += percentage.percentage
         end
         modulus_division += percentage.percentage
       end
@@ -115,5 +116,17 @@ class Survey < ApplicationRecord
       end
     end
     return messages
+  end
+
+  def self.to_csv
+    attributes = %w{id latitude longitude bad_since traveled_to symptom created_at street city state country went_to_hospital contact_with_symptom}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.find_each do |survey|
+        csv << attributes.map{ |attr| survey.send(attr) }
+      end
+    end
   end
 end
