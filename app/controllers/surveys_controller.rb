@@ -22,7 +22,7 @@ class SurveysController < ApplicationController
       @surveys.concat(Survey.filter_by_user(user.id).to_a)
     end
     respond_to do |format|
-      format.html
+      format.all {render json: @surveys}
       format.csv { send_data to_csv, filename: "surveys-#{Date.today}.csv" }
     end
   end

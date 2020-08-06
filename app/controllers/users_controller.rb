@@ -19,8 +19,11 @@ class UsersController < ApplicationController
 
   # GET /users/school_unit/1 id of school unit
   def index_school_unit
-    users = User.where("school_unit_id = ?", @school_unit.id)
-    render json: users
+    @users = User.where("school_unit_id = ?", @school_unit.id)
+    respond_to do |format|
+      format.all {render json: @users}
+      format.csv { send_data to_csv, filename: "users-#{Date.today}.csv" }
+    end
   end
 
   # PATCH/PUT /users/1
@@ -99,7 +102,18 @@ class UsersController < ApplicationController
   end
 
   
-  private
+private
+  def to_csv
+    attributes = %w{id user_name email birthdate country gender race is_professional picture app_id city state identification_code group_id school_unit_id risk_group}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @users.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
   def set_school_unit
     @school_unit = SchoolUnit.find(params[:id])
   end
