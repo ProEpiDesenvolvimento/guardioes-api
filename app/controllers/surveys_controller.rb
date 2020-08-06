@@ -17,13 +17,13 @@ class SurveysController < ApplicationController
 
   # GET /surveys/school_unit/1 id of school unit
   def index_school_unit
-    surveys = []
-    users = User.where("school_unit_id = ?", params[:id]).find_each do |user|
-     surveys = Survey.filter_by_user(user.id)
+    @surveys = []
+    User.where("school_unit_id = ?", params[:id]).find_each do |user|
+      @surveys.concat(Survey.filter_by_user(user.id).to_a)
     end
     respond_to do |format|
       format.html
-      format.csv { send_data surveys.to_csv, filename: "surveys-#{Date.today}.csv" }
+      format.csv { send_data to_csv, filename: "surveys-#{Date.today}.csv" }
     end
   end
 
@@ -97,6 +97,17 @@ class SurveysController < ApplicationController
   end
 
   private
+    def to_csv
+      attributes = %w{id latitude longitude bad_since traveled_to symptom created_at street city state country went_to_hospital contact_with_symptom}
+
+      CSV.generate(headers: true) do |csv|
+        csv << attributes
+        @surveys.each do |survey|
+          csv << attributes.map{ |attr| survey.send(attr) }
+        end
+      end
+    end
+
     def set_school_unit
       @school_unit = SchoolUnit.find(params[:id])
     end

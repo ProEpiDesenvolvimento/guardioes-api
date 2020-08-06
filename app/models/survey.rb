@@ -117,16 +117,4 @@ end
     end
     return messages
   end
-
-  def self.to_csv
-    attributes = %w{id latitude longitude bad_since traveled_to symptom created_at street city state country went_to_hospital contact_with_symptom}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.find_each do |survey|
-        csv << attributes.map{ |attr| survey.send(attr) }
-      end
-    end
-  end
 end
