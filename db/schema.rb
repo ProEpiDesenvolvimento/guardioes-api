@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_140936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "source_link"
+    t.string "icon"
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
