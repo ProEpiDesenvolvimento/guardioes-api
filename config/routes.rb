@@ -14,6 +14,11 @@ Rails.application.routes.draw do
   get "groups/:id/get_twitter", to: 'groups#get_twitter'
   resources :groups
 
+  get 'data_visualization/users_count', to: 'data_visualization#users_count'
+  get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
+  get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
+  get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
+
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms

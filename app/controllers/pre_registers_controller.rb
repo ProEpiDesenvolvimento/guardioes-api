@@ -18,6 +18,7 @@ class PreRegistersController < ApplicationController
     @pre_register = PreRegister.new(pre_register_params)
 
     if @pre_register.save
+      PreRegisterMailer.new_group_request(@pre_register).deliver
       render json: @pre_register, status: :created, location: @pre_register
     else
       render json: @pre_register.errors, status: :unprocessable_entity
@@ -46,6 +47,6 @@ class PreRegistersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def pre_register_params
-      params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :app_id)
+      params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :email, :app_id)
     end
 end
