@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :twitter_apis
   resources :pre_registers
   resources :messages
   resources :syndromes
