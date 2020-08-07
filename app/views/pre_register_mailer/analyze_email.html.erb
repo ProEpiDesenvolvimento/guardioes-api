@@ -1,0 +1,22 @@
+<h1>Uma nova solicitação de cadastro para instituição de ensino foi realizada</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome da instituição</th>
+            <th>CNPJ</th>
+            <th>Email institucional</th>
+            <th>Estado</th>
+            <th>Tipo da organização</th>
+         </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th><%= @pre_register.company_name %></th>
+            <th><%= @pre_register.cnpj %></th>
+            <th><%= @pre_register.email %></th>
+            <th><%= @pre_register.state %></th>
+            <th><%= @pre_register.organization_kind %></th>
+        </tr>
+    </tbody>
+</table>
