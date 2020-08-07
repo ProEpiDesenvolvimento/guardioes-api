@@ -1,5 +1,6 @@
 class TwitterApisController < ApplicationController
   before_action :set_twitter_api, only: [:show, :update, :destroy]
+  before_action :authenticate_admin!, except: [:index, :show]
 
   # GET /twitter_apis
   def index
@@ -48,6 +49,9 @@ class TwitterApisController < ApplicationController
         twitter_handle = twitter_handle[1..twitter_handle.length]
       end
       @twitter_api = TwitterApi.find_by_handle(twitter_handle)
+      if @twitter_api.twitterdata.nil?
+        @twitter_api.update_tweets
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
