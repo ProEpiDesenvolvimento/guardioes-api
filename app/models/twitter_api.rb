@@ -35,13 +35,14 @@ class TwitterApi < ApplicationRecord
 
     client.user_timeline(self.handle, count: 5, exclude_replies: true, tweet_mode: 'compat').each do |tweet|
       data = JSON.parse(tweet.attrs.to_json)
-
+      
       tweet_data = {
         created_at: data['created_at'],
         id: data['id'],
         id_str: data['id_str'],
         name: data['name'],
-        screen_name: data['screen_name']
+        screen_name: data['screen_name'],
+        text: data['text']
       }
       
       is_retweet = !data['retweeted_status'].nil?
@@ -60,22 +61,7 @@ class TwitterApi < ApplicationRecord
         end
       end
 
-      links = []
-
-      if is_retweet && urls = data['retweeted_status']['entities']['urls']
-        urls.each do |x|
-          links << x['url']
-        end
-      end
-
-      if urls = data['entities']['urls']
-        urls.each do |x|
-          links << x['url']
-        end
-      end
-
       tweet_data['images'] = images
-      tweet_data['links'] = links
 
       tweets << tweet_data
     end

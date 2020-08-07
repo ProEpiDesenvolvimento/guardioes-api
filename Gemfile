@@ -47,7 +47,12 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+# Configures an API that communicates with twitter
 gem 'twitter'
+# Time-based platform-independent background job scheduler daemon for Ruby on Rails.
+gem 'crono'
+# Sets up the deamon to run alongside crono
+gem 'daemons'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

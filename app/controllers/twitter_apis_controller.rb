@@ -12,7 +12,6 @@ class TwitterApisController < ApplicationController
 
   # GET /twitter_apis/1
   def show
-    @twitter_api.update_tweets
     render json: @twitter_api
   end
 
@@ -44,7 +43,11 @@ class TwitterApisController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_twitter_api
-      @twitter_api = TwitterApi.find(params[:id])
+      twitter_handle = params[:id]
+      if twitter_handle[0] == '@'
+        twitter_handle = twitter_handle[1..twitter_handle.length]
+      end
+      @twitter_api = TwitterApi.find_by_handle(twitter_handle)
     end
 
     # Only allow a trusted parameter "white list" through.
