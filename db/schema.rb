@@ -10,7 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_25_170816) do
+
+ActiveRecord::Schema.define(version: 2020_07_26_185922) do
+
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +124,18 @@ ActiveRecord::Schema.define(version: 2020_07_25_170816) do
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end
 
+  create_table "pre_registers", force: :cascade do |t|
+    t.string "cnpj"
+    t.string "phone"
+    t.string "organization_kind"
+    t.string "state"
+    t.string "company_name"
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_pre_registers_on_app_id"
+  end
+
   create_table "public_hospitals", force: :cascade do |t|
     t.string "description"
     t.float "latitude"
@@ -202,7 +216,6 @@ ActiveRecord::Schema.define(version: 2020_07_25_170816) do
     t.float "percentage"
     t.bigint "symptom_id"
     t.bigint "syndrome_id"
-    t.float "ponderation"
     t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
   end
@@ -256,6 +269,7 @@ ActiveRecord::Schema.define(version: 2020_07_25_170816) do
   add_foreign_key "managers", "apps"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "users"
