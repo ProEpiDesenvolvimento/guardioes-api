@@ -142,6 +142,18 @@ ActiveRecord::Schema.define(version: 2020_08_05_140936) do
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end
 
+  create_table "pre_registers", force: :cascade do |t|
+    t.string "cnpj"
+    t.string "phone"
+    t.string "organization_kind"
+    t.string "state"
+    t.string "company_name"
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_pre_registers_on_app_id"
+  end
+
   create_table "public_hospitals", force: :cascade do |t|
     t.string "description"
     t.float "latitude"
@@ -276,6 +288,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_140936) do
   add_foreign_key "manager_group_permissions", "groups"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "users"

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :pre_registers
   resources :messages
   resources :syndromes
   resources :school_units
