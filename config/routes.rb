@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   post "upload_by_file", to: 'school_units#upload_by_file'
   
   resources :groups
+
+  get 'data_visualization/users_count', to: 'data_visualization#users_count'
+  get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
+  get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
+  get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
+
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
