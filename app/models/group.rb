@@ -26,7 +26,7 @@ class Group < ApplicationRecord
 
   # Call this function to initialize groups model inner workings
   def self.setup
-    Group.new(description: 'root_node', twitter: '@proepi', )
+    Group.new(description: 'root_node', twitter: '@proepi', children_label: 'Pais').save()
   end
 
   # Return parent group
