@@ -19,11 +19,12 @@ class TwitterApi < ApplicationRecord
   validates :handle, :presence => true, :uniqueness => true
 
   def self.get_twitter_client
+    # Your must put the ENV secrets into the docker-compose file
     Twitter::REST::Client.new do |config|
       config.consumer_key        = "M8wPaN9rUYK7uWhS0Z3wyK5M3"
-      config.consumer_secret     = "nSrWvv1SLC7j6OG6U4ZWpSUaMOhRtCkXHZhEy380MldKjLs2zs"
+      config.consumer_secret     = ENV["TWITTER_API_CONSUMER_SECRET"]
       config.access_token        = "2278065150-VNm0Jmx7iDsi237SfJGx60q1xnPBFslPEe5sB0B"
-      config.access_token_secret = "31OJ3y9oSKRUJ5h8Uljq7oOnYx4x1OxyeHqm7xhHz5VRB"
+      config.access_token_secret = ENV["TWITTER_API_ACESS_TOKEN_SECRET"]
     end
   end
 
@@ -44,7 +45,7 @@ class TwitterApi < ApplicationRecord
         screen_name: data['user']['screen_name'],
         text: data['text']
       }
-      
+
       is_retweet = !data['retweeted_status'].nil?
 
       images = []
