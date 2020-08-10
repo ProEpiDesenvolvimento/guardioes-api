@@ -40,8 +40,8 @@ class TwitterApi < ApplicationRecord
         created_at: data['created_at'],
         id: data['id'],
         id_str: data['id_str'],
-        name: data['name'],
-        screen_name: data['screen_name'],
+        name: data['user']['name'],
+        screen_name: data['user']['screen_name'],
         text: data['text']
       }
       
