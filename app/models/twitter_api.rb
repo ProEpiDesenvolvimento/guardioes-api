@@ -33,7 +33,7 @@ class TwitterApi < ApplicationRecord
 
     tweets = []
 
-    client.user_timeline(self.handle, count: 5, exclude_replies: true, tweet_mode: 'compat').each do |tweet|
+    client.user_timeline(self.handle, count: 200, exclude_replies: true, tweet_mode: 'compat').each do |tweet|
       data = JSON.parse(tweet.attrs.to_json)
       
       tweet_data = {
