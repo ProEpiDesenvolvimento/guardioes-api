@@ -58,10 +58,10 @@ class Survey < ApplicationRecord
     elastic_data[:identification_code] = user.identification_code
     elastic_data[:gender] = user.gender 
     elastic_data[:race] = user.race 
-    if !user.school_unit_id.nil? and SchoolUnit.where(id:user.school_unit_id).count > 0
-      elastic_data[:enrolled_in] = SchoolUnit.where(id:user.school_unit_id)[0].description 
+    if !user.group.nil?
+      elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
     else 
-      elastic_data[:enrolled_in] = nil 
+      elastic_data[:group] = nil 
     end
     Symptom.all.each do |symptom|
       elastic_data[symptom.description] = self.symptom.include? symptom.description

@@ -10,9 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2020_08_03_155221) do
-
+ActiveRecord::Schema.define(version: 2020_08_05_140936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,16 +56,42 @@ ActiveRecord::Schema.define(version: 2020_08_03_155221) do
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
+  create_table "group_managers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "app_id"
+    t.string "group_name"
+    t.string "twitter"
+    t.boolean "require_id"
+    t.integer "id_code_length"
+    t.index ["app_id"], name: "index_group_managers_on_app_id"
+    t.index ["email"], name: "index_group_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
+  end
+
   create_table "groups", force: :cascade do |t|
     t.string "description"
-    t.string "kind"
-    t.string "details"
-    t.bigint "manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.bigint "parent_id"
+    t.string "children_label"
+    t.string "code"
+    t.string "address"
+    t.string "cep"
+    t.string "phone"
+    t.string "email"
+    t.string "twitter"
+    t.boolean "require_id"
+    t.integer "id_code_length"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
-    t.index ["manager_id"], name: "index_groups_on_manager_id"
+    t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
 
   create_table "households", force: :cascade do |t|
@@ -85,6 +109,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_155221) do
     t.bigint "school_unit_id"
     t.string "identification_code"
     t.boolean "risk_group"
+    t.integer "group_id"
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
@@ -97,19 +122,13 @@ ActiveRecord::Schema.define(version: 2020_08_03_155221) do
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
-  create_table "managers", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+  create_table "manager_group_permissions", force: :cascade do |t|
+    t.bigint "group_manager_id"
+    t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
-    t.bigint "app_id"
-    t.index ["app_id"], name: "index_managers_on_app_id"
-    t.index ["email"], name: "index_managers_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
+    t.index ["group_id"], name: "index_manager_group_permissions_on_group_id"
+    t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -264,10 +283,11 @@ ActiveRecord::Schema.define(version: 2020_08_03_155221) do
 
   add_foreign_key "admins", "apps"
   add_foreign_key "contents", "apps"
-  add_foreign_key "groups", "managers"
+  add_foreign_key "group_managers", "apps"
   add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
-  add_foreign_key "managers", "apps"
+  add_foreign_key "manager_group_permissions", "group_managers"
+  add_foreign_key "manager_group_permissions", "groups"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "pre_registers", "apps"
