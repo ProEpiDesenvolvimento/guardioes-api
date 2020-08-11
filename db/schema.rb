@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_140936) do
+ActiveRecord::Schema.define(version: 2020_08_07_210235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,16 @@ ActiveRecord::Schema.define(version: 2020_08_05_140936) do
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
+  create_table "crono_jobs", force: :cascade do |t|
+    t.string "job_id", null: false
+    t.text "log"
+    t.datetime "last_performed_at"
+    t.boolean "healthy"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
+  end
+  
   create_table "group_managers", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -247,6 +257,13 @@ ActiveRecord::Schema.define(version: 2020_08_05_140936) do
     t.datetime "updated_at", null: false
     t.bigint "message_id"
     t.index ["message_id"], name: "index_syndromes_on_message_id"
+  end
+
+  create_table "twitter_apis", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "twitterdata"
+    t.string "handle"
   end
 
   create_table "users", force: :cascade do |t|

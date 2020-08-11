@@ -2,6 +2,10 @@ class GroupManager < ApplicationRecord
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
+  after_create :create_twitter_api
+  after_save :create_twitter_api
+  after_update :create_twitter_api
+
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
   has_many :groups, :through => :manager_group_permission 
 
@@ -14,5 +18,15 @@ class GroupManager < ApplicationRecord
       group = group.parent
     end
     return false
+  end
+
+  # Creates a twitter for a group managers twitter handle 
+  def create_twitter_api
+    begin
+      TwitterApi.new(
+        handle: self.twitter
+      ).save()
+    rescue
+    end
   end
 end
