@@ -116,10 +116,6 @@ class SurveysController < ApplicationController
       @school_unit = SchoolUnit.find(params[:id])
     end
 
-    def set_manager
-      @manager = Manager.find(current_user.id)
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_survey
       @survey = Survey.find(params[:id])
