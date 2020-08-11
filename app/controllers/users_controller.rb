@@ -126,7 +126,8 @@ class UsersController < ApplicationController
       :city,
       :identification_code,
       :school_unit_id,
-      :risk_group
+      :risk_group,
+      :group_id
     )
   end
 
