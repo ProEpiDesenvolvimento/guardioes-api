@@ -14,7 +14,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
-  #belongs_to :group
+  belongs_to :group, optional: true
   has_one :school_unit,
     dependent: :destroy
     
@@ -47,8 +47,8 @@ class User < ApplicationRecord
   def search_data
     elastic_data = self.as_json(except:['app_id', 'group_id', 'aux_code', 'reset_password_token'])
     elastic_data[:app] = self.app.app_name
-    if !self.group_id.nil? and Group.where(id:self.group_id).count > 0
-      elastic_data[:group] = Group.where(id:self.group_id)[0].description
+    if !self.group.nil?
+      elastic_data[:group] = self.group.get_path(string_only=true, labeled=false).join('/')
     else
       elastic_data[:group] = nil
     end
