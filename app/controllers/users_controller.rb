@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index, :query_by_param]
   before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
+  before_action :authenticate_manager!, only: [:index_school_unit]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
   before_action :set_school_unit, only: [:index_school_unit]
-  before_action :set_manager, only: [:index_school_unit]
 
   # GET /user
   def index
@@ -120,10 +120,6 @@ private
 
   def set_school_unit
     @school_unit = SchoolUnit.find(params[:id])
-  end
-
-  def set_manager
-    @manager = Manager.find(current_user.id)
   end
 
   # Use callbacks to share common setup or constraints between actions.

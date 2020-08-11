@@ -1,9 +1,9 @@
 class SurveysController < ApplicationController
   before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
+  before_action :authenticate_manager!, only: [:index_school_unit]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
   before_action :set_school_unit, only: [:index_school_unit]
-  before_action :set_manager, only: [:index_school_unit]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
