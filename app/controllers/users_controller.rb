@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
   before_action :set_school_unit, only: [:index_school_unit]
+  # before_action :set_manager, only: [:index_school_unit]
 
   # GET /user
   def index
@@ -104,18 +105,25 @@ class UsersController < ApplicationController
   
 private
   def to_csv
-    attributes = %w{id user_name email birthdate country gender race is_professional picture app_id city state identification_code group_id school_unit_id risk_group}
+    attributes = []
+    @users.first.search_data.each do |key, value|
+      attributes.append(key)
+    end
 
     CSV.generate(headers: true) do |csv|
       csv << attributes
       @users.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
+        csv << user.search_data.map { |key, value| value.to_s }
       end
     end
   end
 
   def set_school_unit
     @school_unit = SchoolUnit.find(params[:id])
+  end
+
+  def set_manager
+    @manager = Manager.find(current_user.id)
   end
 
   # Use callbacks to share common setup or constraints between actions.

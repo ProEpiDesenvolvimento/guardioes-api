@@ -1,8 +1,9 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys index_school_unit]
+  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
   before_action :set_school_unit, only: [:index_school_unit]
+  before_action :set_manager, only: [:index_school_unit]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
@@ -97,19 +98,26 @@ class SurveysController < ApplicationController
   end
 
   private
-    def to_csv
-      attributes = %w{id latitude longitude bad_since traveled_to symptom created_at street city state country went_to_hospital contact_with_symptom}
+  def to_csv
+    attributes = []
+    @surveys.first.search_data.each do |key, value|
+      attributes.append(key)
+    end
 
-      CSV.generate(headers: true) do |csv|
-        csv << attributes
-        @surveys.each do |survey|
-          csv << attributes.map{ |attr| survey.send(attr) }
-        end
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @surveys.each do |survey|
+        csv << survey.search_data.map { |key, value| value.to_s }
       end
     end
+  end
 
     def set_school_unit
       @school_unit = SchoolUnit.find(params[:id])
+    end
+
+    def set_manager
+      @manager = Manager.find(current_user.id)
     end
 
     # Use callbacks to share common setup or constraints between actions.
