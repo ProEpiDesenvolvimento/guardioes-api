@@ -7,4 +7,12 @@ class GroupSerializer < ActiveModel::Serializer
     end
     { name: object.parent.description, id: object.parent.id }
   end
+
+  def require_id
+    object.require_id
+  end
+
+  def id_code_length
+    object.id_code_length
+  end
 end
