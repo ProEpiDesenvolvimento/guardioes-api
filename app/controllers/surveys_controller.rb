@@ -1,9 +1,9 @@
 class SurveysController < ApplicationController
   before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
-  before_action :authenticate_manager!, only: [:index_school_unit]
+  before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
-  before_action :set_school_unit, only: [:index_school_unit]
+  before_action :set_group, only: [:group_data]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
@@ -16,10 +16,10 @@ class SurveysController < ApplicationController
     render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
-  # GET /surveys/school_unit/1 id of school unit
-  def index_school_unit
+  # GET /surveys/group/1 id of group
+  def group_data
     @surveys = []
-    User.where("school_unit_id = ?", params[:id]).find_each do |user|
+    User.where("group_id = ?", params[:id]).find_each do |user|
       @surveys.concat(Survey.filter_by_user(user.id).to_a)
     end
     respond_to do |format|
@@ -112,8 +112,8 @@ class SurveysController < ApplicationController
     end
   end
 
-    def set_school_unit
-      @school_unit = SchoolUnit.find(params[:id])
+    def set_group
+      @group = Group.find(params[:id])
     end
 
     # Use callbacks to share common setup or constraints between actions.

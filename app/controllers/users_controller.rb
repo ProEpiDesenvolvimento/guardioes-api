@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index, :query_by_param]
   before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
-  before_action :authenticate_manager!, only: [:index_school_unit]
+  before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
-  before_action :set_school_unit, only: [:index_school_unit]
+  before_action :set_group, only: [:group_data]
 
   # GET /user
   def index
@@ -18,9 +18,9 @@ class UsersController < ApplicationController
     render json: @user
   end
 
-  # GET /users/school_unit/1 id of school unit
-  def index_school_unit
-    @users = User.where("school_unit_id = ?", @school_unit.id)
+  # GET /users/group/1 id of group
+  def group_data
+    @users = User.where("group_id = ?", @group.id)
     respond_to do |format|
       format.all {render json: @users}
       format.csv { send_data to_csv, filename: "users-#{Date.today}.csv" }
@@ -118,8 +118,8 @@ private
     end
   end
 
-  def set_school_unit
-    @school_unit = SchoolUnit.find(params[:id])
+  def set_group
+    @group = Group.find(params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
