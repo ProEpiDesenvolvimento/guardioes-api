@@ -157,74 +157,6 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
   end
 
-  create_table "dashboard_favorite", id: :serial, comment: "Presence of a row here indicates a given User has favorited a given Dashboard.", force: :cascade do |t|
-    t.integer "user_id", null: false, comment: "ID of the User who favorited the Dashboard."
-    t.integer "dashboard_id", null: false, comment: "ID of the Dashboard favorited by the User."
-    t.index ["dashboard_id"], name: "idx_dashboard_favorite_dashboard_id"
-    t.index ["user_id", "dashboard_id"], name: "unique_dashboard_favorite_user_id_dashboard_id", unique: true
-    t.index ["user_id"], name: "idx_dashboard_favorite_user_id"
-  end
-
-  create_table "dashboardcard_series", id: :serial, force: :cascade do |t|
-    t.integer "dashboardcard_id", null: false
-    t.integer "card_id", null: false
-    t.integer "position", null: false
-    t.index ["card_id"], name: "idx_dashboardcard_series_card_id"
-    t.index ["dashboardcard_id"], name: "idx_dashboardcard_series_dashboardcard_id"
-  end
-
-  create_table "data_migrations", id: :string, limit: 254, force: :cascade do |t|
-    t.datetime "timestamp", null: false
-    t.index ["id"], name: "idx_data_migrations_id"
-  end
-
-  create_table "databasechangelog", id: false, force: :cascade do |t|
-    t.string "id", limit: 255, null: false
-    t.string "author", limit: 255, null: false
-    t.string "filename", limit: 255, null: false
-    t.datetime "dateexecuted", null: false
-    t.integer "orderexecuted", null: false
-    t.string "exectype", limit: 10, null: false
-    t.string "md5sum", limit: 35
-    t.string "description", limit: 255
-    t.string "comments", limit: 255
-    t.string "tag", limit: 255
-    t.string "liquibase", limit: 20
-    t.string "contexts", limit: 255
-    t.string "labels", limit: 255
-    t.string "deployment_id", limit: 10
-    t.index ["id", "author", "filename"], name: "idx_databasechangelog_id_author_filename", unique: true
-  end
-
-  create_table "databasechangeloglock", id: :integer, default: nil, force: :cascade do |t|
-    t.boolean "locked", null: false
-    t.datetime "lockgranted"
-    t.string "lockedby", limit: 255
-  end
-
-  create_table "dependency", id: :serial, force: :cascade do |t|
-    t.string "model", limit: 32, null: false
-    t.integer "model_id", null: false
-    t.string "dependent_on_model", limit: 32, null: false
-    t.integer "dependent_on_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["dependent_on_id"], name: "idx_dependency_dependent_on_id"
-    t.index ["dependent_on_model"], name: "idx_dependency_dependent_on_model"
-    t.index ["model"], name: "idx_dependency_model"
-    t.index ["model_id"], name: "idx_dependency_model_id"
-  end
-
-  create_table "dimension", id: :serial, comment: "Stores references to alternate views of existing fields, such as remapping an integer to a description, like an enum", force: :cascade do |t|
-    t.integer "field_id", null: false, comment: "ID of the field this dimension row applies to"
-    t.string "name", limit: 254, null: false, comment: "Short description used as the display name of this new column"
-    t.string "type", limit: 254, null: false, comment: "Either internal for a user defined remapping or external for a foreign key based remapping"
-    t.integer "human_readable_field_id", comment: "Only used with external type remappings. Indicates which field on the FK related table to use for display"
-    t.datetime "created_at", null: false, comment: "The timestamp of when the dimension was created."
-    t.datetime "updated_at", null: false, comment: "The timestamp of when these dimension was last updated."
-    t.index ["field_id", "name"], name: "unique_dimension_field_id_name", unique: true
-    t.index ["field_id"], name: "idx_dimension_field_id"
-  end
-
   create_table "group_managers", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -1042,5 +974,4 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
   add_foreign_key "users", "school_units"
-  add_foreign_key "view_log", "core_user", column: "user_id", name: "fk_view_log_ref_user_id", on_delete: :cascade
 end
