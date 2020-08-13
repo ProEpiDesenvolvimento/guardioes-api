@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_07_210235) do
+ActiveRecord::Schema.define(version: 2020_08_12_152255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,9 +97,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_210235) do
     t.string "cep"
     t.string "phone"
     t.string "email"
-    t.string "twitter"
-    t.boolean "require_id"
-    t.integer "id_code_length"
+    t.integer "group_manager_id"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end

@@ -24,6 +24,8 @@ class Group < ApplicationRecord
   # Each group has [0..n] children groups
   has_many :children, class_name: "Group", foreign_key: "parent_id"
 
+  belongs_to :group_manager, optional: true
+
   # Call this function to initialize groups model inner workings
   def self.setup
     Group.new(description: 'root_node', twitter: '@proepi', children_label: 'Pais').save()
@@ -58,15 +60,18 @@ class Group < ApplicationRecord
   end
 
   # Recursively looks for a twitter handle that is not nil
-  # root_node must have a twitter handle (@proepi)
+  # If none is found, returns app's standard twitter
   def get_twitter
     current_node = self
-    twitter = ''
+    twitter = 'appguardioes'
     loop do
-      if current_node.twitter != nil
-        twitter = current_node.twitter
-        break
+      if current_node.group_manager != nil
+        if current_node.group_manager.twitter != nil
+          twitter = current_node.group_manager.twitter
+          break
+        end
       end
+      break if current_node.parent.nil?
       current_node = current_node.parent
     end
     return twitter
@@ -91,5 +96,23 @@ class Group < ApplicationRecord
       m.delete
     end
     delete
+  end
+
+  def require_id
+    if group_manager != nil
+      if group_manager.require_id != nil
+        return true
+      end
+    end
+    return false
+  end
+
+  def id_code_length
+    if group_manager != nil
+      if group_manager.id_code_length != nil
+        return group_manager.id_code_length
+      end
+    end
+    return nil
   end
 end
