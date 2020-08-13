@@ -28,12 +28,16 @@ class Group < ApplicationRecord
 
   # Call this function to initialize groups model inner workings
   def self.setup
-    Group.new(description: 'root_node', twitter: '@proepi', children_label: 'Pais').save()
+    group = Group.new(description: 'root_node', twitter: 'guardioesunb', children_label: 'Pais')
+    group.save()
+    return group
   end
 
   # Return parent group
   def self.get_root
-    return Group.find_by_description('root_node')
+    group = Group.find_by_description('root_node')
+    group = Group::setup() if group.nil?
+    return group
   end
 
   # Returns tree structure that leads to current group
