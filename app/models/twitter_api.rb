@@ -21,9 +21,9 @@ class TwitterApi < ApplicationRecord
   def self.get_twitter_client
     # Your must put the ENV secrets into the docker-compose file
     Twitter::REST::Client.new do |config|
-      config.consumer_key        = "M8wPaN9rUYK7uWhS0Z3wyK5M3"
+      config.consumer_key        = "bGQHQT23vQcLIBLnvkLno013g"
       config.consumer_secret     = ENV["TWITTER_API_CONSUMER_SECRET"]
-      config.access_token        = "2278065150-VNm0Jmx7iDsi237SfJGx60q1xnPBFslPEe5sB0B"
+      config.access_token        = "1292869858279948288-bePtGBsX4ZHMEVpeXO4xUbpkl5tOMn"
       config.access_token_secret = ENV["TWITTER_API_ACESS_TOKEN_SECRET"]
     end
   end
@@ -34,9 +34,9 @@ class TwitterApi < ApplicationRecord
 
     tweets = []
 
-    client.user_timeline(self.handle, count: 200, exclude_replies: true, tweet_mode: 'compat').each do |tweet|
+    client.user_timeline(self.handle, count: 200, exclude_replies: true, tweet_mode: 'extended').each do |tweet|
       data = JSON.parse(tweet.attrs.to_json)
-      
+      puts data
       tweet_data = {
         created_at: data['created_at'],
         id: data['id'],
