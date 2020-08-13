@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :set_group, except: [:index,:upload_group_file,:create,:root,:build_country_city_state_groups]
-  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root]
+  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root,:get_twitter]
   before_action :validate_invalid_group_name, only: [:create,:update]
   before_action :authenticate_admin!, only: [:build_country_city_state_groups, :index]
 
@@ -191,27 +191,19 @@ class GroupsController < ApplicationController
           new_group.description = p[:description]
           new_group.children_label = p[:children_label]
           new_group.parent = current_group
-          new_group.require_id = false
-          new_group.id_code_length = false
-          
+
           # If child group, add child group metadata
-          if p[:children_label] == nil
-            new_group.code = r[:code]
-            new_group.address = r[:address]
-            new_group.cep = r[:cep]
-            new_group.phone = r[:phone]
-            new_group.email = r[:email]
-          end
-            
-          # If group manager has a twitter for news, it's set here for the whole instution.
-          if !build_country_city_state_model && current_group_manager.twitter != nil
-            new_group.twitter = current_group_manager.twitter
+          if !build_country_city_state_model && p[:children_label] == nil
+            new_group.code = r[:metadata][:code]
+            new_group.address = r[:metadata][:address]
+            new_group.cep = r[:metadata][:cep]
+            new_group.phone = r[:metadata][:phone]
+            new_group.email = r[:metadata][:email]
           end
 
-          # If group manager requires identification code for users in his groups
-          if !build_country_city_state_model && current_group_manager.require_id == true
-            new_group.require_id = true
-            new_group.id_code_length = current_group_manager.id_code_length
+          # Add group manager to group
+          if !build_country_city_state_model
+            new_group.group_manager = current_group_manager
           end
 
           # Children label for municipality is 'GRUPO' 
@@ -260,7 +252,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/:id/get_twitter
   def get_twitter
-    render json: @group.get_twitter
+    render json: { twitter: @group.get_twitter }
   end
 
   private
