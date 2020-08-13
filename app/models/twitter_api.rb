@@ -36,7 +36,7 @@ class TwitterApi < ApplicationRecord
 
     client.user_timeline(self.handle, count: 200, exclude_replies: true, tweet_mode: 'extended').each do |tweet|
       data = JSON.parse(tweet.attrs.to_json)
-      puts data
+      
       tweet_data = {
         created_at: data['created_at'],
         id: data['id'],
