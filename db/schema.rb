@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_210235) do
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
   end
-  
+
   create_table "group_managers", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
