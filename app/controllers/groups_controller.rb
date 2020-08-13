@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :set_group, except: [:index,:upload_group_file,:create,:root,:build_country_city_state_groups]
-  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root]
+  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root,:get_twitter]
   before_action :validate_invalid_group_name, only: [:create,:update]
   before_action :authenticate_admin!, only: [:build_country_city_state_groups, :index]
 
@@ -252,7 +252,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/:id/get_twitter
   def get_twitter
-    render json: @group.get_twitter
+    render json: { twitter: @group.get_twitter }
   end
 
   private
