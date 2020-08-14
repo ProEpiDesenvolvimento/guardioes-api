@@ -1,7 +1,9 @@
 class SurveysController < ApplicationController
   before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys]
+  before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
+  before_action :set_group, only: [:group_data]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
@@ -14,12 +16,23 @@ class SurveysController < ApplicationController
     render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
-  # GET /all_surveys
+  # GET /surveys/group/1 id of group
+  def group_data
+    @surveys = []
+    User.where("group_id = ?", params[:id]).find_each do |user|
+      @surveys.concat(Survey.filter_by_user(user.id).to_a)
+    end
+    respond_to do |format|
+      format.all {render json: @surveys}
+      format.csv { send_data to_csv, filename: "surveys-#{Date.today}.csv" }
+    end
+  end
+
   def all_surveys
     @surveys = Survey.all
     
     render json: @surveys
-  end 
+  end
   
   # GET /surveys/1
   def show
@@ -85,6 +98,24 @@ class SurveysController < ApplicationController
   end
 
   private
+  def to_csv
+    attributes = []
+    @surveys.first.search_data.each do |key, value|
+      attributes.append(key)
+    end
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @surveys.each do |survey|
+        csv << survey.search_data.map { |key, value| value.to_s }
+      end
+    end
+  end
+
+    def set_group
+      @group = Group.find(params[:id])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_survey
       @survey = Survey.find(params[:id])
