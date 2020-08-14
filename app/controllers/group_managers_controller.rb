@@ -3,6 +3,7 @@ class GroupManagersController < ApplicationController
   before_action :set_app, only: [:index]
   before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
+  before_action :set_manager, only: [:destroy, :update]
 
   # GET /group_managers/
   def index
@@ -22,6 +23,37 @@ class GroupManagersController < ApplicationController
   def is_manager_permitted
     is_permitted = @manager.is_permitted?(@group)
     render json: { is_permitted: is_permitted, group: @group.get_path(string_only=true).join('/') }, status: :ok
+  end
+
+  def create
+    group_manager = GroupManager.new(group_manager_params)
+    if group_manager.save
+      render json: group_manager, status: :created
+    else
+      render json: group_manager.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    errors = {}
+    update_params.each do |param|
+      begin
+        @manager.update_attribute(param[0], param[1])
+      rescue ActiveRecord::InvalidForeignKey
+        errors[param[0]] = param[1].to_s + ' não foi encontrado'
+      rescue StandardError => msg
+        errors[param[0]] = msg
+      end
+    end
+    if errors.length == 0
+      render json: @manager
+    else
+      render json: {errors: errors, group_manager: @manager}, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @manager.destroy!
   end
   
   # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
@@ -77,6 +109,18 @@ class GroupManagersController < ApplicationController
     def set_manager_and_group
       @manager = GroupManager.find(params[:group_manager_id])
       @group = Group.find(params[:group_id])
+    end
+
+    def set_manager
+      @manager = GroupManager.find(params[:id])
+    end
+
+    def group_manager_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length)
+    end
+
+    def update_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length)
     end
 
     def check_authenticated_admin_or_manager
