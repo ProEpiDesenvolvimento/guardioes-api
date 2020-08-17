@@ -1,6 +1,23 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  searchkick
+  # Index name for a survey is now:
+  # classname_environment[if survey user has group, _groupmanagergroupname]
+  # For these changes to take effect, a reindex of the entire database is needed
+  searchkick index_name: -> {
+    env = 'production' if Rails.env.production? 
+    env = 'development' if Rails.env.development? 
+    env = 'test' if Rails.env.test?
+    # The reason self is not used here is because self, in
+    # this context, refers to the empty object Survey.new
+    last_survey = Survey.last
+    if last_survey.user.group.nil?
+      return 'surveys_' + env
+    end
+    group_name = last_survey.user.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '_'
+    return 'surveys_' + env + '_' + group_name
+  }
     
   belongs_to :user
   belongs_to :household, optional:true
@@ -8,7 +25,6 @@ class Survey < ApplicationRecord
 
   serialize :symptom, Array
 
-  
   def address
     [street, city, state, country].compact.join(', ')
   end
