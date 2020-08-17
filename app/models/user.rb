@@ -2,7 +2,24 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
-  searchkick
+  # Index name for a user is now:
+  # classname_environment[if user has group, _groupmanagergroupname]
+  # For these changes to take effect, a reindex of the entire database is needed
+  searchkick index_name: -> {
+    env = 'production' if Rails.env.production? 
+    env = 'development' if Rails.env.development? 
+    env = 'test' if Rails.env.test?
+    # The reason self is not used here is because self, in
+    # this context, refers to the empty object User.new
+    last_user = User.last
+    if last_user.group.nil?
+      return 'users_' + env
+    end
+    group_name = last_user.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '_'
+    return 'users_' + env + '_' + group_name
+  }
 
   has_many :households,
     dependent: :destroy
