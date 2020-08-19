@@ -18,6 +18,12 @@ class Survey < ApplicationRecord
   end
   
   reverse_geocoded_by :latitude, :longitude do |obj,results|
+    if geo = results.first
+      obj.city    = geo.city
+      obj.country = geo.country
+      obj.street  = geo.street
+      obj.state   = geo.state
+    end
   end
   
   def get_message
