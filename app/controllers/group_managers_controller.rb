@@ -3,7 +3,7 @@ class GroupManagersController < ApplicationController
   before_action :set_app, only: [:index]
   before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
-  before_action :set_manager, only: [:destroy, :update]
+  before_action :set_group_manager, only: [:destroy, :update]
 
   # GET /group_managers/
   def index
@@ -38,7 +38,7 @@ class GroupManagersController < ApplicationController
     errors = {}
     update_params.each do |param|
       begin
-        @manager.update_attribute(param[0], param[1])
+        @group_manager.update_attribute(param[0], param[1])
       rescue ActiveRecord::InvalidForeignKey
         errors[param[0]] = param[1].to_s + ' não foi encontrado'
       rescue StandardError => msg
@@ -46,14 +46,14 @@ class GroupManagersController < ApplicationController
       end
     end
     if errors.length == 0
-      render json: @manager
+      render json: @group_manager
     else
-      render json: {errors: errors, group_manager: @manager}, status: :unprocessable_entity
+      render json: {errors: errors, group_manager: @group_manager}, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @manager.destroy!
+    @group_manager.destroy!
   end
   
   # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
@@ -111,8 +111,8 @@ class GroupManagersController < ApplicationController
       @group = Group.find(params[:group_id])
     end
 
-    def set_manager
-      @manager = GroupManager.find(params[:id])
+    def set_group_manager
+      @group_manager = GroupManager.find(params[:id])
     end
 
     def group_manager_params
