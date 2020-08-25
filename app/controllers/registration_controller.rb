@@ -112,7 +112,8 @@ class RegistrationController < Devise::RegistrationsController
         :app_id,
         :group_name,
         :require_id,
-        :id_code_length
+        :id_code_length,
+        :twitter
       )
     end
   end
