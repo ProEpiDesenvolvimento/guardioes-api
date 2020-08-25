@@ -25,15 +25,6 @@ class GroupManagersController < ApplicationController
     render json: { is_permitted: is_permitted, group: @group.get_path(string_only=true).join('/') }, status: :ok
   end
 
-  def create
-    group_manager = GroupManager.new(group_manager_params)
-    if group_manager.save
-      render json: group_manager, status: :created
-    else
-      render json: group_manager.errors, status: :unprocessable_entity
-    end
-  end
-
   def update
     errors = {}
     update_params.each do |param|
