@@ -4,21 +4,9 @@ class Survey < ApplicationRecord
 
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
-  # This overrides searchkick's class that sends data to elaticsearch, such 
-  # that the index name is now defined by the model that is being evaluated
-  # using the function 'index_pattern_name'
-  Searchkick::RecordData.class_eval do
-    def record_data
-      data = {
-        _index: record.index_pattern_name || index.name,
-        _id: search_id
-      }
-      data[:_type] = document_type if Searchkick.server_below7?
-      data[:routing] = record.search_routing if record.respond_to?(:search_routing)
-      data
-    end
-  end
-  
+  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # such that the index name is now defined by the model that is being 
+  # evaluated using the function 'index_pattern_name'  
   def index_pattern_name
     env = ENV['RAILS_ENV']
     if self.user.group.nil?
