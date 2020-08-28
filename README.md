@@ -102,6 +102,10 @@ E caso queria testar um modulo em específico
 rspec spec/[pasta]/[arquivo]
 ```
 
+### Continuous Integration
+
+Quando uma novo commit é feito, este sobre pro [Travis](https://travis-ci.org/), onde é rodada a bateria de testes para certificar que nada quebrou.
+
 ## License & copyright
 
 ProEpi, Associação Brasileira de Profissionais de Epidemiologia de Campo
