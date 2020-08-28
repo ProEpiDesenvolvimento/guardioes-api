@@ -2,6 +2,8 @@ language: ruby
 
 services:
   - docker
+install:
+  - bundle install
 script:
   - bundle exec rake spec
     
