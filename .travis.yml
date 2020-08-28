@@ -4,6 +4,8 @@ services:
   - docker
 install:
   - bundle install
+  - touch config/master.key
+  - echo "a779f354317e4df61cdb56adfe3469e0" > config/master.key
 script:
   - bundle exec rake spec
     
