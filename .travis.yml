@@ -4,5 +4,7 @@ services:
   - docker
 script:
   - bundle install
+  - gem install ruby-rspec-core
+  - gem install rspec 
   - rspec
     
