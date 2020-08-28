@@ -1,6 +1,8 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  searchkick
+  if !Rails.env.test?
+    searchkick
+  end
     
   belongs_to :user
   belongs_to :household, optional:true

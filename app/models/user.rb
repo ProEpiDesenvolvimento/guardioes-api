@@ -2,7 +2,9 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
-  searchkick
+  if !Rails.env.test?
+    searchkick
+  end
 
   has_many :households,
     dependent: :destroy
