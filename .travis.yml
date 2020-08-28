@@ -7,5 +7,6 @@ script:
   - gem install database_cleaner
   - gem install factory_bot_rails
   - gem install shoulda-matchers
+  - gem intall progress_formatter
   - rspec
     
