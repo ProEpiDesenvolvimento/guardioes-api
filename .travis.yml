@@ -5,5 +5,7 @@ services:
 script:
   - gem install rspec
   - gem install database_cleaner
+  - factory_bot_rails
+  - shoulda-matchers
   - rspec
     
