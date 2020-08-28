@@ -4,5 +4,6 @@ services:
   - docker
 script:
   - gem install rspec
+  - gem install database_cleaner
   - rspec
     
