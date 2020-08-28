@@ -3,5 +3,6 @@ language: ruby
 services:
   - docker
 script:
-  - docker-compose run web rspec
+  - gem install rspec
+  - rspec
     
