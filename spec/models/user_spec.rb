@@ -8,7 +8,7 @@ end
 RSpec.describe User, type: :model do
 
   before :all do
-    App.new(:app_name=>"cleber institution", :owner_country=>"brazil").save()
+    App.new(:app_name=>"brasil", :owner_country=>"brasil").save()
   end
 
   let (:valid_user) {

@@ -3,9 +3,9 @@ language: ruby
 services:
   - docker
 install:
-  - bundle install
   - touch config/master.key
   - echo "a779f354317e4df61cdb56adfe3469e0" > config/master.key
+  - sudo docker-compose up -d
 script:
-  - bundle exec rake spec
+  - sudo docker-compose run web bundle exec rake spec
     
