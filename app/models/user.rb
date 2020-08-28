@@ -2,8 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   acts_as_paranoid
-  # searchkick
-  
+  searchkick
+
   has_many :households,
     dependent: :destroy
 
@@ -14,8 +14,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
-  #belongs_to :group
-  has_one :school_unit
+  belongs_to :group, optional: true
+  has_one :school_unit,
+    dependent: :destroy
+    
   validates :user_name,
     presence: true,
     length: {
@@ -40,4 +42,22 @@ class User < ApplicationRecord
     },
     format: { with: URI::MailTo::EMAIL_REGEXP, message: I18n.translate("validations.email.message") },
     uniqueness: true
+
+  # Data that gets sent as fields for elastic indexes
+  def search_data
+    elastic_data = self.as_json(except:['app_id', 'group_id', 'aux_code', 'reset_password_token'])
+    elastic_data[:app] = self.app.app_name
+    if !self.group.nil?
+      elastic_data[:group] = self.group.get_path(string_only=true, labeled=false).join('/')
+    else
+      elastic_data[:group] = nil
+    end
+    if !self.school_unit_id.nil? and SchoolUnit.where(id:self.school_unit_id).count > 0
+      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
+    else 
+      elastic_data[:enrolled_in] = nil 
+    end
+    elastic_data[:household_count] = self.households.count
+    return elastic_data 
+  end
 end

@@ -33,7 +33,7 @@ namespace :dev do
             first_name: Faker::Name.first_name,
             last_name: Faker::Name.last_name,
             is_god: [true, false].sample,
-            app_id: app.id
+            app_id: 1
           )
         end
       end
@@ -110,6 +110,26 @@ namespace :dev do
           details: Faker::Lorem.paragraph([1,2].sample, false, [1,2].sample),
           app_id: App.all.sample.id 
       )
+      end
+    end
+
+    show_spinner("Create some surveys") do
+      symptom_arr = []
+      Symptom.all.each do |s|
+        symptom_arr.append(s.description)
+      end
+  
+      User.all.each do |user|
+        3.times do
+          symptom_can = [nil, symptom_arr]
+  
+          Survey.create!(
+            latitude: 40.741934119747704,
+            longitude: -73.98951017150449,
+            symptom: symptom_can.sample,
+            user_id: user.id,
+          )
+        end
       end
     end
   end

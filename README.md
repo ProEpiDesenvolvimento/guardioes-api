@@ -3,6 +3,17 @@
 Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
 
 Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
+## Technologies
+
+Usamos nessa API:
+- [Ruby on Rails](https://rubyonrails.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
+
+
+Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
+
+Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
 
 ## Tecnologias
 
@@ -21,6 +32,7 @@ Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conte
 
 #### Sem logs do rails
 ```
+$docker-compose build 
 $docker-compose up -d
 ```
 #### Com logs do rails
@@ -38,7 +50,19 @@ docker-compose run web rake db:migrate
 
 Teste se tudo está funcionando entrando em [http://localhost:3001](http://localhost:3001]). Você deverá ver um JSON se tudo funciona normalmente.
 
+Após a migração da base de dados, para o correto funcionamento de todos os features da API, você deve iniciar os cronjobs, para fazer isso:
+
+```
+sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
+```
+
 ### Erros
+
+### Key
+
+#### "/config/initializers/devise.rb: undefined method '[]' for nil:NilClass"
+
+Significa que você está tentando levantar o ambiente sem a key citada acima.
 
 #### Postgres
 
@@ -64,10 +88,22 @@ Isso significa que a API tentou mandar uma mensagem para a base de dados Elastic
 
 Para solucionar, basta levantar uma instância do [guadioes web](https://github.com/proepidesenvolvimento/guardioes-web/) rodando na porta 9200 ou alterar o endereço do elastic no arquivo elasticsearch.rb.
 
+### Testes
+
+Basta escrever
+
+```
+rspec
+```
+
+E caso queria testar um modulo em específico
+
+```
+rspec spec/[pasta]/[arquivo]
+```
+
 ## License & copyright
 
 ProEpi, Associação Brasileira de Profissionais de Epidemiologia de Campo
 
 Licensed under the [Apache License 2.0](LICENSE.md).
-
-
