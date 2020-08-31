@@ -50,6 +50,12 @@ docker-compose run web rake db:migrate
 
 Teste se tudo está funcionando entrando em [http://localhost:3001](http://localhost:3001]). Você deverá ver um JSON se tudo funciona normalmente.
 
+Após a migração da base de dados, para o correto funcionamento de todos os features da API, você deve iniciar os cronjobs, para fazer isso:
+
+```
+sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
+```
+
 ### Erros
 
 ### Key
