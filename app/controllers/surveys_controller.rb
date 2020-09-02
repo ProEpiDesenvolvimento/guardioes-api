@@ -77,7 +77,6 @@ class SurveysController < ApplicationController
     json = Rails.cache.fetch('week_surveys', expires_in: @WEEK_SURVEY_CACHE_EXPIRATION) do
       render_to_string json: @surveys = Survey.where("created_at >= ?", 1.week.ago.utc), each_serializer: SurveyForMapSerializer
     end
-
     render json: json, each_serializer: SurveyForMapSerializer
   end
 
