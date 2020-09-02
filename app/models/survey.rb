@@ -43,11 +43,12 @@ class Survey < ApplicationRecord
       end
     end
 
-    if top_3.include?('Sindrome Gripal')
-      VigilanceMailer.covid_vigilance_email(self).deliver
+    top_3.each do |syndrome| 
+      if syndrome[:syndrome].description == "Sindrome Gripal"
+        VigilanceMailer.covid_vigilance_email(self).deliver
+      end
     end
-
-
+    
     return symptoms_and_syndromes_data
   end
 
