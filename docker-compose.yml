@@ -20,7 +20,3 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
-      ELASTICSEARCH_URL: http://localhost:9200
-      MAILER_URL:
-      TWITTER_API_CONSUMER_SECRET: 
-      TWITTER_API_ACESS_TOKEN_SECRET: 

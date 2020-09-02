@@ -9,7 +9,7 @@ class Admin < ApplicationRecord
 
   belongs_to :app
 
-  validates_presence_of :first_name, :last_name, :email, :app_id
+  validates_presence_of :first_name, :last_name, :email, :is_god, :app_id
   
   # validates :first_name, 
   #   presence: true,

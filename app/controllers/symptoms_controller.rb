@@ -4,13 +4,7 @@ class SymptomsController < ApplicationController
 
   # GET /symptoms
   def index
-    if current_user.nil?
-      user = current_admin
-    else
-      user = current_user
-    end
-
-    @symptoms = Symptom.filter_symptom_by_app_id(user.app_id)
+    @symptoms = Symptom.filter_symptom_by_app_id(current_user.app_id)
 
     render json: @symptoms
   end
@@ -42,9 +36,6 @@ class SymptomsController < ApplicationController
 
   # DELETE /symptoms/1
   def destroy
-    SyndromeSymptomPercentage.where(symptom:@symptom).each do |obj|
-      obj.destroy
-    end
     @symptom.destroy
   end
 
@@ -56,6 +47,6 @@ class SymptomsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def symptom_params
-      params.require(:symptom).permit(:description, :code, :priority, :details, :app_id, message_attributes: [ :title, :warning_message, :go_to_hospital_message ])
+      params.require(:symptom).permit(:description, :code, :priority, :details, :app_id)
     end
 end

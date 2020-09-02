@@ -20,7 +20,6 @@ class HouseholdsController < ApplicationController
     @household.user_id = @user.id
 
     if @household.save
-      @user.reindex
       render json: @household, status: :created, location: user_household_path(:id => @user)
     else
       render json: @household.errors, status: :unprocessable_entity
@@ -53,19 +52,6 @@ class HouseholdsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def household_params
-      params.require(:household).permit(
-        :description, 
-        :birthdate, 
-        :country, 
-        :gender, 
-        :race, 
-        :kinship, 
-        :user_id, 
-        :picture, 
-        :school_unit_id, 
-        :identification_code, 
-        :risk_group,
-        :group_id
-      )
+      params.require(:household).permit(:description, :birthdate, :country, :gender, :race, :kinship, :user_id, :picture)
     end
 end

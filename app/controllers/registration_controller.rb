@@ -1,7 +1,8 @@
 class RegistrationController < Devise::RegistrationsController
+  before_action :authenticate_admin!, only: [:create_manager]
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
-  before_action :create_group_manager, if: -> { params[:group_manager] }
+  before_action :create_manager, if: -> { params[:manager] }
 
   respond_to :json
   
@@ -55,21 +56,15 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if ( params[:admin] && current_admin )
-      if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
-        @sign_up_params = nil
-      else
-        @sign_up_params = sign_up_params
-      end
+    if params[:admin]
+      @sign_up_params = sign_up_params
     end
   end 
 
 
-  def create_group_manager
-    if params[:group_manager] && (current_admin || current_group_manager)
+  def create_manager
+    if params[:manager]
       @sign_up_params = sign_up_params
-    else
-      @sign_up_params = nil
     end
   end 
 
@@ -96,6 +91,7 @@ class RegistrationController < Devise::RegistrationsController
         :risk_group
       )
     elsif params[:admin]
+      puts "\n\nCheguei aqui \n\n\n"
       params.require(:admin).permit(
         :email,
         :password,
@@ -105,15 +101,11 @@ class RegistrationController < Devise::RegistrationsController
         :app_id
       )
     else
-      params.require(:group_manager).permit(
+      params.require(:manager).permit(
         :email,
         :name,
         :password,
-        :app_id,
-        :group_name,
-        :require_id,
-        :id_code_length,
-        :twitter
+        :app_id
       )
     end
   end
