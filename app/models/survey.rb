@@ -25,25 +25,31 @@ class Survey < ApplicationRecord
   def get_message
     @user_symptoms = []
     symptom.map { |symptom|
-    if Symptom.where(:description=>symptom).any?
-      @user_symptoms.append(Symptom.where(:description=>symptom)[0])
+      if Symptom.where(:description=>symptom).any?
+        @user_symptoms.append(Symptom.where(:description=>symptom)[0])
+      end
+    }
+    symptoms_and_syndromes_data = {}
+    symptom_messages = get_symptoms_messages
+    if symptom_messages.any?
+      symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
     end
-  }
-  symptoms_and_syndromes_data = {}
-  symptom_messages = get_symptoms_messages
-  if symptom_messages.any?
-    symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
-  end
-  top_3 = get_top_3_syndromes
-  if top_3.any?
-    symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
-    syndrome_message = top_3[0][:syndrome].message
-    if !syndrome_message.nil?
-      symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
+    top_3 = get_top_3_syndromes
+    if top_3.any?
+      symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
+      syndrome_message = top_3[0][:syndrome].message
+      if !syndrome_message.nil?
+        symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
+      end
     end
+
+    if top_3.include?('Sindrome Gripal')
+      VigilanceMailer.covid_vigilance_email(self).deliver
+    end
+
+
+    return symptoms_and_syndromes_data
   end
-  return symptoms_and_syndromes_data
-end
 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 
