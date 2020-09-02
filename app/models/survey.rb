@@ -1,7 +1,23 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
   searchkick
-    
+
+  # Index name for a survey is now:
+  # classname_environment[if survey user has group, _groupmanagergroupname]
+  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # such that the index name is now defined by the model that is being 
+  # evaluated using the function 'index_pattern_name'  
+  def index_pattern_name
+    env = ENV['RAILS_ENV']
+    if self.user.group.nil?
+      return 'surveys_' + env
+    end
+    group_name = self.user.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '-'
+    return 'surveys_' + env + '_' + group_name
+  end
+
   belongs_to :user
   belongs_to :household, optional:true
   before_validation :reverse_geocode
@@ -11,7 +27,7 @@ class Survey < ApplicationRecord
   def address
     [street, city, state, country].compact.join(', ')
   end
-
+  
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     if geo = results.first
       obj.city    = geo.city
@@ -43,9 +59,9 @@ class Survey < ApplicationRecord
     end
     return symptoms_and_syndromes_data
   end
- 
+
   scope :filter_by_user, ->(user) { where(user_id: user) }
- 
+
   # Data that gets sent as fields for elastic indexes
   def search_data
     user = nil
@@ -95,7 +111,7 @@ class Survey < ApplicationRecord
       percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome)[0]
       if percentage
         if @user_symptoms.include?(symptom)
-            sum += percentage.percentage
+          sum += percentage.percentage
         end
         modulus_division += percentage.percentage
       end

@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!, only: [:index, :query_by_param]
   before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
+  before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update]
+  before_action :set_group, only: [:group_data]
 
   # GET /user
   def index
@@ -14,6 +16,15 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     render json: @user
+  end
+
+  # GET /users/group/1 id of group
+  def group_data
+    @users = User.where("group_id = ?", @group.id)
+    respond_to do |format|
+      format.all {render json: @users}
+      format.csv { send_data to_csv, filename: "users-#{Date.today}.csv" }
+    end
   end
 
   # PATCH/PUT /users/1
@@ -92,7 +103,25 @@ class UsersController < ApplicationController
   end
 
   
-  private
+private
+  def to_csv
+    attributes = []
+    @users.first.search_data.each do |key, value|
+      attributes.append(key)
+    end
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @users.each do |user|
+        csv << user.search_data.map { |key, value| value.to_s }
+      end
+    end
+  end
+
+  def set_group
+    @group = Group.find(params[:id])
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     # if current_user.id != params[:id]

@@ -4,7 +4,13 @@ class SymptomsController < ApplicationController
 
   # GET /symptoms
   def index
-    @symptoms = Symptom.filter_symptom_by_app_id(current_user.app_id)
+    if current_user.nil?
+      user = current_admin
+    else
+      user = current_user
+    end
+
+    @symptoms = Symptom.filter_symptom_by_app_id(user.app_id)
 
     render json: @symptoms
   end
