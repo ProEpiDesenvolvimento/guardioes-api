@@ -12,7 +12,6 @@ Rails.application.configure do
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
-  config.action_controller.perform_caching = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
@@ -47,8 +46,16 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Custom cache configuration
+  config.action_controller.perform_caching = true
+
+  megabyte = 1048576    # bytes. For some reason 'x.megabytes' does not work on config file
+  
+  config.cache_store = :memory_store, { size: 512 * megabyte }
+
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
+  }
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
@@ -81,13 +88,14 @@ Rails.application.configure do
   end
 
   config.action_mailer.delivery_method = :smtp
+
   config.action_mailer.smtp_settings = {
-    address: "smtp.sendgrid.net",
-    domain: "proepi.com",
-    port: 465,
-    user_name: 'apikey',
-    password: Rails.application.credentials.sendgrid_api_key,
-    ssl: true 
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :user_name            => ENV['proepi_email'],
+    :password             => ENV['proepi_email_password'],
+    :authentication       => "plain",
+    :enable_starttls_auto => true
   }
 
   # Do not dump schema after migrations.

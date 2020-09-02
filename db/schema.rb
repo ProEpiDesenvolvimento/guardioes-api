@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_04_024321) do
+ActiveRecord::Schema.define(version: 2020_08_12_152255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,19 +52,54 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "source_link"
+    t.string "icon"
     t.index ["app_id"], name: "index_contents_on_app_id"
+  end
+
+  create_table "crono_jobs", force: :cascade do |t|
+    t.string "job_id", null: false
+    t.text "log"
+    t.datetime "last_performed_at"
+    t.boolean "healthy"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
+  end
+
+  create_table "group_managers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "app_id"
+    t.string "group_name"
+    t.string "twitter"
+    t.boolean "require_id"
+    t.integer "id_code_length"
+    t.index ["app_id"], name: "index_group_managers_on_app_id"
+    t.index ["email"], name: "index_group_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
   end
 
   create_table "groups", force: :cascade do |t|
     t.string "description"
-    t.string "kind"
-    t.string "details"
-    t.bigint "manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.bigint "parent_id"
+    t.string "children_label"
+    t.string "code"
+    t.string "address"
+    t.string "cep"
+    t.string "phone"
+    t.string "email"
+    t.integer "group_manager_id"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
-    t.index ["manager_id"], name: "index_groups_on_manager_id"
+    t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
 
   create_table "households", force: :cascade do |t|
@@ -79,7 +114,12 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "picture"
+    t.bigint "school_unit_id"
+    t.string "identification_code"
+    t.boolean "risk_group"
+    t.integer "group_id"
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
+    t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
   end
 
@@ -90,19 +130,38 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
-  create_table "managers", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+  create_table "manager_group_permissions", force: :cascade do |t|
+    t.bigint "group_manager_id"
+    t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
+    t.index ["group_id"], name: "index_manager_group_permissions_on_group_id"
+    t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "title"
+    t.text "warning_message"
+    t.text "go_to_hospital_message"
+    t.bigint "syndrome_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "symptom_id"
+    t.index ["symptom_id"], name: "index_messages_on_symptom_id"
+    t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
+  end
+
+  create_table "pre_registers", force: :cascade do |t|
+    t.string "cnpj"
+    t.string "phone"
+    t.string "organization_kind"
+    t.string "state"
+    t.string "company_name"
     t.bigint "app_id"
-    t.index ["app_id"], name: "index_managers_on_app_id"
-    t.index ["email"], name: "index_managers_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email"
+    t.index ["app_id"], name: "index_pre_registers_on_app_id"
   end
 
   create_table "public_hospitals", force: :cascade do |t|
@@ -137,6 +196,11 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
+    t.string "zone"
+    t.string "level"
+    t.string "city"
+    t.string "state"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -169,7 +233,35 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
     t.bigint "app_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "syndrome_id"
+    t.bigint "message_id"
     t.index ["app_id"], name: "index_symptoms_on_app_id"
+    t.index ["message_id"], name: "index_symptoms_on_message_id"
+    t.index ["syndrome_id"], name: "index_symptoms_on_syndrome_id"
+  end
+
+  create_table "syndrome_symptom_percentages", force: :cascade do |t|
+    t.float "percentage"
+    t.bigint "symptom_id"
+    t.bigint "syndrome_id"
+    t.index ["symptom_id"], name: "index_syndrome_symptom_percentages_on_symptom_id"
+    t.index ["syndrome_id"], name: "index_syndrome_symptom_percentages_on_syndrome_id"
+  end
+
+  create_table "syndromes", force: :cascade do |t|
+    t.string "description"
+    t.string "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "message_id"
+    t.index ["message_id"], name: "index_syndromes_on_message_id"
+  end
+
+  create_table "twitter_apis", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "twitterdata"
+    t.string "handle"
   end
 
   create_table "users", force: :cascade do |t|
@@ -206,13 +298,23 @@ ActiveRecord::Schema.define(version: 2020_06_04_024321) do
 
   add_foreign_key "admins", "apps"
   add_foreign_key "contents", "apps"
-  add_foreign_key "groups", "managers"
+  add_foreign_key "group_managers", "apps"
+  add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
-  add_foreign_key "managers", "apps"
+  add_foreign_key "manager_group_permissions", "group_managers"
+  add_foreign_key "manager_group_permissions", "groups"
+  add_foreign_key "messages", "symptoms"
+  add_foreign_key "messages", "syndromes"
+  add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "users"
   add_foreign_key "symptoms", "apps"
+  add_foreign_key "symptoms", "messages"
+  add_foreign_key "symptoms", "syndromes"
+  add_foreign_key "syndrome_symptom_percentages", "symptoms"
+  add_foreign_key "syndrome_symptom_percentages", "syndromes"
+  add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
   add_foreign_key "users", "school_units"
