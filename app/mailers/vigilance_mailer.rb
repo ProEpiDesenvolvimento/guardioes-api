@@ -6,10 +6,10 @@ class VigilanceMailer < ActionMailer::Base
       @survey = survey
       email = mail()
       email.from = 'ProEpi <proepi.desenvolvimento@gmail.com>'
-      email.to = 'gabriel <gsmartins96.x@gmail.com>'
+      email.to = ENV["VIGILANCE_EMAIL"]
       email.subject = '[VIGILANCIA ATIVA] Novo usuário com suspeita'
       
-      return email
+      return email 
     end
   end
   
