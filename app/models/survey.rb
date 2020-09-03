@@ -1,14 +1,29 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
   searchkick
-    
+
+  # Index name for a survey is now:
+  # classname_environment[if survey user has group, _groupmanagergroupname]
+  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # such that the index name is now defined by the model that is being 
+  # evaluated using the function 'index_pattern_name'  
+  def index_pattern_name
+    env = ENV['RAILS_ENV']
+    if self.user.group.nil?
+      return 'surveys_' + env
+    end
+    group_name = self.user.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '-'
+    return 'surveys_' + env + '_' + group_name
+  end
+
   belongs_to :user
   belongs_to :household, optional:true
   before_validation :reverse_geocode
 
   serialize :symptom, Array
 
-  
   def address
     [street, city, state, country].compact.join(', ')
   end
@@ -42,7 +57,8 @@ class Survey < ApplicationRecord
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
       end
     end
-
+    
+    # Possible COVID case detected, send mail to active vigilance about case
     top_3.each do |syndrome| 
       if syndrome[:syndrome].description == "Sindrome Gripal"
         VigilanceMailer.covid_vigilance_email(self).deliver
