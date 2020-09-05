@@ -60,4 +60,23 @@ class User < ApplicationRecord
     elastic_data[:household_count] = self.households.count
     return elastic_data 
   end
+
+  def update_streak(survey)
+    last_survey = Survey.filter_by_user(self.id).order("id DESC").offset(1).first
+    if last_survey.created_at.day == survey.created_at.prev_day.day
+      self.streak += 1
+    else
+      self.streak = 1
+    end
+    self.update_attribute(:streak, self.streak)
+  end
+
+  def get_feedback_message
+    if (self.streak % 3 == 0)
+      index = (self.streak / 3).to_i + 1
+      return Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
+    else
+      return nil
+    end
+  end
 end

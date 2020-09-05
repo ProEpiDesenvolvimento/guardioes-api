@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_12_152255) do
+ActiveRecord::Schema.define(version: 2020_09_05_020549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
+    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -288,6 +289,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.boolean "risk_group"
     t.string "aux_code"
     t.bigint "school_unit_id"
+    t.integer "streak", default: 1
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
