@@ -72,9 +72,13 @@ class User < ApplicationRecord
   end
 
   def get_feedback_message
-    if (self.streak % 3 == 0)
-      index = (self.streak / 3).to_i + 1
-      return Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
+    if self.streak % 3 == 0 || self.streak == 1
+      index = (self.streak / 3).to_i
+      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
+      return message.feedback_message
+    elsif self.streak == 112
+      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC").last
+      return message.feedback_message
     else
       return nil
     end
