@@ -67,14 +67,6 @@ class SurveysController < ApplicationController
     end
   end
 
-  def update
-    if @survey.update(params.require(:survey).permit(:created_at))
-      render json: @survey
-    else
-      render json: @survey.errors, status: :unprocessable_entity
-    end
-  end
-
   # DELETE /surveys/1
   def destroy
     @survey.destroy
