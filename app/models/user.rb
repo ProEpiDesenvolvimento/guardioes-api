@@ -18,9 +18,6 @@ class User < ApplicationRecord
     return 'users_' + env + '_' + group_name
   end
 
-  validates :phone,
-    numericality: { only_integer: true}
-
   has_many :households,
     dependent: :destroy
 

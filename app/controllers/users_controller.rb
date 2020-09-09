@@ -101,7 +101,6 @@ class UsersController < ApplicationController
     
     render json: @users
   end
-
   
 private
   def to_csv
@@ -139,7 +138,26 @@ private
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture, :city, :identification_code, :state, :group_id, :risk_group, :policy_version)
+    params.require(:user).permit(
+      :user_name,
+      :email, 
+      :birthdate, 
+      :country, 
+      :gender, 
+      :race, 
+      :is_professional, 
+      :app_id, 
+      :password, 
+      :picture, 
+      :city, 
+      :identification_code, 
+      :state, 
+      :group_id, 
+      :risk_group, 
+      :policy_version, 
+      :phone, 
+      :is_vigilance
+    )
   end
 
   def update_params
@@ -157,7 +175,9 @@ private
       :school_unit_id,
       :group_id,
       :risk_group,
-      :policy_version
+      :policy_version,
+      :phone, 
+      :is_vigilance
     )
   end
 
