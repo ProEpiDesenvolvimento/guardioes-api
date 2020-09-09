@@ -47,7 +47,7 @@ RSpec.describe User, type: :model do
       end
       it "fails to create user not tied to any app" do
         invalid_user = valid_user
-        invalid_user.app_id = 2
+        invalid_user.app_id = 200
         invalid_user.save()
         test_user_count(0)
       end
@@ -70,12 +70,6 @@ RSpec.describe User, type: :model do
         user.email = "cebolinha"
         user.save()
         test_user_count(0)
-      end
-      it "this test should have failed" do
-        user = valid_user
-        user.email = "cebolinha"
-        user.save()
-        test_user_count(1)
       end
     end
   end
