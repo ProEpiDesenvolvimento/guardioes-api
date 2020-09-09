@@ -4,7 +4,7 @@ class User < ApplicationRecord
 
   # Index name for a users is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
-  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # It has been overriden #searchkick's class that sends data to elaticsearch, 
   # such that the index name is now defined by the model that is being 
   # evaluated using the function 'index_pattern_name'
   def index_pattern_name
@@ -86,7 +86,7 @@ class User < ApplicationRecord
   end
 
   def get_feedback_message
-    if self.streak % 3 == 0 || self.streak == 1
+    if (self.streak % 3 == 0 || self.streak == 1) && self.streak < 112
       index = (self.streak / 3).to_i
       message = Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
       return message.feedback_message
@@ -94,7 +94,9 @@ class User < ApplicationRecord
       message = Message.where.not(feedback_message: [nil, ""]).order("id ASC").last
       return message.feedback_message
     else
-      return nil
+      index = self.streak % 4
+      message = Message.where.not(feedback_message: [nil, ""]).order("id DESC")[index]
+      return message.feedback_message
     end
   end
 end
