@@ -62,6 +62,12 @@ RSpec.describe Group, type: :model do
   before :all do
     create_app
   end
+
+  before :each do
+    Group.all.each do |g|
+      g.delete_subtree
+    end
+  end
   
   describe "=> model functions" do
     context "=> static functions" do
