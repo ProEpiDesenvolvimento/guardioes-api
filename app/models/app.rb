@@ -6,7 +6,9 @@ class App < ApplicationRecord
   has_many :contents
   has_many :group_managers
 
-  searchkick
+  if !Rails.env.test?
+    searchkick
+  end
 
   validates :app_name,
     presence: true,

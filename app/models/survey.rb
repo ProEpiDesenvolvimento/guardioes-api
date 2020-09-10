@@ -1,7 +1,9 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  searchkick
-
+  if !Rails.env.test?
+    searchkick
+  end
+    
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
   # It has been overriden searchkick's class that sends data to elaticsearch, 

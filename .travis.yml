@@ -2,6 +2,12 @@ language: ruby
 
 services:
   - docker
+install:
+  - touch config/master.key
+  - echo "a779f354317e4df61cdb56adfe3469e0" > config/master.key
+  - sudo docker-compose up -d
+  - sudo docker-compose exec db psql -U postgres -c 'create database myapp_test;'
+  - sudo docker-compose run web rails db:migrate RAILS_ENV=test
 script:
-  - bundle exec rake test
+  - sudo docker-compose run web bundle exec rake spec
     
