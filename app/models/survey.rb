@@ -65,7 +65,7 @@ class Survey < ApplicationRecord
   # Data that gets sent as fields for elastic indexes
   def search_data
     user = nil
-    elastic_data = self.as_json() 
+    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
     if !self.household_id.nil?
       user = Household.find(self.household_id)
     else
@@ -82,7 +82,26 @@ class Survey < ApplicationRecord
     Symptom.all.each do |symptom|
       elastic_data[symptom.description] = self.symptom.include? symptom.description
     end
+    
+    lat_long = get_anonymous_latitude_longitude
+    elastic_data[:latitude]  = lat_long[:latitude]
+    elastic_data[:longitude] = lat_long[:longitude]
+    
     return elastic_data 
+  end
+  
+  def get_anonymous_latitude_longitude
+    # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
+    ret = {}
+    dx = 0.05 * rand() # latitude  offset in kilometers (up to 50 meters)
+    dy = 0.05 * rand() # longitude offset in kilometers (up to 50 meters)
+    r_earth = 6378     # Earth radius in kilometers
+    pi = Math::PI
+
+    ret[:latitude]  = self.latitude + (dx / r_earth) * (180.0 / pi)
+    ret[:longitude] = self.longitude + (dy / r_earth) * (180.0 / pi) / Math.cos(latitude * pi/180.0)
+
+    ret
   end
 
   private
