@@ -61,7 +61,7 @@ class Survey < ApplicationRecord
     # Possible COVID case detected, send mail to active vigilance about case
     top_3.each do |syndrome| 
       if syndrome[:syndrome].description == "Sindrome Gripal"
-        VigilanceMailer.covid_vigilance_email(self).deliver
+        VigilanceMailer.covid_vigilance_email(self, @user).deliver
       end
     end
     
