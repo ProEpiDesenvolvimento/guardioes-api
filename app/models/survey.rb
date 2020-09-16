@@ -64,28 +64,44 @@ class Survey < ApplicationRecord
 
   # Data that gets sent as fields for elastic indexes
   def search_data
+    # Set current user/household in variable user
     user = nil
-    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
     if !self.household_id.nil?
       user = Household.find(self.household_id)
     else
       user = self.user
     end
-    elastic_data[:identification_code] = user.identification_code
-    elastic_data[:gender] = user.gender 
-    elastic_data[:race] = user.race 
+
+    # Get object data as hash off of json
+    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
+    
+    # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
       elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
     else 
       elastic_data[:group] = nil 
     end
+    
+    # Add symptoms by column of booleans
     Symptom.all.each do |symptom|
       elastic_data[symptom.description] = self.symptom.include? symptom.description
     end
     
+    # Add latitude and longitude
     lat_long = get_anonymous_latitude_longitude
-    elastic_data[:latitude]  = lat_long[:latitude]
-    elastic_data[:longitude] = lat_long[:longitude]
+    elastic_data["latitude"]  = lat_long[:latitude]
+    elastic_data["longitude"] = lat_long[:longitude]
+    
+    # Add user's city, state, country, 
+    # birthdate, if she is part of the risk group for COVID,
+    # race, gender
+    elastic_data["gender"] = user.gender 
+    elastic_data["race"] = user.race 
+    elastic_data["user_city"] = user.class == User ? user.city : nil
+    elastic_data["user_state"] = user.class == User ? user.state : nil
+    elastic_data["user_country"] = user.country
+    elastic_data["birthdate"] = user.birthdate
+    elastic_data["risk_group"] = user.risk_group || false
     
     return elastic_data 
   end
