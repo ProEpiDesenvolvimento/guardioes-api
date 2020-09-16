@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_09_09_175229) do
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
+    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -288,6 +289,7 @@ ActiveRecord::Schema.define(version: 2020_09_09_175229) do
     t.boolean "risk_group"
     t.string "aux_code"
     t.bigint "school_unit_id"
+    t.integer "streak", default: 1
     t.integer "policy_version", default: 1, null: false
     t.string "phone"
     t.boolean "is_vigilance"
