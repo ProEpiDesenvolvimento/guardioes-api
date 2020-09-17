@@ -78,7 +78,9 @@ class Survey < ApplicationRecord
     # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
       elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
-    else 
+    elsif !user.school_unit_id.nil?
+      elastic_data[:group] = SchoolUnit.find(user.school_unit_id).description
+    else
       elastic_data[:group] = nil 
     end
     
