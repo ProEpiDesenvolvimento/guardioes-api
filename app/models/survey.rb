@@ -39,7 +39,7 @@ class Survey < ApplicationRecord
     end
   end
   
-  def get_message
+  def get_message(user)
     @user_symptoms = []
     symptom.map { |symptom|
       if Symptom.where(:description=>symptom).any?
@@ -62,7 +62,7 @@ class Survey < ApplicationRecord
     
     # Possible COVID case detected, send mail to active vigilance about case
     top_3.each do |syndrome| 
-      if syndrome[:syndrome].description == "Sindrome Gripal"
+      if syndrome[:syndrome].description == "Sindrome Gripal" && user.is_vigilance == true
         VigilanceMailer.covid_vigilance_email(self, @user).deliver
       end
     end

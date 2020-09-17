@@ -57,7 +57,7 @@ class SurveysController < ApplicationController
       if @survey.save
         @user.update_streak(@survey)
         if @survey.symptom.length > 0
-          render json: { survey: @survey, feedback_message: @user.get_feedback_message ,messages: @survey.get_message }, status: :created, location: user_survey_path(:id => @user)
+          render json: { survey: @survey, feedback_message: @user.get_feedback_message, messages: @survey.get_message(@user) }, status: :created, location: user_survey_path(:id => @user)
         else
           render json: { survey: @survey, feedback_message: @user.get_feedback_message }, status: :created, location: user_survey_path(:id => @user)
         end
