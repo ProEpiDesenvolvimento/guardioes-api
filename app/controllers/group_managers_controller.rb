@@ -107,11 +107,11 @@ class GroupManagersController < ApplicationController
     end
 
     def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length)
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
     end
 
     def update_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length)
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
     end
 
     def check_authenticated_admin_or_manager
