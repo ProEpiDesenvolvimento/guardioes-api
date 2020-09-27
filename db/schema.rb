@@ -289,10 +289,10 @@ ActiveRecord::Schema.define(version: 2020_09_09_175229) do
     t.boolean "risk_group"
     t.string "aux_code"
     t.bigint "school_unit_id"
-    t.integer "streak", default: 1
     t.integer "policy_version", default: 1, null: false
+    t.integer "streak", default: 0
     t.string "phone"
-    t.boolean "is_vigilance"
+    t.boolean "is_vigilance", default: false
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
