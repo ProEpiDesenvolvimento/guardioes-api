@@ -23,7 +23,7 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe TwitterApIsController, type: :controller do
+RSpec.describe TwitterApisController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
   # TwitterApi. As you add validations to TwitterApi, be sure to
@@ -38,7 +38,7 @@ RSpec.describe TwitterApIsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # TwitterApIsController. Be sure to keep this updated too.
+  # TwitterApisController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do

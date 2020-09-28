@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe TwitterApIsController, type: :routing do
+RSpec.describe TwitterApisController, type: :routing do
   describe "routing" do
     it "routes to #index" do
       expect(:get => "/twitter_apis").to route_to("twitter_apis#index")

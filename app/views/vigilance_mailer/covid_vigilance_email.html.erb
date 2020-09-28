@@ -1,0 +1,18 @@
+<p>Prezado(a),</p>
+<p>Um participante da Vigilância Ativa informou está com sintomas de COVID-19</p>
+<p>Usuário(a) ID: <%= @survey.user_id %></p>
+
+<% if !@survey.household.nil? %>
+  <h4>Familiar com sintomas </h4>
+  <p>ID: <%= @survey.household.id %></p>
+  <p>Parentesco: <%= @survey.household.kinship %></p>
+<% end %>
+
+<h4>Sintomas: </h4>
+<ul>
+  <% @survey.symptom.each do |symptom|  %>
+    <p>
+      <li><%= symptom %></li>
+    </p> 
+  <% end %>
+</ul>

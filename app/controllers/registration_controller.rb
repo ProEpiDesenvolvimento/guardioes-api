@@ -93,7 +93,8 @@ class RegistrationController < Devise::RegistrationsController
         :identification_code,
         :group_id,
         :school_unit_id,
-        :risk_group
+        :risk_group,
+        :policy_version
       )
     elsif params[:admin]
       params.require(:admin).permit(

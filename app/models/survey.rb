@@ -1,7 +1,9 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
-  searchkick
-
+  if !Rails.env.test?
+    searchkick
+  end
+    
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
   # It has been overriden searchkick's class that sends data to elaticsearch, 
@@ -37,7 +39,7 @@ class Survey < ApplicationRecord
     end
   end
   
-  def get_message
+  def get_message(user)
     @user_symptoms = []
     symptom.map { |symptom|
       if Symptom.where(:description=>symptom).any?
@@ -55,6 +57,13 @@ class Survey < ApplicationRecord
       syndrome_message = top_3[0][:syndrome].message
       if !syndrome_message.nil?
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
+      end
+    end
+    
+    # Possible COVID case detected, send mail to active vigilance about case
+    top_3.each do |syndrome| 
+      if syndrome[:syndrome].description == "Sindrome Gripal" && user.is_vigilance == true
+        VigilanceMailer.covid_vigilance_email(self, user).deliver
       end
     end
     return symptoms_and_syndromes_data
