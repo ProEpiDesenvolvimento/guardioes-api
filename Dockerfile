@@ -1,18 +1,36 @@
-FROM ruby:2.5.3
-RUN apt-get update -qq && apt-get install -y postgresql-client nano
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
-RUN apt-get install --yes nodejs
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get install yarn -y
+FROM ruby:2.5.3-alpine as builder
+
+RUN apk add --update --no-cache \
+  build-base \
+  libxml2-dev \
+  libxslt-dev \
+  curl-dev \
+  git \
+  postgresql-dev \
+  postgresql-client \
+  yaml-dev \
+  zlib-dev \
+  nodejs \
+  yarn \
+  tzdata
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+FROM ruby:2.5.3-alpine
+
+RUN apk add --update --no-cache \
+  tzdata \
+  postgresql-client \
+  nodejs \
+  bash
+
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir /myapp
 WORKDIR /myapp
 
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
-RUN bundle install
-COPY . /myapp
+COPY . .
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
