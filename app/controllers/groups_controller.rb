@@ -1,12 +1,17 @@
 class GroupsController < ApplicationController
   before_action :set_group, except: [:index,:upload_group_file,:create,:root,:build_country_city_state_groups]
-  before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root,:get_twitter]
+  before_action :check_authenticated_admin_or_manager, except: [:index,:get_path,:get_children,:show,:root,:get_twitter]
   before_action :validate_invalid_group_name, only: [:create,:update]
-  before_action :authenticate_admin!, only: [:build_country_city_state_groups, :index]
+  # before_action :authenticate_group_manager!, only: [:index]
+  before_action :authenticate_admin!, only: [:build_country_city_state_groups]
 
   # GET /groups
   def index
-    @groups = Group.all
+    if params[:filter_by] == 'group_manager'
+      @groups = Group.where('group_manager_id = ?', current_group_manager.id)
+    else
+      @groups = Group.all
+    end
 
     render json: @groups
   end
@@ -19,7 +24,7 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
+    # return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if @group.save
       render json: @group, status: :created, location: @group
     else
@@ -29,7 +34,7 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
+    # return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if @group.update(group_params)
       render json: @group
     else
@@ -166,6 +171,7 @@ class GroupsController < ApplicationController
           }
 
           rows_to_create << row
+          return render json: rows_to_create
         end
     end
 
@@ -211,13 +217,13 @@ class GroupsController < ApplicationController
             new_group.children_label = 'GRUPO'
           end
           
-          if !validate_manager_group_permissions(new_group)
-            current_group = nil
-            is_valid_manager = false
-            r[:reason] = 'Not enough permissions'
-            groups_not_created << r
-            break
-          end
+          # if !validate_manager_group_permissions(new_group)
+          #   current_group = nil
+          #   is_valid_manager = false
+          #   r[:reason] = 'Not enough permissions'
+          #   groups_not_created << r
+          #   break
+          # end
 
           was_created = true
           new_group.save()
@@ -271,7 +277,8 @@ class GroupsController < ApplicationController
         :address,
         :cep,
         :phone,
-        :email
+        :email,
+        :group_manager_id
       )
     end
 

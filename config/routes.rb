@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   resources :apps
   resources :rumors
 
-  get "surveys/school_unit/:id", to: "surveys#group_data"
+  get "surveys/group/:id", to: "surveys#group_data"
   get "users/school_unit/:id", to: "users#group_data"
 
   get "surveys/all_surveys", to: "surveys#all_surveys"

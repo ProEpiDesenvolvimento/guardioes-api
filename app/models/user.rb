@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   # Index name for a users is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
-  # It has been overriden #searchkick's class that sends data to elaticsearch, 
+  # It has been overriden searchkick's class that sends data to elaticsearch, 
   # such that the index name is now defined by the model that is being 
   # evaluated using the function 'index_pattern_name'
   def index_pattern_name
