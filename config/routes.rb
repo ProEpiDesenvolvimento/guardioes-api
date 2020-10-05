@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     resources :surveys
   end
   post "render_user_by_filter",to: "users#query_by_param"
-
+  patch "admin_update/:id", to: "users#admin_update"
   resources :rumors
 
   scope "/user" do 
