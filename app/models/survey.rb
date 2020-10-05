@@ -6,7 +6,7 @@ class Survey < ApplicationRecord
     
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
-  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # It has been overriden # searchkick's class that sends data to elaticsearch, 
   # such that the index name is now defined by the model that is being 
   # evaluated using the function 'index_pattern_name'  
   def index_pattern_name
@@ -53,19 +53,21 @@ class Survey < ApplicationRecord
     end
     top_3 = get_top_3_syndromes
     if top_3.any?
-      symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
+      symptoms_and_syndromes_data[:top_3] = top_3.map do |obj| 
+        # Possible COVID case detected, send mail to active vigilance about case
+        if obj[:syndrome].description == "Síndrome Gripal" && user.is_vigilance == true
+          VigilanceMailer.covid_vigilance_email(self, user).deliver
+        end
+        
+        { name: obj[:syndrome].description, percentage: obj[:likelyhood] }
+      end
+
       syndrome_message = top_3[0][:syndrome].message
       if !syndrome_message.nil?
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
       end
     end
-    
-    # Possible COVID case detected, send mail to active vigilance about case
-    top_3.each do |syndrome| 
-      if syndrome[:syndrome].description == "Sindrome Gripal" && user.is_vigilance == true
-        VigilanceMailer.covid_vigilance_email(self, user).deliver
-      end
-    end
+
     return symptoms_and_syndromes_data
   end
 
@@ -125,6 +127,7 @@ class Survey < ApplicationRecord
         modulus_division += percentage.percentage
       end
     end
+    return 0.2
     if modulus_division == 0
       return 0
     else
