@@ -1,6 +1,10 @@
 class GroupSerializer < ActiveModel::Serializer
   attributes :id, :description, :children_label, :parent, :require_id, :id_code_length,
+<<<<<<< Updated upstream
                   :group_manager, :code, :address, :cep, :phone, :email
+=======
+             :group_manager, :code, :address, :cep, :phone, :email
+>>>>>>> Stashed changes
 
   def parent
     if object.parent == nil
