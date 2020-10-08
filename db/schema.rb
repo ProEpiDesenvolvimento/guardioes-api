@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_24_013233) do
+ActiveRecord::Schema.define(version: 2020_10_08_155529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,15 +140,23 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
   end
 
+  create_table "managers", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
-    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
+    t.string "feedback_message"
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end
@@ -291,9 +299,9 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.string "aux_code"
     t.bigint "school_unit_id"
     t.integer "policy_version", default: 1, null: false
-    t.integer "streak", default: 0
     t.string "phone"
-    t.boolean "is_vigilance", default: false
+    t.boolean "is_vigilance"
+    t.integer "streak", default: 0
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true

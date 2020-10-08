@@ -2,6 +2,7 @@ class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
   before_action :create_group_manager, if: -> { params[:group_manager] }
+  before_action :create_manager, if: -> { params[:manager] }
 
   respond_to :json
   
@@ -64,6 +65,13 @@ class RegistrationController < Devise::RegistrationsController
     end
   end 
 
+  def create_manager
+    if params[:manager] && current_admin
+      @sign_up_params = sign_up_params
+    else
+      @sign_up_params = nil
+    end
+  end 
 
   def create_group_manager
     if params[:group_manager] && (current_admin || current_group_manager)
@@ -105,7 +113,7 @@ class RegistrationController < Devise::RegistrationsController
         :is_god,
         :app_id
       )
-    else
+    elsif
       params.require(:group_manager).permit(
         :email,
         :name,
@@ -115,6 +123,12 @@ class RegistrationController < Devise::RegistrationsController
         :require_id,
         :id_code_length,
         :twitter
+      )
+    else
+      params.require(:manager).permit(
+        :name,
+        :email,
+        :password,
       )
     end
   end
