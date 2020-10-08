@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
+    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
