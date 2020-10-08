@@ -6,11 +6,7 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    if current_group_manager
-      @groups = Group.where('group_manager_id = ?', current_group_manager.id)
-    else
-      @groups = Group.all
-    end
+    @groups = Group.all
     render json: @groups
   end
 
@@ -22,6 +18,10 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
+    if (current_group_manager)
+      ManagerGroupPermission::permit(current_group_manager, @group)
+    end
+    
     return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if current_group_manager
       @group.group_manager_id = current_group_manager.id
@@ -172,7 +172,6 @@ class GroupsController < ApplicationController
           }
 
           rows_to_create << row
-          return render json: rows_to_create
         end
     end
 
@@ -218,13 +217,13 @@ class GroupsController < ApplicationController
             new_group.children_label = 'GRUPO'
           end
           
-          # if !validate_manager_group_permissions(new_group)
-          #   current_group = nil
-          #   is_valid_manager = false
-          #   r[:reason] = 'Not enough permissions'
-          #   groups_not_created << r
-          #   break
-          # end
+          if !validate_manager_group_permissions(new_group)
+            current_group = nil
+            is_valid_manager = false
+            r[:reason] = 'Not enough permissions'
+            groups_not_created << r
+            break
+          end
 
           was_created = true
           new_group.save()
