@@ -20,12 +20,9 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     if (current_group_manager)
       ManagerGroupPermission::permit(current_group_manager, @group)
-    end
-    
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
-    if current_group_manager
       @group.group_manager_id = current_group_manager.id
     end
+    return render json: 'Not enough permissions' if !validate_manager_group_permissions
     if @group.save
       render json: @group, status: :created, location: @group
     else
