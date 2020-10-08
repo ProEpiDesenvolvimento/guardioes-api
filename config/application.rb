@@ -53,7 +53,7 @@ module Myapp
           _index: index_name,
           _id: search_id
         }
-        data[:_type] = document_type if # searchkick.server_below7?
+        data[:_type] = document_type if Searchkick.server_below7?
         data[:routing] = record.search_routing if record.respond_to?(:search_routing)
         data
       end
