@@ -274,8 +274,7 @@ class GroupsController < ApplicationController
         :address,
         :cep,
         :phone,
-        :email,
-        :group_manager_id
+        :email
       )
     end
 
