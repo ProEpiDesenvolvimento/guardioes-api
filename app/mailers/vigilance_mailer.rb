@@ -4,17 +4,27 @@ class VigilanceMailer < ActionMailer::Base
 
   def covid_vigilance_email(survey, user)
     @survey = survey
+    @user = user
     
-    if user.group_id
-      group_manager = user.group.group_manager
+    @date = @user.birthdate.strftime("%d, %m, %Y")
+    @date.gsub!(', ', '/')
+
+    @symptoms = []
+    @survey.symptom.each do |symptom|
+      @symptoms.append Symptom.where("code = ?", symptom).first
+    end
+
+    # if user.group_id
+      # group_manager = user.group.group_manager
 
       email = mail()
       email.from = 'ProEpi <proepi.desenvolvimento@gmail.com>'
-      email.to = group_manager.group_name + ' <' + group_manager.vigilance_email + '>'
+      # email.to = group_manager.group_name + ' <' + group_manager.vigilance_email + '>'
+      email.to = 'Tiago' + ' <' + 'tsrrodrigues2000@gmail.com' + '>'
       email.subject = '[VIGILANCIA ATIVA] Novo usuário com suspeita'
 
       return email
-    end
+    # end
   end
 end
   
