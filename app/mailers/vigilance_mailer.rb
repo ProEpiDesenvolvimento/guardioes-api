@@ -14,17 +14,16 @@ class VigilanceMailer < ActionMailer::Base
       @symptoms.append Symptom.where("code = ?", symptom).first
     end
 
-    # if user.group_id
-      # group_manager = user.group.group_manager
+    if user.group_id
+      group_manager = user.group.group_manager
 
       email = mail()
       email.from = 'ProEpi <proepi.desenvolvimento@gmail.com>'
-      # email.to = group_manager.group_name + ' <' + group_manager.vigilance_email + '>'
-      email.to = 'Tiago' + ' <' + 'tsrrodrigues2000@gmail.com' + '>'
+      email.to = group_manager.group_name + ' <' + group_manager.vigilance_email + '>'
       email.subject = '[VIGILANCIA ATIVA] Novo usuário com suspeita'
 
       return email
-    # end
+    end
   end
 end
   
