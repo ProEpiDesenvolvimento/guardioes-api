@@ -1,5 +1,5 @@
 class Managers < ApplicationController
-  # GET /group_managers/
+
   def index
     render json: @app.group_managers
   end
