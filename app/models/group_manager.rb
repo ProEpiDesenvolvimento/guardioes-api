@@ -6,7 +6,7 @@ class GroupManager < ApplicationRecord
   after_save :create_twitter_api
   after_update :create_twitter_api
 
-  has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
+  has_many :manager_group_permission, :class_name => 'ManagerGroupPermission', dependent: :delete_all
   has_many :groups, :through => :manager_group_permission 
 
   # Check if a group is permitted by recusively scaling group branch

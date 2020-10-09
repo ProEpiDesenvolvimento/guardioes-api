@@ -75,25 +75,62 @@ class Survey < ApplicationRecord
 
   # Data that gets sent as fields for elastic indexes
   def search_data
+    # Set current user/household in variable user
     user = nil
-    elastic_data = self.as_json() 
     if !self.household_id.nil?
       user = Household.find(self.household_id)
     else
       user = self.user
     end
-    elastic_data[:identification_code] = user.identification_code
-    elastic_data[:gender] = user.gender 
-    elastic_data[:race] = user.race 
+
+    # Get object data as hash off of json
+    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
+    
+    # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
       elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
-    else 
+    elsif !user.school_unit_id.nil?
+      elastic_data[:group] = SchoolUnit.find(user.school_unit_id).description
+    else
       elastic_data[:group] = nil 
     end
+    
+    # Add symptoms by column of booleans
     Symptom.all.each do |symptom|
       elastic_data[symptom.description] = self.symptom.include? symptom.description
     end
+    
+    # Add latitude and longitude
+    lat_long = get_anonymous_latitude_longitude
+    elastic_data["latitude"]  = lat_long[:latitude]
+    elastic_data["longitude"] = lat_long[:longitude]
+    
+    # Add user's city, state, country, 
+    # birthdate, if she is part of the risk group for COVID,
+    # race, gender
+    elastic_data["gender"] = user.gender 
+    elastic_data["race"] = user.race 
+    elastic_data["user_city"] = user.class == User ? user.city : nil
+    elastic_data["user_state"] = user.class == User ? user.state : nil
+    elastic_data["user_country"] = user.country
+    elastic_data["birthdate"] = user.birthdate
+    elastic_data["risk_group"] = user.risk_group || false
+    
     return elastic_data 
+  end
+  
+  def get_anonymous_latitude_longitude
+    # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
+    ret = {}
+    dx = 0.05 * rand() # latitude  offset in kilometers (up to 50 meters)
+    dy = 0.05 * rand() # longitude offset in kilometers (up to 50 meters)
+    r_earth = 6378     # Earth radius in kilometers
+    pi = Math::PI
+
+    ret[:latitude]  = self.latitude + (dx / r_earth) * (180.0 / pi)
+    ret[:longitude] = self.longitude + (dy / r_earth) * (180.0 / pi) / Math.cos(latitude * pi/180.0)
+
+    ret
   end
 
   private
