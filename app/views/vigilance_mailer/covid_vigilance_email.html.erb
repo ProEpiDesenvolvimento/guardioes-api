@@ -1,18 +1,28 @@
 <p>Prezado(a),</p>
-<p>Um participante da Vigilância Ativa informou está com sintomas de COVID-19</p>
-<p>Usuário(a) ID: <%= @survey.user_id %></p>
+<p>Um participante da Vigilância Ativa informou estar com sintomas de COVID-19</p><br>
+<h4>Usuário(a):</h4>
+<p>Id: <%= @user.id %></p>
+<p>Nome: <%= @user.user_name %></p>
+<p>Sexo: <%= @user.gender %></p>
+<p>Data de Nascimento: <%= @date %></p>
+<p>Telefone: <%= @user.phone %></p>
+<p>Departamento: <%= @user.group.parent.description %></p>
 
 <% if !@survey.household.nil? %>
   <h4>Familiar com sintomas </h4>
   <p>ID: <%= @survey.household.id %></p>
   <p>Parentesco: <%= @survey.household.kinship %></p>
-<% end %>
+  <p>Nome: <%= @user.household.description %></p>
+  <p>Sexo: <%= @user.household.gender %></p>
+  <p>Data de Nascimento: <%= @user.household.birthdate.strftime("%d, %m, %Y").gsub!(', ', '/') %></p>
+  <p>Departamento: <%= @user.household.group.parent.description %></p>
+  <% end %>
 
 <h4>Sintomas: </h4>
 <ul>
-  <% @survey.symptom.each do |symptom|  %>
+  <% @symptoms.each do |symptom|  %>
     <p>
-      <li><%= symptom %></li>
+      <li><%= symptom.description %></li>
     </p> 
   <% end %>
 </ul>
