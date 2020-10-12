@@ -82,6 +82,7 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+    resources :managers
     devise_for :managers,
       path: "manager/",
       path_names: {
