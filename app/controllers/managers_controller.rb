@@ -1,15 +1,28 @@
-class Managers < ApplicationController
+class ManagersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
   before_action :set_manager, only: [:show, :update, :destroy]
   before_action :set_app, only: [:index]
 
   def index
-    render json: @app.manager
+    render json: @app.managers
   end
 
   # GET /managers/:id
   def show
-    render json: @manager
+    render json: Manager.find(params[:id])
+  end
+
+  def update
+    if @manager.update(manager_params)
+      render json: @manager
+    else
+      render json: @manager.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /managers/:id
+  def destroy
+    @manager.destroy!
   end
 
   private
