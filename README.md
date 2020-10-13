@@ -83,6 +83,13 @@ Isso significa que a API tentou mandar uma mensagem para a base de dados Elastic
 Para solucionar, basta levantar uma instância do [guadioes web](https://github.com/proepidesenvolvimento/guardioes-web/) rodando na porta 9200 ou alterar o endereço do elastic no arquivo elasticsearch.rb.
 
 ### Testes
+Primeiramente realize o setup do banco de dados de testes
+
+```
+bundle exec rake db:drop RAILS_ENV=test
+bundle exec rake db:create RAILS_ENV=test
+bundle exec rake db:schema:load RAILS_ENV=test
+```
 
 Basta escrever
 
