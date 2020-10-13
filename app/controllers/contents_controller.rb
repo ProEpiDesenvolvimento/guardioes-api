@@ -7,7 +7,7 @@ class ContentsController < ApplicationController
     if current_user.nil?
       user = current_admin
     else
-      user = current_user
+      user = current_manager
     end
     @contents = Content.user_country(user.app_id)
 

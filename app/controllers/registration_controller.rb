@@ -113,7 +113,7 @@ class RegistrationController < Devise::RegistrationsController
         :is_god,
         :app_id
       )
-    elsif
+    elsif params[:group_manager]
       params.require(:group_manager).permit(
         :email,
         :name,
@@ -129,6 +129,7 @@ class RegistrationController < Devise::RegistrationsController
         :name,
         :email,
         :password,
+        :app_id
       )
     end
   end
