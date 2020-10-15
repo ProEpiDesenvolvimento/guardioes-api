@@ -4,7 +4,16 @@ class VigilanceMailer < ActionMailer::Base
 
   def covid_vigilance_email(survey, user)
     @survey = survey
+    @user = user
     
+    @date = @user.birthdate.strftime("%d, %m, %Y")
+    @date.gsub!(', ', '/')
+
+    @symptoms = []
+    @survey.symptom.each do |symptom|
+      @symptoms.append Symptom.where("code = ?", symptom).first
+    end
+
     if user.group_id
       group_manager = user.group.group_manager
 
