@@ -51,6 +51,9 @@ class SurveysController < ApplicationController
     begin_datetime = DateTime.parse(begin_datetime)
     end_datetime = DateTime.parse(end_datetime)
     @surveys = Survey.where('created_at >= ? AND created_at <= ?', begin_datetime, end_datetime).all
+    if @surveys.empty?
+      return render json: { message: "No data was found in given period:   #{begin_datetime} -> #{end_datetime}" }
+    end
     respond_to do |format|
       format.all { render json: { message: 'You must append \'.csv\' to the end of the url'} }
       format.csv { send_data to_csv_csv_data, filename: "surveys-#{begin_datetime}-#{end_datetime}.csv" }
