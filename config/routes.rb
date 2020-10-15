@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   #get "surveys/week_limited", to: "surveys#limited_surveys"
   get "surveys/week", to: "surveys#limited_surveys"
   get "surveys/render_without_user", to: "surveys#render_without_user"
+  get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
   post "email_reset_password", to: "users#email_reset_password"
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"

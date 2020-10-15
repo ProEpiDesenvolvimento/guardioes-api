@@ -118,9 +118,30 @@ class Survey < ApplicationRecord
     
     return elastic_data 
   end
+
+  def csv_data
+    data = self.as_json(except: [ :updated_at, :latitude, :longitude, 
+                                  :bad_since, :symptom, :street, :city, 
+                                  :state, :country, :deleted_at, :traveled_to, 
+                                  :contact_with_symptom, :went_to_hospital]) 
+    data[:user_name] = self.user.user_name
+    data[:user_created_at] = self.user.created_at
+    data[:identification_code] = self.user.identification_code
+    data[:household_identification_code] = nil
+    data[:household_created_at] = nil
+    if self.household_id != nil
+      data[:household_identification_code] = self.household.identification_code
+      data[:household_created_at] = self.household.created_at
+    end
+    data
+  end
   
   def get_anonymous_latitude_longitude
     # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
+    if self.latitude == nil || self.longitude == nil
+      return { latitude: nil, longitude: nil }
+    end
+    
     ret = {}
     dx = 0.05 * rand() # latitude  offset in kilometers (up to 50 meters)
     dy = 0.05 * rand() # longitude offset in kilometers (up to 50 meters)
