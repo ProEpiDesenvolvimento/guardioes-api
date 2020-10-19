@@ -129,9 +129,11 @@ class Survey < ApplicationRecord
     data[:identification_code] = self.user.identification_code
     data[:household_identification_code] = nil
     data[:household_created_at] = nil
+    data[:household_name] = nil
     if self.household_id != nil
       data[:household_identification_code] = self.household.identification_code
       data[:household_created_at] = self.household.created_at
+      data[:household_name] = self.household.description
     end
     data
   end
