@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   acts_as_paranoid
   if !Rails.env.test?
-    # searchkick
+    searchkick
   end
 
   # Index name for a users is now:
@@ -9,16 +9,16 @@ class User < ApplicationRecord
   # It has been overriden searchkick's class that sends data to elaticsearch, 
   # such that the index name is now defined by the model that is being 
   # evaluated using the function 'index_pattern_name'
-  # def index_pattern_name
-  #   env = ENV['RAILS_ENV']
-  #   if self.group.nil?
-  #     return 'users_' + env
-  #   end
-  #   group_name = self.group.group_manager.group_name
-  #   group_name.downcase!
-  #   group_name.gsub! ' ', '-'
-  #   return 'users_' + env + '_' + group_name
-  # end
+  def index_pattern_name
+    env = ENV['RAILS_ENV']
+    if self.group.nil?
+      return 'users_' + env
+    end
+    group_name = self.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '-'
+    return 'users_' + env + '_' + group_name
+  end
 
   has_many :households,
     dependent: :destroy
