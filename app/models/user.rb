@@ -94,7 +94,7 @@ class User < ApplicationRecord
     else
       obj.streak = 1
     end
-    obj.update_attribute(:streak, obj.streak)s
+    obj.update_attribute(:streak, obj.streak)
   end
 
   def get_feedback_message(survey)
