@@ -91,17 +91,11 @@ class User < ApplicationRecord
   end
 
   def get_feedback_message
-    if (self.streak % 3 == 0 || self.streak == 1) && self.streak < 112
-      index = (self.streak / 3).to_i
-      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
-      return message.feedback_message
-    elsif self.streak == 112
-      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC").last
-      return message.feedback_message
-    else
+    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", self.streak)
+    if message.empty?
       index = self.streak % 4
-      message = Message.where.not(feedback_message: [nil, ""]).order("id DESC")[index]
-      return message.feedback_message
+      message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)[index]
     end
+    return message.feedback_message
   end
 end
