@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   acts_as_paranoid
   if !Rails.env.test?
-    searchkick
+    # searchkick
   end
 
   # Index name for a users is now:
@@ -9,16 +9,16 @@ class User < ApplicationRecord
   # It has been overriden searchkick's class that sends data to elaticsearch, 
   # such that the index name is now defined by the model that is being 
   # evaluated using the function 'index_pattern_name'
-  def index_pattern_name
-    env = ENV['RAILS_ENV']
-    if self.group.nil?
-      return 'users_' + env
-    end
-    group_name = self.group.group_manager.group_name
-    group_name.downcase!
-    group_name.gsub! ' ', '-'
-    return 'users_' + env + '_' + group_name
-  end
+  # def index_pattern_name
+  #   env = ENV['RAILS_ENV']
+  #   if self.group.nil?
+  #     return 'users_' + env
+  #   end
+  #   group_name = self.group.group_manager.group_name
+  #   group_name.downcase!
+  #   group_name.gsub! ' ', '-'
+  #   return 'users_' + env + '_' + group_name
+  # end
 
   has_many :households,
     dependent: :destroy
@@ -77,24 +77,37 @@ class User < ApplicationRecord
   end
 
   def update_streak(survey)
-    last_survey = Survey.filter_by_user(self.id).order("id DESC").offset(1).first
+    if survey.household_id
+      obj = survey.household
+      last_survey = Survey.where("household_id = ?", survey.household_id).order("id DESC").offset(1).first
+    else
+      obj = self
+      last_survey = Survey.where("user_id = ?", self.id).order("id DESC").offset(1).first
+    end
+
     if last_survey
       if last_survey.created_at.day == survey.created_at.prev_day.day
-        self.streak += 1
-      else
-        self.streak = 1
+        obj.streak += 1
+      elsif last_survey.created_at.day != survey.created_at.day
+        obj.streak = 1
       end
-      self.update_attribute(:streak, self.streak)
     else
-      self.update_attribute(:streak, 1)
+      obj.streak = 1
     end
+    obj.update_attribute(:streak, obj.streak)s
   end
 
-  def get_feedback_message
-    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", self.streak).first
+  def get_feedback_message(survey)
+    if survey.household_id
+      obj = survey.household
+    else
+      obj = self
+    end
+    
+    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
     if !message
       message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
-      index = self.streak % message.size
+      index = obj.streak % message.size
       message = message[index]
     end
     return message.feedback_message
