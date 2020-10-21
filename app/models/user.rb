@@ -91,10 +91,11 @@ class User < ApplicationRecord
   end
 
   def get_feedback_message
-    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", self.streak)
-    if message.empty?
-      index = self.streak % 4
-      message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)[index]
+    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", self.streak).first
+    if !message
+      message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      index = self.streak % message.size
+      message = message[index]
     end
     return message.feedback_message
   end
