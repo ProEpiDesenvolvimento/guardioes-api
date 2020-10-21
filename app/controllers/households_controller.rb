@@ -65,8 +65,7 @@ class HouseholdsController < ApplicationController
         :school_unit_id, 
         :identification_code, 
         :risk_group,
-        :group_id,
-        :streak
+        :group_id
       )
     end
 end
