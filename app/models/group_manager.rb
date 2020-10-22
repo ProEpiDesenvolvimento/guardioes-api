@@ -8,7 +8,8 @@ class GroupManager < ApplicationRecord
 
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
   has_many :groups, :through => :manager_group_permission 
-
+  has_one :permission, dependent: :destroy
+  
   # Check if a group is permitted by recusively scaling group branch
   # confering if any of the groups are permitted on the way
   def is_permitted?(group)

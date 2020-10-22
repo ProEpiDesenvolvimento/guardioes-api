@@ -36,6 +36,13 @@ namespace :dev do
             app_id: 1
           )
         end
+        Permission.create!(
+          models_create: [:content, :symptom],
+          models_read: [:all],
+          models_update: [:content, :symptom],
+          models_destroy: [:content],
+          models_manage: [],
+        )
       end
     end
 

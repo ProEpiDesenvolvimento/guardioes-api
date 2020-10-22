@@ -1,8 +1,8 @@
 class ContentsController < ApplicationController
   # before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
-  load_and_authorize_resource
-
+  # load_and_authorize_resource
+  authorize_resource :class => false
   # GET /contents
   def index
     if current_user.nil?

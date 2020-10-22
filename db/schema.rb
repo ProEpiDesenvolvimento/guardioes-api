@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_15_172421) do
+ActiveRecord::Schema.define(version: 2020_10_22_180420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,6 +183,12 @@ ActiveRecord::Schema.define(version: 2020_10_15_172421) do
     t.text "models_manage"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "admin_id"
+    t.bigint "manager_id"
+    t.bigint "group_manager_id"
+    t.index ["admin_id"], name: "index_permissions_on_admin_id"
+    t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
   create_table "pre_registers", force: :cascade do |t|
@@ -347,6 +353,9 @@ ActiveRecord::Schema.define(version: 2020_10_15_172421) do
   add_foreign_key "managers", "permissions"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_managers"
+  add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
