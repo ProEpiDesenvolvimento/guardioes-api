@@ -130,11 +130,9 @@ class Survey < ApplicationRecord
     data[:household_identification_code] = nil
     data[:household_created_at] = nil
     data[:household_name] = nil
-    if self.household_id != nil
-      data[:household_identification_code] = self.household.identification_code
-      data[:household_created_at] = self.household.created_at
-      data[:household_name] = self.household.description
-    end
+    data[:household_identification_code] = self.household.identification_code if self.household
+    data[:household_created_at] = self.household.created_at if self.household
+    data[:household_name] = self.household.description if self.household
     data
   end
   
