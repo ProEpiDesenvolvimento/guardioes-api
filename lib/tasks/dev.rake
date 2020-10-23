@@ -43,6 +43,12 @@ namespace :dev do
           models_destroy: [:content],
           models_manage: [],
         )
+        Manager.create!(
+          email: Faker::Internet.email,
+          password: "12345678",
+          name: Faker::Name.first_name,
+          app_id: 1
+        )
       end
     end
 
