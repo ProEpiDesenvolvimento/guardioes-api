@@ -1,16 +1,19 @@
 class ContentsController < ApplicationController
   # before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
-  # load_and_authorize_resource
   authorize_resource :class => false
+
   # GET /contents
   def index
-    if current_user.nil?
-      user = current_admin
+    if current_user.nil? && current_manager.nil?
+      @user = current_admin
+    elsif current_admin.nil? && current_user.nil?
+      @user = current_manager
     else
-      user = current_manager
+      @user = current_user
     end
-    @contents = Content.user_country(user.app_id)
+
+    @contents = Content.user_country(@user.app_id)
 
     render json: @contents
   end

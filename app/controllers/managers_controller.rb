@@ -9,7 +9,10 @@ class ManagersController < ApplicationController
 
   # GET /managers/:id
   def show
-    render json: Manager.find(params[:id])
+    @manager = Manager.find(params[:id])
+    @permissions = Permission.find(@manager.permission_id) 
+    data = {manager: @manager}.merge({permisions: @permissions})
+    render json: data, status: :ok
   end
 
   def update
