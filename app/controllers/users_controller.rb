@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
+  authorize_resource :class => false
 
   # GET /user
   def index

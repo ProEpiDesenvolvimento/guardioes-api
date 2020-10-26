@@ -10,12 +10,12 @@ class Ability
       when Admin
           can :create, [ :content, :symptom ]
       when Manager
-        can :read, convert_symbol(permission_id.models_create)
         can :read, convert_symbol(permission_id.models_read)
+        can :create, convert_symbol(permission_id.models_create)
         can :update, convert_symbol(permission_id.models_update)
         can :destroy, convert_symbol(permission_id.models_destroy)
-        can :manage, convert_symbol(permission_id.models_destroy)
-      end
+        can :manage, convert_symbol(permission_id.models_manage)
+    end
   end
 
   private 
@@ -23,11 +23,21 @@ class Ability
     Permission.find(id)
   end
 
-  # Convert arrayn of string to symbol [":content"] to [:content] e.g
+  # Convert array of string to symbol [":content"] to [:content] e.g
   def convert_symbol(array)
-    array.each do |convert|
-      array.to_sym
+    models = %i[]
+    array.each do |new_array|
+      if new_array == "symptom"
+        models << :symptom
+      elsif new_array == "syndrome"
+        models << :syndrome
+      elsif new_array == "content"
+        models << :content
+      else 
+        models << :user
+      end
     end
+
+    return models
   end
 end
-

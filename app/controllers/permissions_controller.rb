@@ -9,8 +9,7 @@ class PermissionsController < ApplicationController
   # POST /permissions
   def create
     @permissions = Permission.new(permission_params)
-    puts "-------------------------"
-    puts permission_params[:models_manage]
+
     if @permissions.save
       render json: @permissions, status: :created, location: @permissions
     else
