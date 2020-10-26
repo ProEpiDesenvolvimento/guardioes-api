@@ -4,6 +4,7 @@ class GroupManagersController < ApplicationController
   before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
   before_action :set_group_manager, only: [:destroy, :update]
+  authorize_resource :class => false
 
   # GET /group_managers/
   def index

@@ -4,7 +4,9 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    permission_id = set_permission(user.permission_id)
+    if !user.has_attribute?('is_god')
+      permission_id = set_permission(user.permission_id)
+    end
 
     case user
       when Admin
