@@ -12,6 +12,7 @@ class Ability
           can :manage, :all
         else
           can :manage, [ :manage, :group_manager, :symptom, :syndrome, :content, :user ]
+        end
       when Manager
         can :read, convert_symbol(permission_id.models_read)
         can :create, convert_symbol(permission_id.models_create)
@@ -26,7 +27,7 @@ class Ability
     Permission.find(id)
   end
 
-  # Convert array of string to symbol [":content"] to [:content] e.g
+  # Convert array of string to symbol ["content"] to [:content] e.g
   def convert_symbol(array)
     models = %i[]
     array.each do |new_array|
