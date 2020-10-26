@@ -8,7 +8,10 @@ class Ability
 
     case user
       when Admin
-          can :create, [ :content, :symptom ]
+        if user.is_god?
+          can :manage, :all
+        else
+          can :manage, [ :manage, :group_manager, :symptom, :syndrome, :content, :user ]
       when Manager
         can :read, convert_symbol(permission_id.models_read)
         can :create, convert_symbol(permission_id.models_create)
