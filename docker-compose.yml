@@ -6,9 +6,9 @@ services:
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: myapp_development
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://postgres@db
-      ELASTICSEARCH_URL: http://localhost:9200
-      MAILER_URL:
-      GOOGLE_MAPS_API_KEY: AIzaSyBgA7vme-oh1GWhnkNwQUIRECwPAU4wkp4
+      DATABASE_URL: ${DATABASE_URL}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+      MAILER_URL: ${MAILER_URL}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
