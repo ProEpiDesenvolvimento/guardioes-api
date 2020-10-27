@@ -47,3 +47,6 @@
 /client/yarn-error.log*
 
 /config/.env
+
+# Environment file for docker-compose.yml
+.env
