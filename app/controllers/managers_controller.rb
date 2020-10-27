@@ -43,6 +43,7 @@ class ManagersController < ApplicationController
         :name,
         :email,
         :password,
+        :permission_id,
       )
   end 
 end
