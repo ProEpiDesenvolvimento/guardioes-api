@@ -15,8 +15,6 @@ Rails.application.routes.draw do
   get "groups/:id/get_twitter", to: 'groups#get_twitter'
   resources :groups
 
-  # get "app/:id/get_twitter", to: 'app#get_twitter'
-
   get 'data_visualization/users_count', to: 'data_visualization#users_count'
   get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
   get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
@@ -28,7 +26,10 @@ Rails.application.routes.draw do
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
+
+  get "apps/:id/get_twitter", to: 'apps#get_twitter'
   resources :apps
+
   resources :rumors
 
   get "surveys/school_unit/:id", to: "surveys#group_data"

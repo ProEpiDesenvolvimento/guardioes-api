@@ -23,4 +23,6 @@ class App < ApplicationRecord
       minimum: 1,
       maximum: 255
     }
+
+  validates :twitter, presence: true
 end

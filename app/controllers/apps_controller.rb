@@ -42,7 +42,7 @@ class AppsController < ApplicationController
     @app.destroy
   end
 
-  # GET /app/:id/get_twitter
+  # GET /apps/:id/get_twitter
   def get_twitter
     render json: { twitter: @app.twitter }
   end
