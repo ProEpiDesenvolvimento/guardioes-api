@@ -7,17 +7,21 @@ RSpec.describe 'guardians API', type: :request do
 
   # test suite for GET /apps
   describe 'GET /apps' do
+    
     # make HTTP get request before each example
-    before { get '/apps' }
+    before do
+      user = create(:admin, app: apps.first )
+      sign_in user    
+      get '/apps', {}
+    end
 
     it 'returns apps' do
-      # 'json' is a custom helper to parse JSON responses
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body).count).to eq(1) # should return the APP of the generated admin user 
     end
 
     it 'returns status code 200' do
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:success)
     end
   end
 
