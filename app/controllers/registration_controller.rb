@@ -44,7 +44,7 @@ class RegistrationController < Devise::RegistrationsController
   
         if find_app.blank?
           name = params[:user][:residence]
-          app = App.create!(app_name: name, owner_country: name)
+          app = App.create!(app_name: name, owner_country: name, twitter: nil)
   
           @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
         else
