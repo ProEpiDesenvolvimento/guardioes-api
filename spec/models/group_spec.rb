@@ -163,7 +163,7 @@ RSpec.describe Group, type: :model do
     context '=> get_twitter' do 
       it 'when none is present (root twitter)' do
         fga = create_fga_group_tree
-        expect(fga.get_twitter).to eq('appguardioes')
+        expect(fga.get_twitter).to eq(nil)
       end
       it 'when parent is present' do
         fga = create_fga_group_tree
