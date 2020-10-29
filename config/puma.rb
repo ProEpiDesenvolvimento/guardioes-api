@@ -7,6 +7,11 @@
 threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 threads threads_count, threads_count
 
+# Requests can take up to five minutes to respond
+# This is set so it's possible can load all surveys 
+# csv data on surveys_controller#surveys_to_csv route
+worker_timeout (5*60)
+
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
 port        ENV.fetch("PORT") { 3000 }
