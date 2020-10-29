@@ -1,8 +1,18 @@
-
-version: '3'
+version: "3"
 services:
   db:
     image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+  dbbackup:
+    image: postgres
+    ports:
+      - "5432:5432"
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
@@ -22,4 +32,7 @@ services:
       DATABASE_URL: postgres://postgres@db
       ELASTICSEARCH_URL: http://localhost:9200
       MAILER_URL:
-      GOOGLE_MAPS_API_KEY: AIzaSyBgA7vme-oh1GWhnkNwQUIRECwPAU4wkp4
+      TWITTER_API_CONSUMER_SECRET: 
+      TWITTER_API_ACESS_TOKEN_SECRET:  
+      VIGILANCE_EMAIL:
+      CSV_DATA_KEY: 

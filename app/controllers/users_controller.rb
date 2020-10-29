@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
-  before_action :authenticate_admin!, only: [:index, :query_by_param]
-  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token]
+  before_action :authenticate_admin!, only: [:index, :query_by_param, :admin_update]
+  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
+  before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user, only: [:show, :destroy]
-  before_action :set_user_update, only: [:update]
+  before_action :set_user_update, only: [:update, :admin_update]
+  before_action :set_group, only: [:group_data]
 
   # GET /user
   def index
@@ -14,6 +16,15 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     render json: @user
+  end
+
+  # GET /users/group/1 id of group
+  def group_data
+    @users = User.where("group_id = ?", @group.id)
+    respond_to do |format|
+      format.all {render json: @users}
+      format.csv { send_data to_csv, filename: "users-#{Date.today}.csv" }
+    end
   end
 
   # PATCH/PUT /users/1
@@ -35,11 +46,19 @@ class UsersController < ApplicationController
     end
   end
   
+  def admin_update
+    self.update
+  end
+
   def email_reset_password
     @user = User.find_by_email(params[:email])
-    code = rand(36**4).to_s(36)
-    @user.update_attribute(:aux_code, code)
-    @user.send_reset_password_instructions if @user.present?
+    aux_code = rand(36**4).to_s(36)
+    reset_password_token = rand(36**10).to_s(36)
+    @user.update_attribute(:aux_code, aux_code)
+    @user.update_attribute(:reset_password_token, reset_password_token)
+    if @user.present?
+      UserMailer.reset_password_email(@user).deliver
+    end
     render json: {message: "Email enviado com sucesso"}, status: :ok
   end
 
@@ -86,9 +105,26 @@ class UsersController < ApplicationController
     
     render json: @users
   end
-
   
-  private
+private
+  def to_csv
+    attributes = []
+    @users.first.search_data.each do |key, value|
+      attributes.append(key)
+    end
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      @users.each do |user|
+        csv << user.search_data.map { |key, value| value.to_s }
+      end
+    end
+  end
+
+  def set_group
+    @group = Group.find(params[:id])
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     # if current_user.id != params[:id]
@@ -106,7 +142,26 @@ class UsersController < ApplicationController
   end
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :app_id, :password, :picture, :city, :identification_code, :state, :group_id, :risk_group)
+    params.require(:user).permit(
+      :user_name,
+      :email, 
+      :birthdate, 
+      :country, 
+      :gender, 
+      :race, 
+      :is_professional, 
+      :app_id, 
+      :password, 
+      :picture, 
+      :city, 
+      :identification_code, 
+      :state, 
+      :group_id, 
+      :risk_group, 
+      :policy_version, 
+      :phone, 
+      :is_vigilance
+    )
   end
 
   def update_params
@@ -117,11 +172,16 @@ class UsersController < ApplicationController
       :race,
       :is_professional,
       :residence,
+      :country,
       :state,
       :city,
       :identification_code,
       :school_unit_id,
-      :risk_group
+      :group_id,
+      :risk_group,
+      :policy_version,
+      :phone, 
+      :is_vigilance
     )
   end
 
