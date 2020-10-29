@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_24_013233) do
+ActiveRecord::Schema.define(version: 2020_10_28_155712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.string "owner_country", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "twitter"
   end
 
   create_table "contents", force: :cascade do |t|
@@ -119,6 +120,7 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.string "identification_code"
     t.boolean "risk_group"
     t.integer "group_id"
+    t.integer "streak", default: 0
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
@@ -144,11 +146,12 @@ ActiveRecord::Schema.define(version: 2020_09_24_013233) do
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
-    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
+    t.string "feedback_message"
+    t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end

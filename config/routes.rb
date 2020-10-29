@@ -26,7 +26,10 @@ Rails.application.routes.draw do
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
+
+  get "apps/:id/get_twitter", to: 'apps#get_twitter'
   resources :apps
+
   resources :rumors
 
   get "surveys/school_unit/:id", to: "surveys#group_data"
