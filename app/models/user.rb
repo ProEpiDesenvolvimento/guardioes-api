@@ -77,31 +77,39 @@ class User < ApplicationRecord
   end
 
   def update_streak(survey)
-    last_survey = Survey.filter_by_user(self.id).order("id DESC").offset(1).first
+    if survey.household_id
+      obj = survey.household
+      last_survey = Survey.where("household_id = ?", survey.household_id).order("id DESC").offset(1).first
+    else
+      obj = self
+      last_survey = Survey.where("user_id = ?", self.id).order("id DESC").offset(1).first
+    end
+
     if last_survey
       if last_survey.created_at.day == survey.created_at.prev_day.day
-        self.streak += 1
-      else
-        self.streak = 1
+        obj.streak += 1
+      elsif last_survey.created_at.day != survey.created_at.day
+        obj.streak = 1
       end
-      self.update_attribute(:streak, self.streak)
     else
-      self.update_attribute(:streak, 1)
+      obj.streak = 1
     end
+    obj.update_attribute(:streak, obj.streak)
   end
 
-  def get_feedback_message
-    if (self.streak % 3 == 0 || self.streak == 1) && self.streak < 112
-      index = (self.streak / 3).to_i
-      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC")[index]
-      return message.feedback_message
-    elsif self.streak == 112
-      message = Message.where.not(feedback_message: [nil, ""]).order("id ASC").last
-      return message.feedback_message
+  def get_feedback_message(survey)
+    if survey.household_id
+      obj = survey.household
     else
-      index = self.streak % 4
-      message = Message.where.not(feedback_message: [nil, ""]).order("id DESC")[index]
-      return message.feedback_message
+      obj = self
     end
+    
+    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
+    if !message
+      message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      index = obj.streak % message.size
+      message = message[index]
+    end
+    return message.feedback_message
   end
 end
