@@ -1,5 +1,8 @@
 class Household < ApplicationRecord
   acts_as_paranoid
+  if !Rails.env.test?
+    searchkick
+  end
   
   validates_presence_of :description, 
                         :birthdate, 
@@ -20,6 +23,8 @@ class Household < ApplicationRecord
   belongs_to :user
   has_many :surveys, dependent: :destroy
 
+  has_one :school_unit
+  belongs_to :group, optional: true
 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 end

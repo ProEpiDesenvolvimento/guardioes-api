@@ -41,6 +41,11 @@ GOOGLE_MAPS_API_KEY=AIzaSyBgA7vme-oh1GWhnkNwQUIRECwPAU4wkp4
 ELASTICSEARCH_URL=http://localhost:9200
 DATABASE_URL=postgres://postgres@db
 MAILER_URL=
+TWITTER_API_CONSUMER_SECRET=
+TWITTER_API_ACESS_TOKEN_SECRET=
+VIGILANCE_EMAIL=
+CSV_DATA_KEY=
+
 ```
 
 ### Levantando
@@ -64,6 +69,12 @@ docker-compose run web rake db:migrate
 ```
 
 Teste se tudo está funcionando entrando em [http://localhost:3001](http://localhost:3001]). Você deverá ver um JSON se tudo funciona normalmente.
+
+Após a migração da base de dados, para o correto funcionamento de todos os features da API, você deve iniciar os cronjobs, para fazer isso:
+
+```
+sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
+```
 
 ### Erros
 
@@ -110,6 +121,10 @@ E caso queria testar um modulo em específico
 ```
 rspec spec/[pasta]/[arquivo]
 ```
+
+### Continuous Integration
+
+Quando uma novo commit é feito, este sobre pro [Travis](https://travis-ci.org/), onde é rodada a bateria de testes para certificar que nada quebrou.
 
 ## License & copyright
 

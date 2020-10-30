@@ -4,9 +4,11 @@ class App < ApplicationRecord
   has_many :symptoms
   has_many :public_hospitals
   has_many :contents
-  has_many :managers
+  has_many :group_managers
 
-  searchkick
+  if !Rails.env.test?
+    searchkick
+  end
 
   validates :app_name,
     presence: true,
