@@ -9,6 +9,16 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
+  dbbackup:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
@@ -25,3 +35,4 @@ services:
       TWITTER_API_CONSUMER_SECRET: 
       TWITTER_API_ACESS_TOKEN_SECRET:  
       VIGILANCE_EMAIL:
+      CSV_DATA_KEY: 

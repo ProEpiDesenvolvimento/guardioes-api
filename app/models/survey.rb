@@ -53,19 +53,21 @@ class Survey < ApplicationRecord
     end
     top_3 = get_top_3_syndromes
     if top_3.any?
-      symptoms_and_syndromes_data[:top_3] = top_3.map { |obj| { name: obj[:syndrome].description, percentage: obj[:likelyhood] }}
+      symptoms_and_syndromes_data[:top_3] = top_3.map do |obj| 
+        # Possible COVID case detected, send mail to active vigilance about case
+        if obj[:syndrome].description == "Síndrome Gripal" && user.is_vigilance == true
+          VigilanceMailer.covid_vigilance_email(self, user).deliver
+        end
+        
+        { name: obj[:syndrome].description, percentage: obj[:likelyhood] }
+      end
+
       syndrome_message = top_3[0][:syndrome].message
       if !syndrome_message.nil?
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
       end
     end
-    
-    # Possible COVID case detected, send mail to active vigilance about case
-    top_3.each do |syndrome| 
-      if syndrome[:syndrome].description == "Sindrome Gripal" && user.is_vigilance == true
-        VigilanceMailer.covid_vigilance_email(self, user).deliver
-      end
-    end
+
     return symptoms_and_syndromes_data
   end
 
@@ -82,7 +84,7 @@ class Survey < ApplicationRecord
     end
 
     # Get object data as hash off of json
-    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
+    elastic_data = self.as_json(except: [:updated_at]) 
     
     # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
@@ -98,11 +100,6 @@ class Survey < ApplicationRecord
       elastic_data[symptom.description] = self.symptom.include? symptom.description
     end
     
-    # Add latitude and longitude
-    lat_long = get_anonymous_latitude_longitude
-    elastic_data["latitude"]  = lat_long[:latitude]
-    elastic_data["longitude"] = lat_long[:longitude]
-    
     # Add user's city, state, country, 
     # birthdate, if she is part of the risk group for COVID,
     # race, gender
@@ -116,9 +113,33 @@ class Survey < ApplicationRecord
     
     return elastic_data 
   end
+
+  def csv_data
+    data = self.as_json(except: [ :updated_at, :latitude, :longitude, 
+                                  :bad_since, :symptom, :street, :city, 
+                                  :state, :country, :deleted_at, :traveled_to, 
+                                  :contact_with_symptom, :went_to_hospital]) 
+    data[:user_name] = self.user.user_name
+    data[:user_created_at] = self.user.created_at
+    data[:identification_code] = self.user.identification_code
+    data[:household_identification_code] = nil
+    data[:household_created_at] = nil
+    data[:household_name] = nil
+    data[:household_identification_code] = self.household.identification_code if self.household
+    data[:household_created_at] = self.household.created_at if self.household
+    data[:household_name] = self.household.description if self.household
+    data
+  end
   
+  # this function will not be used anymore, because the offset of
+  # the location is not wanted anymore, but it will be here if someone
+  # needs one day
   def get_anonymous_latitude_longitude
     # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
+    if self.latitude == nil || self.longitude == nil
+      return { latitude: nil, longitude: nil }
+    end
+    
     ret = {}
     dx = 0.05 * rand() # latitude  offset in kilometers (up to 50 meters)
     dy = 0.05 * rand() # longitude offset in kilometers (up to 50 meters)

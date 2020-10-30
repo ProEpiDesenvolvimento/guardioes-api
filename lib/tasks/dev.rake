@@ -152,7 +152,8 @@ namespace :dev do
       show_spinner("Criando Aplicativo do Brasil...") do 
         App.create(
           owner_country: "Brasil",
-          app_name: "Guardiões da Saúde"
+          app_name: "Guardioes da Saude",
+          twitter: "appguardioes"
         )
       end
 

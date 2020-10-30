@@ -45,6 +45,7 @@ class GroupManagersController < ApplicationController
   end
 
   def destroy
+    ManagerGroupPermission.find(@group_manager.id)
     @group_manager.destroy!
   end
 

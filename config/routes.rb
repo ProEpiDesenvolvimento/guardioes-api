@@ -28,7 +28,10 @@ Rails.application.routes.draw do
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
+
+  get "apps/:id/get_twitter", to: 'apps#get_twitter'
   resources :apps
+
   resources :rumors
 
   get "surveys/school_unit/:id", to: "surveys#group_data"
@@ -39,6 +42,7 @@ Rails.application.routes.draw do
   #get "surveys/week_limited", to: "surveys#limited_surveys"
   get "surveys/week", to: "surveys#limited_surveys"
   get "surveys/render_without_user", to: "surveys#render_without_user"
+  get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
   post "email_reset_password", to: "users#email_reset_password"
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"
