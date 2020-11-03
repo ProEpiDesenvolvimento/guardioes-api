@@ -32,8 +32,10 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.bigint "permission_id"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
+    t.index ["permission_id"], name: "index_admins_on_permission_id"
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
@@ -82,8 +84,10 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
     t.boolean "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
+    t.bigint "permission_id"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
+    t.index ["permission_id"], name: "index_group_managers_on_permission_id"
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
   end
 
@@ -142,18 +146,52 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
     t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
   end
 
+  create_table "managers", force: :cascade do |t|
+    t.string "name"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.bigint "app_id"
+    t.bigint "permission_id"
+    t.index ["app_id"], name: "index_managers_on_app_id"
+    t.index ["email"], name: "index_managers_on_email", unique: true
+    t.index ["permission_id"], name: "index_managers_on_permission_id"
+    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
+    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.text "models_create"
+    t.text "models_read"
+    t.text "models_update"
+    t.text "models_destroy"
+    t.text "models_manage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "admin_id"
+    t.bigint "manager_id"
+    t.bigint "group_manager_id"
+    t.index ["admin_id"], name: "index_permissions_on_admin_id"
+    t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
   create_table "pre_registers", force: :cascade do |t|
@@ -306,14 +344,21 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
   end
 
   add_foreign_key "admins", "apps"
+  add_foreign_key "admins", "permissions"
   add_foreign_key "contents", "apps"
   add_foreign_key "group_managers", "apps"
+  add_foreign_key "group_managers", "permissions"
   add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
+  add_foreign_key "managers", "apps"
+  add_foreign_key "managers", "permissions"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_managers"
+  add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"

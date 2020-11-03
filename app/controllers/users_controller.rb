@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   def index
     @users = User.all
 
-    render json: @users
+    render json: @users, each_serializer: PanelUserSerializer
   end
 
   # GET /users/1
@@ -106,6 +106,12 @@ class UsersController < ApplicationController
     render json: @users
   end
   
+  def panel_list
+    @users = User.all
+
+    render json: @users, each_serializer: PanelUserSerializer
+  end
+
 private
   def to_csv
     attributes = []
