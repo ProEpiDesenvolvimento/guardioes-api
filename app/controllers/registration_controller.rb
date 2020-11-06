@@ -66,7 +66,7 @@ class RegistrationController < Devise::RegistrationsController
   end 
 
   def create_manager
-    if params[:manager] && current_admin
+    if params[:manager] 
       @sign_up_params = sign_up_params
     else
       @sign_up_params = nil
@@ -129,7 +129,14 @@ class RegistrationController < Devise::RegistrationsController
         :name,
         :email,
         :password,
-        :app_id
+        :app_id,
+        permission_attributes: [
+          models_create: [],
+          models_read: [],
+          models_update: [],
+          models_destroy: [],
+          models_manage: []
+        ]
       )
     end
   end

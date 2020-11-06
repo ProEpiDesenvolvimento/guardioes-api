@@ -5,7 +5,7 @@ class Ability
 
   def initialize(user)
     if !user.has_attribute?('is_god')
-      permission_id = set_permission(user.permission_id)
+      permission_id = set_permission(user.permission.id)
     end
 
     case user
