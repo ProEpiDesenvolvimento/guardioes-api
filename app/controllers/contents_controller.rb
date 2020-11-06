@@ -60,4 +60,6 @@ class ContentsController < ApplicationController
     def content_params
       params.require(:content).permit(:title, :body, :icon, :content_type, :app_id, :source_link)
     end
+
+    
 end

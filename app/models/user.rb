@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   acts_as_paranoid
-  if !Rails.env.test?
-    searchkick
-  end
+  # if !Rails.env.test?
+  #   searchkick
+  # end
 
   # Index name for a users is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
