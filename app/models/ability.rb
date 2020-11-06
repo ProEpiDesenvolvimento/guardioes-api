@@ -5,7 +5,7 @@ class Ability
 
   def initialize(user)
     if !user.has_attribute?('is_god')
-      permission_id = set_permission(user.permission.id)
+      set_permission(user.permission.id)
     end
 
     case user
@@ -16,17 +16,17 @@ class Ability
           can :manage, [ :manage, :group_manager, :symptom, :syndrome, :content, :user ]
         end
       when Manager
-        can :read, convert_symbol(permission_id.models_read)
-        can :create, convert_symbol(permission_id.models_create)
-        can :update, convert_symbol(permission_id.models_update)
-        can :destroy, convert_symbol(permission_id.models_destroy)
-        can :manage, convert_symbol(permission_id.models_manage)
+        can :read, convert_symbol(@permission.models_read)
+        can :create, convert_symbol(@permission.models_create)
+        can :update, convert_symbol(@permission.models_update)
+        can :destroy, convert_symbol(@permission.models_destroy)
+        can :manage, convert_symbol(@permission.models_manage)
     end
   end
 
   private 
   def set_permission(id)
-    Permission.find(id)
+    @permission = Permission.find(id)
   end
 
   # Convert array of string to symbol ["content"] to [:content] e.g
