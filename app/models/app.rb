@@ -5,6 +5,7 @@ class App < ApplicationRecord
   has_many :public_hospitals
   has_many :contents
   has_many :group_managers
+  has_many :managers
 
   if !Rails.env.test?
     searchkick

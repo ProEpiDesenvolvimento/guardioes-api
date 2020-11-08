@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_28_155712) do
+ActiveRecord::Schema.define(version: 2020_11_06_181915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,10 +157,8 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.bigint "app_id"
-    t.bigint "permission_id"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
-    t.index ["permission_id"], name: "index_managers_on_permission_id"
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
   end
 
@@ -186,9 +184,9 @@ ActiveRecord::Schema.define(version: 2020_10_28_155712) do
     t.text "models_manage"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "admin_id"
     t.bigint "manager_id"
     t.bigint "group_manager_id"
+    t.bigint "admin_id"
     t.index ["admin_id"], name: "index_permissions_on_admin_id"
     t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
     t.index ["manager_id"], name: "index_permissions_on_manager_id"

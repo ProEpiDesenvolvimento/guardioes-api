@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-  before_action :authenticate_admin!, only: [:index, :query_by_param, :admin_update]
-  before_action :authenticate_user!, except: [:index, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
+  before_action :authenticate_admin!, only: [:query_by_param, :admin_update]
+  before_action :authenticate_user!, except: [:index, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
   before_action :authenticate_group_manager!, only: [:group_data]
-  before_action :set_user, only: [:show, :destroy]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
+  authorize_resource :class => false
 
   # GET /user
   def index
@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    render json: @user = User.find(params[:id])
   end
 
   # GET /users/group/1 id of group
@@ -85,6 +85,7 @@ class UsersController < ApplicationController
   end
   
   def destroy
+    @user = User.find(params[:id])
     @user.destroy!
   end
 

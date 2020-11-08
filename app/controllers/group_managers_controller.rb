@@ -4,6 +4,7 @@ class GroupManagersController < ApplicationController
   before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
   before_action :set_group_manager, only: [:destroy, :update]
+  authorize_resource :class => false
 
   # GET /group_managers/
   def index
@@ -47,8 +48,38 @@ class GroupManagersController < ApplicationController
     ManagerGroupPermission.find(@group_manager.id)
     @group_manager.destroy!
   end
-  
-  # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_app
+      @app = App.find current_admin.app_id
+    end
+
+    def set_manager_and_group
+      @manager = GroupManager.find(params[:group_manager_id])
+      @group = Group.find(params[:group_id])
+    end
+
+    def set_group_manager
+      @group_manager = GroupManager.find(params[:id])
+    end
+
+    def group_manager_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    end
+
+    def update_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    end
+
+    def check_authenticated_admin_or_manager
+      if current_admin.nil? && current_group_manager.nil?
+        return render json: {}, status: :ok
+      end
+    end
+end
+
+# THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
   # For now, as this feature is complex, this is comented. In the future, this will be patched to
   # be safe.
 
@@ -91,33 +122,3 @@ class GroupManagersController < ApplicationController
   # def add_users_in_manager_group
 
   # end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_app
-      @app = App.find current_admin.app_id
-    end
-
-    def set_manager_and_group
-      @manager = GroupManager.find(params[:group_manager_id])
-      @group = Group.find(params[:group_id])
-    end
-
-    def set_group_manager
-      @group_manager = GroupManager.find(params[:id])
-    end
-
-    def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
-    end
-
-    def update_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
-    end
-
-    def check_authenticated_admin_or_manager
-      if current_admin.nil? && current_group_manager.nil?
-        return render json: {}, status: :ok
-      end
-    end
-end
