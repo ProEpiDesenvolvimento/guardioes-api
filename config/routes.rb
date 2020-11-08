@@ -57,6 +57,7 @@ Rails.application.routes.draw do
 
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
+    get "/panel", to: "users#panel_list"
   end
 
   devise_for :admins,
