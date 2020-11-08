@@ -8,7 +8,8 @@ class Admin < ApplicationRecord
          jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
-
+  has_one :permission, dependent: :destroy
+  
   validates_presence_of :first_name, :last_name, :email, :app_id
   
   # validates :first_name, 
