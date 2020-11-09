@@ -84,7 +84,7 @@ class Survey < ApplicationRecord
     end
 
     # Get object data as hash off of json
-    elastic_data = self.as_json(except: [:updated_at, :latitude, :longitude]) 
+    elastic_data = self.as_json(except: [:updated_at]) 
     
     # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
@@ -99,11 +99,6 @@ class Survey < ApplicationRecord
     Symptom.all.each do |symptom|
       elastic_data[symptom.description] = self.symptom.include? symptom.description
     end
-    
-    # Add latitude and longitude
-    lat_long = get_anonymous_latitude_longitude
-    elastic_data["latitude"]  = lat_long[:latitude]
-    elastic_data["longitude"] = lat_long[:longitude]
     
     # Add user's city, state, country, 
     # birthdate, if she is part of the risk group for COVID,
@@ -129,13 +124,16 @@ class Survey < ApplicationRecord
     data[:identification_code] = self.user.identification_code
     data[:household_identification_code] = nil
     data[:household_created_at] = nil
-    if self.household_id != nil
-      data[:household_identification_code] = self.household.identification_code
-      data[:household_created_at] = self.household.created_at
-    end
+    data[:household_name] = nil
+    data[:household_identification_code] = self.household.identification_code if self.household
+    data[:household_created_at] = self.household.created_at if self.household
+    data[:household_name] = self.household.description if self.household
     data
   end
   
+  # this function will not be used anymore, because the offset of
+  # the location is not wanted anymore, but it will be here if someone
+  # needs one day
   def get_anonymous_latitude_longitude
     # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
     if self.latitude == nil || self.longitude == nil

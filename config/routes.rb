@@ -4,9 +4,11 @@ Rails.application.routes.draw do
   resources :messages
   resources :syndromes
   resources :school_units
+  resources :permissions, only: [:create, :update, :show, :destory]
   post "school_units_list", to: 'school_units#index_filtered'
   post "upload_by_file", to: 'school_units#upload_by_file'
-  
+
+
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
   post "groups/upload_group_file", to: 'groups#upload_group_file'
@@ -26,7 +28,10 @@ Rails.application.routes.draw do
   resources :public_hospitals
   post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
+
+  get "apps/:id/get_twitter", to: 'apps#get_twitter'
   resources :apps
+
   resources :rumors
 
   get "surveys/school_unit/:id", to: "surveys#group_data"
@@ -82,6 +87,19 @@ Rails.application.routes.draw do
       sessions: 'session',
       registrations: 'registration'
     }
+
+    resources :managers
+    devise_for :managers,
+      path: "manager/",
+      path_names: {
+        sign_in: "login",
+        sign_out: "logout",
+        registration: "signup"
+      },
+      controllers: {
+        sessions: "session",
+        registrations: "registration",
+      }
 
     devise_for :users,
       path: "/user",
