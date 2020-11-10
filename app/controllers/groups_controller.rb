@@ -6,7 +6,12 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    @groups = Group.all#where(group_manager_id: current_group_manager.id)
+    # Adicionar verificação caso não seja um group_manager
+    # Retornar mensagem de erro para casos especificos
+      # Não tem grupo cadastrado
+      # Não tem permissão
+      # 
+    @groups = Group.where(group_manager_id: current_group_manager.id)
     
     render json: @groups
   end
