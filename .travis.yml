@@ -14,8 +14,8 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build 
 script:
-  - sudo docker-compose run web bundle exec rubocop app/controllers
-  - sudo docker-compose run web bundle exec rubocop app/models
+  # - sudo docker-compose run web bundle exec rubocop app/controllers
+  # - sudo docker-compose run web bundle exec rubocop app/models
   - sudo docker-compose run web bundle exec rake spec
 
 after_script:
