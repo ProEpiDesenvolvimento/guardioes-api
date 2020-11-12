@@ -67,6 +67,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'faker'
   gem 'capybara'
+  gem 'simplecov', '~> 0.17.1', require: false # 0.17.1
 end
 
 group :development do
