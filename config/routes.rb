@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
   get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
   get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
+  post 'data_visualization/metabase_urls', to: 'data_visualization#metabase_urls'
 
   get "dashboard", to: 'dashboard#index'
   
