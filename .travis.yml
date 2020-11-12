@@ -6,6 +6,8 @@ language: ruby
 services:
   - docker
 install:
+  - touch config/master.key
+  - echo $RAILS_MASTER_KEY > config/master.key
   - sudo docker-compose up -d
   - sudo docker-compose exec db psql -U postgres -c 'create database myapp_test;'
   - sudo docker-compose run web rails db:migrate RAILS_ENV=test
