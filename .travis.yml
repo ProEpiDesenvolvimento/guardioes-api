@@ -9,5 +9,7 @@ install:
   - sudo docker-compose exec db psql -U postgres -c 'create database myapp_test;'
   - sudo docker-compose run web rails db:migrate RAILS_ENV=test
 script:
+  - sudo docker-compose run web bundle exec rubocop app/controllers
+  - sudo docker-compose run web bundle exec rubocop app/models
   - sudo docker-compose run web bundle exec rake spec
     
