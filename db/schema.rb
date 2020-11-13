@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_06_181915) do
+ActiveRecord::Schema.define(version: 2020_11_10_211235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2020_11_06_181915) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -82,6 +83,7 @@ ActiveRecord::Schema.define(version: 2020_11_06_181915) do
     t.boolean "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -153,6 +155,7 @@ ActiveRecord::Schema.define(version: 2020_11_06_181915) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.bigint "app_id"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
