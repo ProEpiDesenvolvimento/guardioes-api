@@ -4,6 +4,7 @@ class GroupManagersController < ApplicationController
   before_action :check_authenticated_admin_or_manager, only: [:show, :add_manager_permission,:is_manager_permitted, :remove_manager_permission]
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
   before_action :set_group_manager, only: [:destroy, :update]
+  authorize_resource :class => false, except: [:email_reset_password, :reset_password, :show_reset_token] 
 
   # GET /group_managers/
   def index
@@ -47,8 +48,72 @@ class GroupManagersController < ApplicationController
     ManagerGroupPermission.find(@group_manager.id)
     @group_manager.destroy!
   end
-  
-  # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
+
+  def email_reset_password
+    @group_manager = GroupManager.find_by_email(params[:email])
+    aux_code = rand(36**4).to_s(36)
+    reset_password_token = rand(36**10).to_s(36)
+    @group_manager.update_attribute(:aux_code, aux_code)
+    @group_manager.update_attribute(:reset_password_token, reset_password_token)
+    if @group_manager.present?
+      GroupManagerMailer.reset_password_email(@group_manager).deliver
+    end
+    render json: {message: "Email enviado com sucesso"}, status: :ok
+  end
+
+  def show_reset_token
+    group_manager = GroupManager.where(aux_code: params[:code]).first
+    if group_manager.present?
+      render json: {reset_password_token: group_manager.reset_password_token}, status: :ok
+    else
+      render json: {error: true, message: "Codigo invalido"}, status: :bad_request
+    end
+  end
+
+  def reset_password
+    @group_manager = GroupManager.where(reset_password_token: params[:reset_password_token]).first
+    if @group_manager.present?
+      if @group_manager.reset_password(params[:password], params[:password_confirmation])
+        render json: {error: false, message: "Senha redefinida com sucesso"}, status: :ok
+      else
+        render json: {error: true, data: @group_manager.errors}, status: :bad_request
+      end
+    else
+      render json: {error: true, message: "Token invalido"}, status: :bad_request
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_app
+      @app = App.find current_admin.app_id
+    end
+
+    def set_manager_and_group
+      @manager = GroupManager.find(params[:group_manager_id])
+      @group = Group.find(params[:group_id])
+    end
+
+    def set_group_manager
+      @group_manager = GroupManager.find(params[:id])
+    end
+
+    def group_manager_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    end
+
+    def update_params
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    end
+
+    def check_authenticated_admin_or_manager
+      if current_admin.nil? && current_group_manager.nil?
+        return render json: {}, status: :ok
+      end
+    end
+end
+
+# THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
   # For now, as this feature is complex, this is comented. In the future, this will be patched to
   # be safe.
 
@@ -91,33 +156,3 @@ class GroupManagersController < ApplicationController
   # def add_users_in_manager_group
 
   # end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_app
-      @app = App.find current_admin.app_id
-    end
-
-    def set_manager_and_group
-      @manager = GroupManager.find(params[:group_manager_id])
-      @group = Group.find(params[:group_id])
-    end
-
-    def set_group_manager
-      @group_manager = GroupManager.find(params[:id])
-    end
-
-    def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
-    end
-
-    def update_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
-    end
-
-    def check_authenticated_admin_or_manager
-      if current_admin.nil? && current_group_manager.nil?
-        return render json: {}, status: :ok
-      end
-    end
-end
