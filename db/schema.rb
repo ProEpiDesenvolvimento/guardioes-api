@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 2020_11_10_211235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
+    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
