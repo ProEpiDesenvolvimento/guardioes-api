@@ -108,9 +108,13 @@ class UsersController < ApplicationController
   end
   
   def panel_list
-    @users = User.all
-
-    render json: @users, each_serializer: PanelUserSerializer
+    if params[:email] 
+      query_regex = "^" + params[:email]
+      @user =  User.where('email ~* ?', query_regex)
+    else
+      @user = User.all
+    end
+    paginate @user, per_page: 100
   end
 
 private
