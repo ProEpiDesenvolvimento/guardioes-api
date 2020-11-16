@@ -6,12 +6,14 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
+    @group_node = []
+
     @groups = Group.where(group_manager_id: current_group_manager.id)
     @groups.each do |group|
       current_node = group
       loop do
         if current_node.children_label === 'MUNICIPIO'
-          @group_node = current_node
+          @group_node << current_node
           break
         end
         break if current_node.parent.nil?
