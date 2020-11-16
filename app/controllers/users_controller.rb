@@ -114,7 +114,7 @@ class UsersController < ApplicationController
     else
       @user = User.all
     end
-    paginate @user, per_page: 100
+    paginate @user, per_page: 50
   end
 
 private
