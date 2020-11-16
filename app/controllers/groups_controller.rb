@@ -6,14 +6,22 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    # Adicionar verificação caso não seja um group_manager
-    # Retornar mensagem de erro para casos especificos
-      # Não tem grupo cadastrado
-      # Não tem permissão
-      # 
     @groups = Group.where(group_manager_id: current_group_manager.id)
-    
-    render json: @groups
+    @groups.each do |group|
+      current_node = group
+      loop do
+        if current_node.children_label === 'MUNICIPIO'
+          @group_node = current_node
+          break
+        end
+        break if current_node.parent.nil?
+        current_node = current_node.parent
+      end
+    end
+
+    groups = Group.where(id: @group_node).or(Group.where(group_manager_id: current_group_manager.id))
+
+    render json: groups
   end
 
   # GET /groups/1
