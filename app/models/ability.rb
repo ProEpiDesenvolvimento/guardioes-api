@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if !user.has_attribute?('is_god')
+    if !user.has_attribute?('is_god') && user == User
       set_permission(user.permission.id)
     end
 
@@ -21,6 +21,8 @@ class Ability
         can :update, convert_symbol(@permission.models_update)
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+      when User
+        can :manage, :all
     end
   end
 
