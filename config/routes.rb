@@ -65,6 +65,8 @@ Rails.application.routes.draw do
     post "show_reset_token", to: "admin#show_reset_token"
     post "reset_password", to: "admin#reset_password"
   end
+  resources :admins, only: %i[index]
+  
   devise_for :admins,
     path: 'admin/',
     path_names: {
