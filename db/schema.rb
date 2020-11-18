@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_18_132915) do
+ActiveRecord::Schema.define(version: 2020_11_18_173733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,10 +156,8 @@ ActiveRecord::Schema.define(version: 2020_11_18_132915) do
     t.datetime "remember_created_at"
     t.bigint "app_id"
     t.string "aux_code"
-    t.bigint "permission_id"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
-    t.index ["permission_id"], name: "index_managers_on_permission_id"
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
   end
 
@@ -350,7 +348,6 @@ ActiveRecord::Schema.define(version: 2020_11_18_132915) do
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
   add_foreign_key "managers", "apps"
-  add_foreign_key "managers", "permissions"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "permissions", "admins"
