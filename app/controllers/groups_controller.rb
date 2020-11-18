@@ -6,12 +6,9 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    if current_group_manager 
+    
       @groups = Group.where(group_manager_id: current_group_manager.id)
-    else 
-      @groups = 'Ok'
-    end
-
+    
     render json: @groups
   end
 
