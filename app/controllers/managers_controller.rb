@@ -3,6 +3,8 @@ class ManagersController < ApplicationController
   before_action :set_manager, only: [:show, :update, :destroy]
   before_action :set_app, only: [:index]
 
+  load_and_authorize_resource
+
   def index
     render json: @app.managers
   end

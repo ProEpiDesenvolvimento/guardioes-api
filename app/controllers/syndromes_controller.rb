@@ -2,7 +2,7 @@ class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
   #before_action :authenticate_admin!, except: %i[ index ]
-  authorize_resource :class => false
+  load_and_authorize_resource
 
   # GET /syndromes
   def index

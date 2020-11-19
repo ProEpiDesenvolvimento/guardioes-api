@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
-  authorize_resource :class => false, except: [:email_reset_password, :reset_password, :show_reset_token] 
+  load_and_authorize_resource, except: [:email_reset_password, :reset_password, :show_reset_token] 
 
   # GET /user
   def index

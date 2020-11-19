@@ -1,7 +1,7 @@
 class ContentsController < ApplicationController
   # before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
-  authorize_resource :class => false
+  load_and_authorize_resource
 
   # GET /contents
   def index
