@@ -1,4 +1,4 @@
-class AdminController < ApplicationController
+class AdminsController < ApplicationController
   before_action :authenticate_admin!, except: [:email_reset_password, :reset_password, :show_reset_token] 
   def index
     @admins = Admin.all
