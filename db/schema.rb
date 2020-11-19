@@ -32,11 +32,9 @@ ActiveRecord::Schema.define(version: 2020_11_10_211235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
-    t.bigint "permission_id"
     t.string "aux_code"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
-    t.index ["permission_id"], name: "index_admins_on_permission_id"
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
@@ -85,11 +83,9 @@ ActiveRecord::Schema.define(version: 2020_11_10_211235) do
     t.boolean "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
-    t.bigint "permission_id"
     t.string "aux_code"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
-    t.index ["permission_id"], name: "index_group_managers_on_permission_id"
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
   end
 
@@ -169,12 +165,10 @@ ActiveRecord::Schema.define(version: 2020_11_10_211235) do
     t.string "title"
     t.text "warning_message"
     t.text "go_to_hospital_message"
-    t.text "feedback_message"
     t.bigint "syndrome_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
@@ -346,16 +340,13 @@ ActiveRecord::Schema.define(version: 2020_11_10_211235) do
   end
 
   add_foreign_key "admins", "apps"
-  add_foreign_key "admins", "permissions"
   add_foreign_key "contents", "apps"
   add_foreign_key "group_managers", "apps"
-  add_foreign_key "group_managers", "permissions"
   add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
   add_foreign_key "managers", "apps"
-  add_foreign_key "managers", "permissions"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "permissions", "admins"
