@@ -1,7 +1,8 @@
 class SymptomsController < ApplicationController
   #before_action :authenticate_admin!, except: [:index]
   before_action :set_symptom, only: [:show, :update, :destroy]
-  authorize_resource :class => false
+  
+  load_and_authorize_resource
 
   # GET /symptoms
   def index

@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-  before_action :authenticate_admin!, only: [:query_by_param, :admin_update]
-  before_action :authenticate_user!, except: [:index, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
+  # before_action :authenticate_admin!, only: [:query_by_param, :admin_update]
+  before_action :authenticate_user!, except: [:index, :panel_list, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
   before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
-  authorize_resource :class => false
+  load_and_authorize_resource, except: [:email_reset_password, :reset_password, :show_reset_token] 
 
   # GET /user
   def index
@@ -107,6 +107,16 @@ class UsersController < ApplicationController
     render json: @users
   end
   
+  def panel_list
+    if params[:email] 
+      query_regex = "^" + params[:email]
+      @user =  User.where('email ~* ?', query_regex)
+    else
+      @user = User.all
+    end
+    paginate @user, per_page: 50
+  end
+
 private
   def to_csv
     attributes = []

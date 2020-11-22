@@ -5,6 +5,9 @@ def test_user_count(expected)
   expect(User.all.length).to eq(expected)
 end
 
+#################################################
+## Some tests r not suposed to be in this file ##
+#################################################
 RSpec.describe User, type: :model do
 
   # before :all do
