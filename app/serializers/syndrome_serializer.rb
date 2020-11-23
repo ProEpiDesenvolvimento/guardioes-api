@@ -6,7 +6,7 @@ class SyndromeSerializer < ActiveModel::Serializer
 
   def symptoms
     return object.symptoms.map do |symptom|
-      obj = symptom.as_json({only: [:description]})
+      obj = symptom.as_json({only: [:id, :description, :app_id]})
       if SyndromeSymptomPercentage.where(syndrome:object,symptom:symptom).any?
         obj[:percentage] = SyndromeSymptomPercentage.where(syndrome:object,symptom:symptom)[0].percentage
       else
