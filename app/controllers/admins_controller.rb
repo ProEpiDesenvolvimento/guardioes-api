@@ -1,8 +1,33 @@
-class AdminController < ApplicationController
+class AdminsController < ApplicationController
   before_action :authenticate_admin!, except: [:email_reset_password, :reset_password, :show_reset_token] 
   def index
     @admins = Admin.all
     render json: @admins
+  end
+  
+  def update
+    errors = {}
+    @admin = Admin.find(params[:id])
+    begin
+    	@admin.update!(admin_params)
+    rescue StandardError => e
+    	errors << e
+    end
+    if errors.length == 0
+      render json: @admin
+    else
+      render json: {errors: errors, user: @admin}, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    errors = {}
+    @admin = Admin.find(params[:id])
+    begin
+      @admin.destroy!
+    rescue StandardError => e
+      errors << e
+    end
   end
 
   def email_reset_password
@@ -49,5 +74,5 @@ class AdminController < ApplicationController
         :is_god,
         :app_id
       )
-  end 
+  end
 end
