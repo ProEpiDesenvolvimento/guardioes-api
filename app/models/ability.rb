@@ -22,7 +22,7 @@ class Ability
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
       when GroupManager
-        can: manage, [ User, Group ]
+        can :manage, [ User, Group ]
       when User
         can :manage, :all
     end

@@ -6,7 +6,11 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    @groups = Group.all#where(group_manager_id: current_group_manager.id)
+    @group_manager = GroupManager.find(current_group_manager.id)
+    @groups = Group.where(
+        group_manager_id: current_group_manager.id, 
+        description: @group_manager.group_name
+      ).where.not(children_label: nil)
     
     render json: @groups
   end
