@@ -215,13 +215,13 @@ class GroupsController < ApplicationController
             new_group.children_label = 'GRUPO'
           end
           
-          if !validate_manager_group_permissions(new_group)
-            current_group = nil
-            is_valid_manager = false
-            r[:reason] = 'Not enough permissions'
-            groups_not_created << r
-            break
-          end
+          #if !validate_manager_group_permissions(new_group)
+          #  current_group = nil
+          #  is_valid_manager = false
+          #  r[:reason] = 'Not enough permissions'
+          #  groups_not_created << r
+          #  break
+          #end
 
           was_created = true
           new_group.save()

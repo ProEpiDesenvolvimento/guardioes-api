@@ -1,10 +1,20 @@
 class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
-  before_action :authenticate_admin!, except: %i[ index ]
+  #before_action :authenticate_admin!, except: %i[ index ]
+  load_and_authorize_resource
+
   # GET /syndromes
   def index
-    @syndromes = Syndrome.all
+    if current_user.nil? && current_manager.nil?
+      @user = current_admin
+    elsif current_admin.nil? && current_user.nil?
+      @user = current_manager
+    else
+      @user = current_user
+    end
+    
+    @syndromes = Syndrome.filter_syndrome_by_app_id(@user.app_id)
 
     render json: @syndromes
   end
@@ -98,7 +108,8 @@ class SyndromesController < ApplicationController
     def syndrome_params
       params.require(:syndrome).permit(
         :description,
-        :details, 
+        :details,
+        :app_id,
         :symptom => [[:description,:code,:percentage,:details,:priority,:app_id]],
         message_attributes: [  :title, :warning_message, :go_to_hospital_message ]
       )

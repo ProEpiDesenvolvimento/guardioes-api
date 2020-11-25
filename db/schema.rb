@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_21_181235) do
+ActiveRecord::Schema.define(version: 2020_11_18_225337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.string "owner_country", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "twitter"
   end
 
   create_table "contents", force: :cascade do |t|
@@ -81,6 +83,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.boolean "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -141,6 +144,23 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
   end
 
+  create_table "managers", force: :cascade do |t|
+    t.string "name"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.bigint "app_id"
+    t.string "aux_code"
+    t.index ["app_id"], name: "index_managers_on_app_id"
+    t.index ["email"], name: "index_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "title"
     t.text "warning_message"
@@ -149,10 +169,25 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.text "models_create"
+    t.text "models_read"
+    t.text "models_update"
+    t.text "models_destroy"
+    t.text "models_manage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "manager_id"
+    t.bigint "group_manager_id"
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_permissions_on_admin_id"
+    t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
   create_table "pre_registers", force: :cascade do |t|
@@ -258,6 +293,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "message_id"
+    t.bigint "app_id", default: 1
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
@@ -311,8 +347,12 @@ ActiveRecord::Schema.define(version: 2020_10_21_181235) do
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
+  add_foreign_key "managers", "apps"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_managers"
+  add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
