@@ -71,17 +71,19 @@ class GroupsController < ApplicationController
 
   # POST /groups/upload_group_file/
   def upload_group_file(build_country_city_state_model = false)
-    validate_group_manager(build_country_city_state_model); return if performed?
-    data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
+    handle_errors do
+      validate_group_manager(build_country_city_state_model)
+      data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
 
-    headers = data.row(1) # First row containing headers for table
-    
-    validate_mandatory_columns headers; return if performed?
+      headers = data.row(1) # First row containing headers for table
+      
+      validate_mandatory_columns headers
 
-    rows_to_create = get_rows(build_country_city_state_model, headers, data); return if performed?
-    create_groups(rows_to_create, build_country_city_state_model); return if performed?
+      rows_to_create = get_rows(build_country_city_state_model, headers, data)
+      create_groups(rows_to_create, build_country_city_state_model)
 
-    render json: {message: 'All groups created', error: false}, status: :created
+      render json: {message: 'All groups created', error: false}, status: :created
+    end
   end
 
   # POST /groups/build_country_city_state_groups/
@@ -124,11 +126,11 @@ class GroupsController < ApplicationController
           not_found_columns << label
         end
       end
-      render json: {
+      raise CustomException.new({
         message: 'Mandatory table rows not found',
         not_found_columns: not_found_columns,
         error: true
-        }, status: :unprocessable_entity if not_found_columns.any?
+        }, :unprocessable_entity) if not_found_columns.any?
     end
 
     # Check if all required columns are present and returns the one that aren't
@@ -157,7 +159,7 @@ class GroupsController < ApplicationController
     
     def validate_invalid_group_name
       if group_params[:description] == 'root_node'
-        return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
+        raise CustomException.new('You cannot name a group \'root_node\'', :unprocessable_entity)
       end
     end
 
@@ -175,23 +177,25 @@ class GroupsController < ApplicationController
 
     def validate_row(build_country_city_state_model, row_data, i)
       if !build_country_city_state_model && (row_data[i].nil? || row_data[i].empty?)
-        render json: {
+        raise CustomException.new({
           message: 'Filter data is empty',
           row: idx,
           column: headers[i],
           error: true
-        }, status: :unprocessable_entity and return
+        }, :unprocessable_entity)
       elif build_country_city_state_model && (!row_data[i].nil? || !row_data[i].empty?)
-        render json: {
+        raise CustomException.new({
           message: 'Filter data is filled',
           row: idx,
           column: headers[i],
           error: true
-        }, status: :unprocessable_entity and return
+        }, :unprocessable_entity)
       end
       # If some group is called root_node, a forbidden name, return failure
       if row_data[i] == 'root_node'
-        render json: {message: 'You cannot name a group \'root_node\'', error: true}, status: :unprocessable_entity and return
+        raise CustomException.new({
+          message: 'You cannot name a group \'root_node\'',
+          error: true}, :unprocessable_entity)
       end
     end
 
@@ -219,7 +223,9 @@ class GroupsController < ApplicationController
 
     def validate_group_manager(build_country_city_state_model)
       if !build_country_city_state_model && current_group_manager.nil?
-        render json: 'You must be a group manager to create new groups', status: :forbidden
+        raise CustomException.new(
+          'You must be a group manager to create new groups',
+          :forbidden)
       end
     end
 
@@ -331,11 +337,26 @@ class GroupsController < ApplicationController
         end
       end
       if groups_not_created.any?
-        return render json: {
+        raise CustomException.new({
           message: 'Some or all groups were not created',
           error: true,
           groups: groups_not_created
-        }, status: :created
-      end  
+        }, :created)
+      end
+    end
+  end
+
+  def handle_errors
+    yield
+  rescue CustomException => e
+    render json: e.data, status: e.status
+    return
+  end
+
+  class CustomException < StandardError
+    attr_reader :data, :status
+    def initialize(data, status)
+      @data = data
+      @status= status
     end
   end
