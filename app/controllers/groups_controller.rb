@@ -74,126 +74,12 @@ class GroupsController < ApplicationController
     validate_group_manager(build_country_city_state_model); return if performed?
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
 
-    # Mandatory columns for .xls document to register new institutions
-
     headers = data.row(1) # First row containing headers for table
     
-    # If rows are not found, return error alongside missing rows
-    not_found_columns = validate_mandatory_columns headers
-    if not_found_columns.any?
-      return render json: {message: 'Mandatory table rows not found', not_found_columns: not_found_columns, error: true}, status: :unprocessable_entity
-    end
-    
-    filter_columns = filter_columns headers
-    filter_size = DEFAULT_FILTERS_SIZE + filter_columns.length
+    validate_mandatory_columns headers; return if performed?
 
-    rows_to_create = []
-
-    data.each_with_pagename do |name, sheet|
-      sheet_data = format_sheet sheet
-      sheet.each_with_index(
-        code: 'CODIGO', 
-        description: 'UNIDADE',
-        address: 'ENDEREÇO', 
-        cep: 'CEP', 
-        phone: 'TELEFONE',
-        email: 'EMAIL',
-      ) do |group_data, idx|
-          # Jump table header
-          next if idx == 0
-
-          # Get row from sheet
-          row_data = sheet_data[idx]
-
-          # List of path filters (country, state, municipality, filter_1, filter_2, ...)
-          path_filter_list = (6..6+filter_size-1)
-          path = []
-
-          # Check if any filter data is empty and returns error if so
-          path_filter_list.each do |i|
-            validate_row(build_country_city_state_model, row_data, i); return if performed?
-            path = fill_path row_data, headers, build_country_city_state_model, i
-          end
-
-          row = {
-            metadata: group_data,
-            path: path
-          }
-
-          rows_to_create << row
-        end
-    end
-
-    groups_not_created = []
-
-    rows_to_create.each do |r|
-      current_group = Group::get_root
-      was_created = false
-      is_valid_manager = true
-      r[:path].each_with_index do |p, i|
-        # Create or add child to the path leading to the child group
-        child = current_group.children.find_by_description(p[:description])
-        if child.nil?
-          # 0: Country, 1: State, 2: Municipality. Managers may not create these, only use them.
-          if i <= 2 && !build_country_city_state_model
-            current_group = nil
-            is_valid_manager = false
-            r[:reason] = 'Creating a new group for \'' + p[:label] + '\' (' + p[:description] + ') is not allowed'
-            groups_not_created << r
-            break
-          end
-          new_group = Group.new()
-          new_group.description = p[:description]
-          new_group.children_label = p[:children_label]
-          new_group.parent = current_group
-
-          # If child group, add child group metadata
-          if !build_country_city_state_model && p[:children_label] == nil
-            new_group.code = r[:metadata][:code]
-            new_group.address = r[:metadata][:address]
-            new_group.cep = r[:metadata][:cep]
-            new_group.phone = r[:metadata][:phone]
-            new_group.email = r[:metadata][:email]
-          end
-
-          # Add group manager to group
-          if !build_country_city_state_model
-            new_group.group_manager = current_group_manager
-          end
-
-          # Children label for municipality is 'GRUPO' 
-          if build_country_city_state_model && i == 2
-            new_group.children_label = 'GRUPO'
-          end
-          
-          #if !validate_manager_group_permissions(new_group)
-          #  current_group = nil
-          #  is_valid_manager = false
-          #  r[:reason] = 'Not enough permissions'
-          #  groups_not_created << r
-          #  break
-          #end
-
-          was_created = true
-          new_group.save()
-          current_group = new_group
-        else
-          current_group = child
-        end
-      end
-      if !was_created && is_valid_manager
-        r[:reason] = 'Already exists'
-        groups_not_created << r
-      end
-    end
-
-    if groups_not_created.any?
-      return render json: {
-        message: 'Some or all groups were not created',
-        error: true,
-        groups: groups_not_created
-      }, status: :created
-    end
+    rows_to_create = get_rows(build_country_city_state_model, headers, data); return if performed?
+    create_groups(rows_to_create, build_country_city_state_model); return if performed?
 
     render json: {message: 'All groups created', error: false}, status: :created
   end
@@ -238,7 +124,11 @@ class GroupsController < ApplicationController
           not_found_columns << label
         end
       end
-      not_found_columns
+      render json: {
+        message: 'Mandatory table rows not found',
+        not_found_columns: not_found_columns,
+        error: true
+        }, status: :unprocessable_entity if not_found_columns.any?
     end
 
     # Check if all required columns are present and returns the one that aren't
@@ -327,43 +217,125 @@ class GroupsController < ApplicationController
       end
     end
 
-    def get_rows
-      sheet.each_with_index(
-        code: 'CODIGO', 
-        description: 'UNIDADE',
-        address: 'ENDEREÇO', 
-        cep: 'CEP', 
-        phone: 'TELEFONE',
-        email: 'EMAIL',
-      ) do |group_data, idx|
-          # Jump table header
-          next if idx == 0
-
-          # Get row from sheet
-          row_data = sheet_data[idx]
-
-          # List of path filters (country, state, municipality, filter_1, filter_2, ...)
-          path_filter_list = (6..6+filter_size-1)
-          path = []
-
-          # Check if any filter data is empty and returns error if so
-          path_filter_list.each do |i|
-            validate_row(build_country_city_state_model, row_data, i); return if performed?
-            path = fill_path row_data, headers, build_country_city_state_model, i
-          end
-
-          row = {
-            metadata: group_data,
-            path: path
-          }
-
-          rows_to_create << row
-        end
-    end
-
     def validate_group_manager(build_country_city_state_model)
       if !build_country_city_state_model && current_group_manager.nil?
         render json: 'You must be a group manager to create new groups', status: :forbidden
       end
+    end
+
+    def get_rows(build_country_city_state_model, headers, data)
+      rows_to_create = []
+    
+      filter_columns = filter_columns headers
+      filter_size = DEFAULT_FILTERS_SIZE + filter_columns.length
+    
+      rows_to_create = []
+    
+      data.each_with_pagename do |name, sheet|
+        sheet_data = format_sheet sheet
+        sheet.each_with_index(
+          code: 'CODIGO', 
+          description: 'UNIDADE',
+          address: 'ENDEREÇO', 
+          cep: 'CEP', 
+          phone: 'TELEFONE',
+          email: 'EMAIL',
+        ) do |group_data, idx|
+            # Jump table header
+            next if idx == 0
+    
+            # Get row from sheet
+            row_data = sheet_data[idx]
+    
+            # List of path filters (country, state, municipality, filter_1, filter_2, ...)
+            path_filter_list = (6..6+filter_size-1)
+            path = []
+    
+            # Check if any filter data is empty and returns error if so
+            path_filter_list.each do |i|
+              validate_row(build_country_city_state_model, row_data, i); return if performed?
+              path = fill_path row_data, headers, build_country_city_state_model, i
+            end
+    
+            row = {
+              metadata: group_data,
+              path: path
+            }
+    
+            rows_to_create << row
+          end
+      end
+      rows_to_create
+    end
+
+    def create_groups(rows_to_create, build_country_city_state_model)
+      groups_not_created = []
+      rows_to_create.each do |r|
+        current_group = Group::get_root
+        was_created = false
+        is_valid_manager = true
+        r[:path].each_with_index do |p, i|
+          # Create or add child to the path leading to the child group
+          child = current_group.children.find_by_description(p[:description])
+          if child.nil?
+            # 0: Country, 1: State, 2: Municipality. Managers may not create these, only use them.
+            if i <= 2 && !build_country_city_state_model
+              current_group = nil
+              is_valid_manager = false
+              r[:reason] = 'Creating a new group for \'' + p[:label] + '\' (' + p[:description] + ') is not allowed'
+              groups_not_created << r
+              break
+            end
+            new_group = Group.new()
+            new_group.description = p[:description]
+            new_group.children_label = p[:children_label]
+            new_group.parent = current_group
+  
+            # If child group, add child group metadata
+            if !build_country_city_state_model && p[:children_label] == nil
+              new_group.code = r[:metadata][:code]
+              new_group.address = r[:metadata][:address]
+              new_group.cep = r[:metadata][:cep]
+              new_group.phone = r[:metadata][:phone]
+              new_group.email = r[:metadata][:email]
+            end
+  
+            # Add group manager to group
+            if !build_country_city_state_model
+              new_group.group_manager = current_group_manager
+            end
+  
+            # Children label for municipality is 'GRUPO' 
+            if build_country_city_state_model && i == 2
+              new_group.children_label = 'GRUPO'
+            end
+            
+            #if !validate_manager_group_permissions(new_group)
+            #  current_group = nil
+            #  is_valid_manager = false
+            #  r[:reason] = 'Not enough permissions'
+            #  groups_not_created << r
+            #  break
+            #end
+  
+            was_created = true
+            new_group.save()
+            current_group = new_group
+          else
+            current_group = child
+          end
+        end
+        if !was_created && is_valid_manager
+          r[:reason] = 'Already exists'
+          groups_not_created << r
+        end
+      end
+      if groups_not_created.any?
+        return render json: {
+          message: 'Some or all groups were not created',
+          error: true,
+          groups: groups_not_created
+        }, status: :created
+      end  
     end
   end
