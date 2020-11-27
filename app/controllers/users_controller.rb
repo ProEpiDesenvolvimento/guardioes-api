@@ -108,11 +108,20 @@ class UsersController < ApplicationController
   end
   
   def panel_list
+    if current_user.nil? && current_manager.nil?
+      @current_user = current_admin
+    elsif current_admin.nil? && current_user.nil?
+      @current_user = current_manager
+    else
+      @current_user = current_user
+    end
+
     if params[:email] 
       query_regex = "^" + params[:email]
-      @user =  User.where('email ~* ?', query_regex)
+      @user =  User.user_by_app_id(@current_user.app_id).where('email ~* ?', query_regex)
     else
-      @user = User.all
+      #@user = User.all
+      @user = User.user_by_app_id(@current_user.app_id)
     end
     paginate @user, per_page: 50
   end

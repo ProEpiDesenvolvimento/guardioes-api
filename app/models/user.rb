@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  belongs_to :app
+  
   acts_as_paranoid
   if !Rails.env.test?
     searchkick
@@ -112,4 +114,6 @@ class User < ApplicationRecord
     end
     return message.feedback_message
   end
+
+  scope :user_by_app_id, ->(current_user_app_id) { where(app_id: current_user_app_id) }
 end
