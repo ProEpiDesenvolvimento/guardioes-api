@@ -1,7 +1,12 @@
 class AppSerializer < ActiveModel::Serializer
   attributes :id, :app_name, :owner_country, :twitter, :adminEmail
+
   def adminEmail
-    object.admins[0].email
+    if object.admins[0].nil?
+      return nil
+    else 
+      object.admins[0].email
+    end
   end
 
   has_many :contents
