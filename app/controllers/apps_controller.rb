@@ -6,13 +6,14 @@ class AppsController < ApplicationController
   # GET /apps
   def index
     @apps = App.all
-
     render json: @apps
   end
 
   # GET /apps/1
   def show
-    render json: @app
+    @admin = Admin.where(app_id: @app.id)
+    newApps = {app: @app}.merge({admin: @admin})
+    render json: newApps
   end
 
   # POST /apps
