@@ -1,5 +1,8 @@
 class AdminsController < ApplicationController
   before_action :authenticate_admin!, except: [:email_reset_password, :reset_password, :show_reset_token] 
+
+  load_and_authorize_resource
+  
   def index
     @admins = Admin.all
     render json: @admins

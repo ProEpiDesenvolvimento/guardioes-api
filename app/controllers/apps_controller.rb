@@ -3,6 +3,8 @@ class AppsController < ApplicationController
   before_action :authenticate_admin_is_god, except: [:update, :show, :get_twitter]
   before_action :set_app, only: [:show, :update, :destroy, :get_twitter]
 
+  load_and_authorize_resource
+
   # GET /apps
   def index
     @apps = App.all
