@@ -57,6 +57,7 @@ Rails.application.routes.draw do
 
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
+    get "/panel", to: "users#panel_list"
   end
 
   scope "/admin" do 
@@ -64,6 +65,8 @@ Rails.application.routes.draw do
     post "show_reset_token", to: "admin#show_reset_token"
     post "reset_password", to: "admin#reset_password"
   end
+  resources :admins, only: [:index, :update, :destroy]
+  
   devise_for :admins,
     path: 'admin/',
     path_names: {

@@ -3,21 +3,41 @@ class ManagersController < ApplicationController
   before_action :set_manager, only: [:show, :update, :destroy]
   before_action :set_app, only: [:index]
 
+  load_and_authorize_resource
+
   def index
-    render json: @app.managers
+    if @app.managers.empty?
+      return render json: @app.managers, status: :ok
+    end
+    data = { 'managers' => [] }
+    @app.managers.each do |manager|
+      permissions = Permission.where(manager_id: manager.id).first
+      data['managers'].append({manager: manager}.merge({permissions: permissions}))
+    end
+    render json: data, status: :ok
   end
 
   # GET /managers/:id
   def show
     @manager = Manager.find(params[:id])
     @permissions = Permission.where(manager_id: @manager.id) 
-    data = {manager: @manager}.merge({permisions: @permissions})
+    data = {manager: @manager}.merge({permissions: @permissions})
     render json: data, status: :ok
   end
 
   def update
-    if @manager.update(manager_params)
-      render json: @manager
+    if @manager.update(manager_params.except(:permissions))
+      @permission = Permission.where(manager_id: @manager.id).first
+      if params['manager'].has_key?(:permissions)
+        if @permission.update({models_manage: manager_params.fetch(:permissions)})
+          data = {manager: @manager}.merge({permissions: @permission})
+          render json: data, status: :ok
+        else
+          render json: @permission.errors, status: :unprocessable_entity
+        end
+      else
+        render json: "aaaa"
+      end
     else
       render json: @manager.errors, status: :unprocessable_entity
     end
@@ -78,6 +98,7 @@ class ManagersController < ApplicationController
         :email,
         :password,
         :permission_id,
+        :permissions => []
       )
   end 
 end
