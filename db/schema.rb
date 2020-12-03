@@ -156,7 +156,6 @@ ActiveRecord::Schema.define(version: 2020_11_18_225337) do
     t.datetime "remember_created_at"
     t.bigint "app_id"
     t.string "aux_code"
-    t.integer "permission_id"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
@@ -170,6 +169,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_225337) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
+    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
