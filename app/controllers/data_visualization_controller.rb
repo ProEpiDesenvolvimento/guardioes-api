@@ -26,7 +26,7 @@ class DataVisualizationController < ApplicationController
         token = JWT.encode payload, metabase_config[:secret_key]
         iframe_url = metabase_config[:site_url] + "/embed/question/" + token + "#bordered=true&titled=true"
         iframe_urls.append({
-          :question => payload['question'],
+          :question => payload['resource']['question'],
           :iframe_url => iframe_url
         })
     }
