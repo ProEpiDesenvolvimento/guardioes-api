@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if !user.has_attribute?('is_god')
+    if !user.has_attribute?('is_god') && !user.has_attribute?('country') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
 
@@ -13,7 +13,7 @@ class Ability
         if user.is_god?
           can :manage, :all
         else
-          can :manage, [ :manage, :group_manager, :symptom, :syndrome, :content, :user ]
+          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
@@ -21,6 +21,10 @@ class Ability
         can :update, convert_symbol(@permission.models_update)
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+      when GroupManager
+        can :manage, [ User, Group ]
+      when User
+        can :manage, :all
     end
   end
 
@@ -34,13 +38,13 @@ class Ability
     models = %i[]
     array.each do |new_array|
       if new_array == "symptom"
-        models << :symptom
+        models << Symptom
       elsif new_array == "syndrome"
-        models << :syndrome
+        models << Syndrome
       elsif new_array == "content"
-        models << :content
+        models << Content
       else 
-        models << :user
+        models << User
       end
     end
 

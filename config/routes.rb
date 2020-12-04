@@ -58,8 +58,16 @@ Rails.application.routes.draw do
 
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
+    get "/panel", to: "users#panel_list"
   end
 
+  scope "/admin" do 
+    post "email_reset_password", to: "admin#email_reset_password"
+    post "show_reset_token", to: "admin#show_reset_token"
+    post "reset_password", to: "admin#reset_password"
+  end
+  resources :admins, only: [:index, :update, :destroy]
+  
   devise_for :admins,
     path: 'admin/',
     path_names: {
@@ -74,6 +82,11 @@ Rails.application.routes.draw do
 
     resources :group_managers
     get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
+    scope "/group_manager" do 
+      post "email_reset_password", to: "group_managers#email_reset_password"
+      post "show_reset_token", to: "group_managers#show_reset_token"
+      post "reset_password", to: "group_managers#reset_password"
+    end
     # IN THE FUTURE THE FOLLOWING FUTURES WILL BE IMPLEMENTED
     # get 'group_managers/:manager_id/:group_id/permit', to: 'group_managers#add_manager_permission'
     # get 'group_managers/:manager_id/:group_id/unpermit', to: 'group_managers#remove_manager_permission'
@@ -90,6 +103,11 @@ Rails.application.routes.draw do
     }
 
     resources :managers
+    scope "/manager" do 
+      post "email_reset_password", to: "managers#email_reset_password"
+      post "show_reset_token", to: "managers#show_reset_token"
+      post "reset_password", to: "managers#reset_password"
+    end
     devise_for :managers,
       path: "manager/",
       path_names: {
