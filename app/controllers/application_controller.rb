@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Application Controller
 class ApplicationController < ActionController::API
   # before_action :ensure_json_request
   # protect_from_forgery
