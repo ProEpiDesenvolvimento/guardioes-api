@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Admins controllers
 class AdminsController < ApplicationController
   before_action :authenticate_admin!, except: %i[email_reset_password reset_password show_reset_token]
 
@@ -11,13 +12,8 @@ class AdminsController < ApplicationController
   end
 
   def update
-    errors = {}
     @admin = Admin.find(params[:id])
-    begin
-      @admin.update!(admin_params)
-    rescue StandardError => e
-      errors << e
-    end
+    errors = update_admin
     if errors.length.zero?
       render json: @admin
     else
@@ -68,6 +64,16 @@ class AdminsController < ApplicationController
   end
 
   private
+
+  def update_admin
+    errors = {}
+    begin
+      @admin.update!(admin_params)
+    rescue StandardError => e
+      errors << e
+    end
+    errors
+  end
 
   def admin_params
     params.require(:admin).permit(
