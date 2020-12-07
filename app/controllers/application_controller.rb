@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   # before_action :ensure_json_request
   # protect_from_forgery
@@ -7,8 +9,9 @@ class ApplicationController < ActionController::API
   end
 
   def ensure_json_request
-      return if request.headers["Accept"] =~ /vnd\.api\+json/
-      render :nothing => true, :status => 406
+    return if request.headers['Accept'] =~ /vnd\.api\+json/
+
+    render nothing: true, status: 406
   end
 
   # methods used on Admin and User registration
@@ -25,7 +28,7 @@ class ApplicationController < ActionController::API
       errors: [
         {
           status: '400',
-          title: I18n.translate("validations.title"),
+          title: I18n.translate('validations.title'),
           detail: resource.errors,
           code: resource
         }
@@ -34,14 +37,14 @@ class ApplicationController < ActionController::API
   end
 
   def current_ability
-      if admin_signed_in?
-        @current_ability ||= Ability.new(current_admin)
-      elsif manager_signed_in?
-        @current_ability ||= Ability.new(current_manager)
-      elsif group_manager_signed_in?
-        @current_ability ||= Ability.new(current_group_manager)
-      else
-        @current_ability ||= Ability.new(current_user)
-      end
+    @current_ability ||= if admin_signed_in?
+                           Ability.new(current_admin)
+                         elsif manager_signed_in?
+                           Ability.new(current_manager)
+                         elsif group_manager_signed_in?
+                           Ability.new(current_group_manager)
+                         else
+                           Ability.new(current_user)
+                         end
   end
 end

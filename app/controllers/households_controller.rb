@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class HouseholdsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_household, only: [:show, :update, :destroy]
-  before_action :set_user, only: [:index, :create]
+  before_action :set_household, only: %i[show update destroy]
+  before_action :set_user, only: %i[index create]
 
   # GET /households
   def index
@@ -21,7 +23,7 @@ class HouseholdsController < ApplicationController
 
     if @household.save
       @user.reindex
-      render json: @household, status: :created, location: user_household_path(:id => @user)
+      render json: @household, status: :created, location: user_household_path(id: @user)
     else
       render json: @household.errors, status: :unprocessable_entity
     end
@@ -42,30 +44,31 @@ class HouseholdsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_household
-      @household = Household.find(params[:id])
-    end
 
-    def set_user
-      @user = User.find(current_user.id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_household
+    @household = Household.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def household_params
-      params.require(:household).permit(
-        :description, 
-        :birthdate, 
-        :country, 
-        :gender, 
-        :race, 
-        :kinship, 
-        :user_id, 
-        :picture, 
-        :school_unit_id, 
-        :identification_code, 
-        :risk_group,
-        :group_id
-      )
-    end
+  def set_user
+    @user = User.find(current_user.id)
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def household_params
+    params.require(:household).permit(
+      :description,
+      :birthdate,
+      :country,
+      :gender,
+      :race,
+      :kinship,
+      :user_id,
+      :picture,
+      :school_unit_id,
+      :identification_code,
+      :risk_group,
+      :group_id
+    )
+  end
 end

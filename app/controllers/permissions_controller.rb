@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PermissionsController < ApplicationController
-  before_action :set_user_permission, only: [:show] 
+  before_action :set_user_permission, only: [:show]
 
   # GET /permissions/1
   def show
@@ -26,11 +28,10 @@ class PermissionsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy; end
 
-  end
-    
   private
+
   def set_user_permission
     @user = User.find(params[:id])
     @permissions = Permission.find(@user.permission_id)
@@ -45,7 +46,7 @@ class PermissionsController < ApplicationController
       models_read: [],
       models_update: [],
       models_destroy: [],
-      models_manage: [],
+      models_manage: []
     )
-  end 
+  end
 end

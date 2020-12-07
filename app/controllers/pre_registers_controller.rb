@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PreRegistersController < ApplicationController
-  before_action :set_pre_register, only: [:show, :update, :destroy]
+  before_action :set_pre_register, only: %i[show update destroy]
 
   # GET /pre_registers
   def index
@@ -15,11 +17,11 @@ class PreRegistersController < ApplicationController
 
   # POST /pre_registers
   def create
-    if !PreRegister.where("email = ?", pre_register_params[:email]).empty?
-      return render json: {errors: "Email already registered"}, status: 409
+    unless PreRegister.where('email = ?', pre_register_params[:email]).empty?
+      return render json: { errors: 'Email already registered' }, status: 409
     end
-    @pre_register = PreRegister.new(pre_register_params)
 
+    @pre_register = PreRegister.new(pre_register_params)
 
     if @pre_register.save
       PreRegisterMailer.analyze_email(@pre_register).deliver
@@ -44,13 +46,14 @@ class PreRegistersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_pre_register
-      @pre_register = PreRegister.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def pre_register_params
-      params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :email, :app_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_pre_register
+    @pre_register = PreRegister.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def pre_register_params
+    params.require(:pre_register).permit(:cnpj, :phone, :organization_kind, :state, :company_name, :email, :app_id)
+  end
 end

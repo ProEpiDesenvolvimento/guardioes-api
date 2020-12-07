@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:show, :update, :destroy]
+  before_action :set_message, only: %i[show update destroy]
 
   # GET /messages
   def index
@@ -39,13 +41,14 @@ class MessagesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_message
-      @message = Message.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def message_params
-      params.require(:message).permit(:title, :warning_message, :go_to_hospital_message, :syndrome_id, :symptom_id, :feedback_message, :day)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = Message.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def message_params
+    params.require(:message).permit(:title, :warning_message, :go_to_hospital_message, :syndrome_id, :symptom_id, :feedback_message, :day)
+  end
 end

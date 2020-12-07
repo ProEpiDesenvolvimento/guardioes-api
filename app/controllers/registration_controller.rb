@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
@@ -5,31 +7,32 @@ class RegistrationController < Devise::RegistrationsController
   before_action :create_manager, if: -> { params[:manager] }
 
   respond_to :json
-  
+
   def create
     if params[:user]
       build_resource(@new_sign_up_params)
       resource.save
-  
+
       render_resource(resource)
     else
       build_resource(@sign_up_params)
       resource.save
-  
+
       render_resource(resource)
     end
   end
 
   private
+
   def set_app
     if params[:user]
       if params[:user][:residence].blank?
         find_app = App.where(owner_country: params[:user][:country])
-  
+
         if find_app.blank?
           name = params[:user][:country]
           app = App.create!(app_name: name, owner_country: name)
-  
+
           puts "\n New Sign up Params App doesn't exist \n\n\n"
           puts @new_sign_up_params
           @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
@@ -42,11 +45,11 @@ class RegistrationController < Devise::RegistrationsController
         end
       else
         find_app = App.where(owner_country: params[:user][:residence])
-  
+
         if find_app.blank?
           name = params[:user][:residence]
           app = App.create!(app_name: name, owner_country: name, twitter: nil)
-  
+
           @new_sign_up_params = sign_up_params.merge(app_id: app.id).except(:residence)
         else
           @new_sign_up_params = sign_up_params.merge(app_id: find_app.first.id).except(:residence)
@@ -56,31 +59,22 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if ( params[:admin] && current_admin )
-      if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
-        @sign_up_params = nil
-      else
-        @sign_up_params = sign_up_params
-      end
+    if params[:admin] && current_admin
+      @sign_up_params = if (current_admin.is_god == false) && (params[:admin][:is_god] == true)
+                          nil
+                        else
+                          sign_up_params
+                        end
     end
-  end 
+  end
 
   def create_manager
-    if params[:manager] 
-      @sign_up_params = sign_up_params
-    else
-      @sign_up_params = nil
-    end
-  end 
+    @sign_up_params = (sign_up_params if params[:manager])
+  end
 
   def create_group_manager
-    if params[:group_manager] && (current_admin || current_group_manager)
-      @sign_up_params = sign_up_params
-    else
-      @sign_up_params = nil
-    end
-  end 
-
+    @sign_up_params = (sign_up_params if params[:group_manager] && (current_admin || current_group_manager))
+  end
 
   def sign_up_params
     if params[:user]

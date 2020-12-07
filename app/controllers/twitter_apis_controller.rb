@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class TwitterApisController < ApplicationController
-  before_action :set_twitter_api, only: [:show, :update, :destroy]
-  before_action :authenticate_admin!, except: [:index, :show]
+  before_action :set_twitter_api, only: %i[show update destroy]
+  before_action :authenticate_admin!, except: %i[index show]
 
   # GET /twitter_apis
   def index
@@ -8,7 +10,7 @@ class TwitterApisController < ApplicationController
     TwitterApi.all.each do |t|
       twitter_apis << t.handle
     end
-    return render json: twitter_apis.to_json()
+    render json: twitter_apis.to_json
   end
 
   # GET /twitter_apis/1
@@ -42,24 +44,21 @@ class TwitterApisController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_twitter_api
-      twitter_handle = params[:id]
-      if twitter_handle[0] == '@'
-        twitter_handle = twitter_handle[1..twitter_handle.length]
-      end
-      @twitter_api = TwitterApi.find_by_handle(twitter_handle)
-      if @twitter_api.twitterdata.nil?
-        @twitter_api.update_tweets
-      end
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def twitter_api_params
-      params
-        .require(:twitter_api)
-        .permit(
-          :handle
-        )
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_twitter_api
+    twitter_handle = params[:id]
+    twitter_handle = twitter_handle[1..twitter_handle.length] if twitter_handle[0] == '@'
+    @twitter_api = TwitterApi.find_by_handle(twitter_handle)
+    @twitter_api.update_tweets if @twitter_api.twitterdata.nil?
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def twitter_api_params
+    params
+      .require(:twitter_api)
+      .permit(
+        :handle
+      )
+  end
 end

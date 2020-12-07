@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class PublicHospitalsController < ApplicationController
-  before_action :authenticate_admin!, except: [:index, :show]
-  before_action :authenticate_user!, only: [:index, :show]
-  before_action :set_public_hospital, only: [:show, :update, :destroy]
+  before_action :authenticate_admin!, except: %i[index show]
+  before_action :authenticate_user!, only: %i[index show]
+  before_action :set_public_hospital, only: %i[show update destroy]
 
   # GET /public_hospitals
   def index
@@ -45,13 +47,14 @@ class PublicHospitalsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_public_hospital
-      @public_hospital = PublicHospital.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def public_hospital_params
-      params.require(:public_hospital).permit(:description, :latitude, :longitude, :phone, :details, :app_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_public_hospital
+    @public_hospital = PublicHospital.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def public_hospital_params
+    params.require(:public_hospital).permit(:description, :latitude, :longitude, :phone, :details, :app_id)
+  end
 end
