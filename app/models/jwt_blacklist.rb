@@ -1,5 +1,7 @@
-class JWTBlacklist < ApplicationRecord
-    include Devise::JWT::RevocationStrategies::Blacklist
+# frozen_string_literal: true
 
-    self.table_name = 'jwt_blacklist'
+class JWTBlacklist < ApplicationRecord
+  include Devise::JWT::RevocationStrategies::Blacklist
+
+  self.table_name = 'jwt_blacklist'
 end

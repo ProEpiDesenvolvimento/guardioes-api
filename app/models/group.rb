@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Group < ApplicationRecord
   # FOR PROPER FUNCTIONING OF THIS MODEL, THERE MUST EXIST A GROUP CALLED 'root_node'
   # root_node is the parent group of all the groups, can be easily created by typing
 
   # -----------------------> Group::setup() in rails console <-----------------------
-  
+
   # Stucture is as follows:
   #          ----- root_node -----
   #          |                   |
@@ -13,31 +15,31 @@ class Group < ApplicationRecord
   # root node has many children, all of them are countries
   # all of those have children, each of them states in the country
   # all of those have children, each of them are municipalities in a state
-  # children of municipalities must be a institution (for example, UnB) 
+  # children of municipalities must be a institution (for example, UnB)
 
   # Each group has [0..n] managers
-  has_many :manager_group_permission, :class_name => 'ManagerGroupPermission'
-  has_many :group_managers, :through => :manager_group_permission 
+  has_many :manager_group_permission, class_name: 'ManagerGroupPermission'
+  has_many :group_managers, through: :manager_group_permission
 
   # Each group has one parent (except for 'root_node', that's why optional is true)
-  belongs_to :parent, class_name: "Group", optional: true
+  belongs_to :parent, class_name: 'Group', optional: true
   # Each group has [0..n] children groups
-  has_many :children, class_name: "Group", foreign_key: "parent_id"
+  has_many :children, class_name: 'Group', foreign_key: 'parent_id'
 
   belongs_to :group_manager, optional: true
 
   # Call this function to initialize groups model inner workings
   def self.setup
     group = Group.new(description: 'root_node', children_label: 'Pais')
-    group.save()
-    return group
+    group.save
+    group
   end
 
   # Return parent group
   def self.get_root
     group = Group.find_by_description('root_node')
-    group = Group::setup() if group.nil?
-    return group
+    group = Group.setup if group.nil?
+    group
   end
 
   # Returns tree structure that leads to current group
@@ -45,22 +47,20 @@ class Group < ApplicationRecord
     path = []
     current_node = self
     while current_node.description != 'root_node'
-      if labeled
-        if string_only
-          path << { group: current_node.description, label: current_node.label }
-        else
-          path << { group: current_node, label: current_node.label }
-        end
-      else
-        if string_only
-          path << current_node.description
-        else
-          path << current_node
-        end
-      end
+      path << if labeled
+                if string_only
+                  { group: current_node.description, label: current_node.label }
+                else
+                  { group: current_node, label: current_node.label }
+                end
+              elsif string_only
+                current_node.description
+              else
+                current_node
+              end
       current_node = current_node.parent
     end
-    return path.reverse
+    path.reverse
   end
 
   # Recursively looks for a twitter handle that is not nil
@@ -69,54 +69,47 @@ class Group < ApplicationRecord
     current_node = self
     twitter = nil
     loop do
-      if current_node.group_manager != nil
-        if current_node.group_manager.twitter != nil
+      unless current_node.group_manager.nil?
+        unless current_node.group_manager.twitter.nil?
           twitter = current_node.group_manager.twitter
           break
         end
       end
       break if current_node.parent.nil?
+
       current_node = current_node.parent
     end
-    return twitter
+    twitter
   end
 
   # Returns the label for a given group
   # For example: label for group New York would be 'City'
   def label
-    return parent.children_label
+    parent.children_label
   end
 
   # Deletes current group and all of it's subtree
   # If you delete New York subtree expect every child, grandchild and so on to be deleted too
   def delete_subtree
-    children.each do |child|
-      child.delete_subtree
-    end
-    User.where(group_id:id).each do |u|
+    children.each(&:delete_subtree)
+    User.where(group_id: id).each do |u|
       u.update_attribute(:group_id, nil)
     end
-    manager_group_permission.each do |m|
-      m.delete
-    end
+    manager_group_permission.each(&:delete)
     delete
   end
 
   def require_id
-    if group_manager != nil
-      if group_manager.require_id != nil
-        return true
-      end
+    unless group_manager.nil?
+      return true unless group_manager.require_id.nil?
     end
-    return false
+    false
   end
 
   def id_code_length
-    if group_manager != nil
-      if group_manager.id_code_length != nil
-        return group_manager.id_code_length
-      end
+    unless group_manager.nil?
+      return group_manager.id_code_length unless group_manager.id_code_length.nil?
     end
-    return nil
+    nil
   end
 end

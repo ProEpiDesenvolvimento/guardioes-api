@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublicHospital < ApplicationRecord
   belongs_to :app
 

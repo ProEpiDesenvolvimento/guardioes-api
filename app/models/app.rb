@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class App < ApplicationRecord
   has_many :admins
   has_many :users
@@ -7,21 +9,19 @@ class App < ApplicationRecord
   has_many :group_managers
   has_many :managers
 
-  if !Rails.env.test?
-    searchkick
-  end
+  searchkick unless Rails.env.test?
 
   validates :app_name,
-    presence: true,
-    length: {
-      minimum: 1,
-      maximum: 255
-    }
+            presence: true,
+            length: {
+              minimum: 1,
+              maximum: 255
+            }
 
   validates :owner_country,
-    presence: true,
-    length: {
-      minimum: 1,
-      maximum: 255
-    }
+            presence: true,
+            length: {
+              minimum: 1,
+              maximum: 255
+            }
 end
