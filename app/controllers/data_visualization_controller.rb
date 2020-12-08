@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DataVisualization controllers
 class DataVisualizationController < ApplicationController
   def users_count
     render json: User.count

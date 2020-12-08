@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
+# GroupManagers Controller
 class GroupManagersController < ApplicationController
   before_action :authenticate_admin!, only: [:index]
-  before_action :set_app, only: [:index]
-  before_action :check_authenticated_admin_or_manager, only: %i[show add_manager_permission is_manager_permitted remove_manager_permission]
-  before_action :set_manager_and_group, only: %i[is_manager_permitted add_manager_permission remove_manager_permission]
+  before_action :check_authenticated_admin_or_manager, only: %i[
+    show add_manager_permission
+    manager_permitted?
+    remove_manager_permission
+  ]
+  before_action :set_manager_and_group, only: %i[manager_permitted? add_manager_permission remove_manager_permission]
   before_action :set_group_manager, only: %i[destroy update]
 
   load_and_authorize_resource except: %i[email_reset_password reset_password show_reset_token]
 
   # GET /group_managers/
   def index
+    @app = App.find current_admin.app_id
     render json: @app.group_managers
   end
 
@@ -25,20 +30,13 @@ class GroupManagersController < ApplicationController
   end
 
   # GET /group_managers/:manager_id/:group_id
-  def is_manager_permitted
+  def manager_permitted?
     is_permitted = @manager.is_permitted?(@group)
-    render json: { is_permitted: is_permitted, group: @group.get_path(string_only = true).join('/') }, status: :ok
+    render json: { is_permitted: is_permitted, group: @group.get_path(true).join('/') }, status: :ok
   end
 
   def update
-    errors = {}
-    update_params.each do |param|
-      @group_manager.update_attribute(param[0], param[1])
-    rescue ActiveRecord::InvalidForeignKey
-      errors[param[0]] = "#{param[1]} não foi encontrado"
-    rescue StandardError => e
-      errors[param[0]] = e
-    end
+    errors = update_group_manager
     if errors.length.zero?
       render json: @group_manager
     else
@@ -52,10 +50,7 @@ class GroupManagersController < ApplicationController
 
   def email_reset_password
     @group_manager = GroupManager.find_by_email(params[:email])
-    aux_code = rand(36**4).to_s(36)
-    reset_password_token = rand(36**10).to_s(36)
-    @group_manager.update_attribute(:aux_code, aux_code)
-    @group_manager.update_attribute(:reset_password_token, reset_password_token)
+    @group_manager.update_attributes(aux_code: rand(36**4).to_s(36), reset_password_token: rand(36**10).to_s(36))
     GroupManagerMailer.reset_password_email(@group_manager).deliver if @group_manager.present?
     render json: { message: 'Email enviado com sucesso' }, status: :ok
   end
@@ -84,9 +79,16 @@ class GroupManagersController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_app
-    @app = App.find current_admin.app_id
+  def update_group_manager
+    errors = {}
+    update_params.each do |param|
+      @group_manager.update_attribute(param[0], param[1])
+    rescue ActiveRecord::InvalidForeignKey
+      errors[param[0]] = "#{param[1]} não foi encontrado"
+    rescue StandardError => e
+      errors[param[0]] = e
+    end
+    errors
   end
 
   def set_manager_and_group
@@ -99,11 +101,23 @@ class GroupManagersController < ApplicationController
   end
 
   def group_manager_params
-    params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    params.require(:group_manager).permit(
+      :email, :password,
+      :name, :app_id,
+      :group_name, :twitter,
+      :require_id, :id_code_length,
+      :vigilance_email
+    )
   end
 
   def update_params
-    params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+    params.require(:group_manager).permit(
+      :email, :password,
+      :name, :app_id,
+      :group_name, :twitter,
+      :require_id, :id_code_length,
+      :vigilance_email
+    )
   end
 
   def check_authenticated_admin_or_manager
