@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Contents Controller
 class ContentsController < ApplicationController
   # before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: %i[show update destroy]
