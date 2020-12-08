@@ -2,7 +2,8 @@ class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
   #before_action :authenticate_admin!, except: %i[ index ]
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
+  authorize_resource only: [:create]
 
   # GET /syndromes
   def index
@@ -101,7 +102,7 @@ class SyndromesController < ApplicationController
     end
 
     def set_symptoms
-       @symptoms = params[:symptoms]
+      @symptoms = params[:symptom]
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -110,8 +111,8 @@ class SyndromesController < ApplicationController
         :description,
         :details,
         :app_id,
-        :symptom => [[:description,:code,:percentage,:details,:priority,:app_id]],
-        message_attributes: [  :title, :warning_message, :go_to_hospital_message ]
+        :symptom => [[ :description, :code, :percentage, :details, :priority, :app_id ]],
+        message_attributes: [ :title, :warning_message, :go_to_hospital_message ]
       )
     end
 end
