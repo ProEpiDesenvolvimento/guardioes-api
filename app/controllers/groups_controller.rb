@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
     @groups = Group.where(
         group_manager_id: current_group_manager.id, 
         description: @group_manager.group_name
-      ).where.not(children_label: nil)
+      )
     
     render json: @groups
   end
