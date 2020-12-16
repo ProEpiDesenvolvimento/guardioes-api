@@ -25,6 +25,7 @@ class Group < ApplicationRecord
   has_many :children, class_name: "Group", foreign_key: "parent_id"
 
   belongs_to :group_manager, optional: true
+  serialize :vigilance_syndromes, Array
 
   # Call this function to initialize groups model inner workings
   def self.setup

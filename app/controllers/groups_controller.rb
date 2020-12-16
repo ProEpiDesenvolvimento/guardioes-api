@@ -38,7 +38,13 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   def update
     return render json: 'Not enough permissions' if !validate_manager_group_permissions
-    if @group.update(group_params)
+    @hashes = params[:group][:vigilance_syndromes].each do |vs|
+      vs.to_s
+    end
+    return if validate_hashes
+        
+    @group.update_attribute(:vigilance_syndromes, @hashes)
+    if @group.update(group_params.except [:vigilance_syndromes])
       render json: @group
     else
       render json: @group.errors, status: :unprocessable_entity
@@ -279,7 +285,8 @@ class GroupsController < ApplicationController
         :address,
         :cep,
         :phone,
-        :email
+        :email,
+        :vigilance_syndromes
       )
     end
 
@@ -322,5 +329,14 @@ class GroupsController < ApplicationController
       if group_params[:description] == 'root_node'
         return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
       end
+    end
+
+    def validate_hashes
+      @hashes.each do |h|
+        if not h.key?("syndrome_id")
+          return render json: {errors: "Missing key syndrome_id"}, status: :unprocessable_entity
+        end
+      end
+      return false
     end
 end
