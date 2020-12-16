@@ -38,9 +38,7 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   def update
     return render json: 'Not enough permissions' if !validate_manager_group_permissions
-    @hashes = params[:group][:vigilance_syndromes].each do |vs|
-      vs.to_s
-    end
+    @hashes = params[:group][:vigilance_syndromes].each { |vs| vs.to_s }
     return if validate_hashes
         
     @group.update_attribute(:vigilance_syndromes, @hashes)
@@ -332,10 +330,14 @@ class GroupsController < ApplicationController
     end
 
     def validate_hashes
+      ids = []
       @hashes.each do |h|
-        if not h.key?("syndrome_id")
+        if ids.include? h[:syndrome_id]
+          return render json: {errors: "Duplicated key syndrome_id"}, status: :unprocessable_entity
+        elsif not h.key?("syndrome_id")
           return render json: {errors: "Missing key syndrome_id"}, status: :unprocessable_entity
         end
+        ids.append(h[:syndrome_id])
       end
       return false
     end
