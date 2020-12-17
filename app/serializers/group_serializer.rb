@@ -6,7 +6,7 @@ class GroupSerializer < ActiveModel::Serializer
     if object.parent == nil
       return nil
     end
-    { name: object.parent.description, id: object.parent.id }
+    { name: object.parent.description, id: object.parent.id, children_label: object.parent.children_label }
   end
 
   def require_id
