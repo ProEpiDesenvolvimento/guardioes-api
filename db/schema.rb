@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(version: 2020_12_08_022432) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.index ["app_id"], name: "index_pre_registers_on_app_id"
+    t.index ["email"], name: "index_pre_registers_on_email", unique: true
   end
 
   create_table "public_hospitals", force: :cascade do |t|
