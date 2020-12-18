@@ -36,7 +36,7 @@ class ManagersController < ApplicationController
           render json: @permission.errors, status: :unprocessable_entity
         end
       else
-        render json: "aaaa"
+        render json: @manager
       end
     else
       render json: @manager.errors, status: :unprocessable_entity
