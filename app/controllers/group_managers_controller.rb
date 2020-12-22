@@ -28,10 +28,12 @@ class GroupManagersController < ApplicationController
   end
 
   def update
-    @hashes = params[:group_manager][:vigilance_syndromes].each { |vs| vs.to_s }
-    return if validate_hashes
-        
-    @group_manager.update_attribute(:vigilance_syndromes, @hashes)
+    if params[:group_manager][:vigilance_syndromes]
+      @hashes = params[:group_manager][:vigilance_syndromes].each { |vs| vs.to_s }
+      return if validate_hashes
+          
+      @group_manager.update_attribute(:vigilance_syndromes, @hashes)
+    end
     errors = {}
     update_params.each do |param|
       begin
