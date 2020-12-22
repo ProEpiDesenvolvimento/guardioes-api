@@ -2,9 +2,10 @@ class VigilanceMailer < ActionMailer::Base
   default from: 'proepi.desenvolvimento@gmail.com'
   layout 'mailer'
 
-  def covid_vigilance_email(survey, user)
+  def vigilance_email(survey, user, syndrome)
     @survey = survey
     @user = user
+    @syndrome = syndrome
     
     @date = @user.birthdate.strftime("%d, %m, %Y")
     @date.gsub!(', ', '/')

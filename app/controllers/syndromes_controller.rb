@@ -2,17 +2,21 @@ class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
   #before_action :authenticate_admin!, except: %i[ index ]
-  load_and_authorize_resource except: [:create]
+  load_and_authorize_resource except: [:create, :index]
   authorize_resource only: [:create]
 
   # GET /syndromes
   def index
-    if current_user.nil? && current_manager.nil?
-      @user = current_admin
-    elsif current_admin.nil? && current_user.nil?
+    if not current_manager.nil?
       @user = current_manager
-    else
+    elsif not current_group_manager.nil?
+      @user = current_group_manager
+    elsif not current_admin.nil?
+      @user = current_admin
+    elsif not current_user.nil?
       @user = current_user
+    else
+      return render json: { errors: "Token not found" }, status: :unprocessable_entity
     end
     
     @syndromes = Syndrome.filter_syndrome_by_app_id(@user.app_id)

@@ -53,10 +53,15 @@ class Survey < ApplicationRecord
     end
     top_3 = get_top_3_syndromes
     if top_3.any?
-      symptoms_and_syndromes_data[:top_3] = top_3.map do |obj| 
-        # Possible COVID case detected, send mail to active vigilance about case
-        if obj[:syndrome].description == "Síndrome Gripal" && user.is_vigilance == true
-          VigilanceMailer.covid_vigilance_email(self, user).deliver
+      group = Group.where("id = ?", user.group_id).first
+      group_manager = GroupManager.where("id = ?", group.group_manager_id).first
+      symptoms_and_syndromes_data[:top_3] = top_3.map do |obj|
+        if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
+          group_manager[:vigilance_syndromes].each do |vs|
+            if vs[:syndrome_id] == obj[:syndrome].id
+              VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+            end
+          end
         end
         
         { name: obj[:syndrome].description, percentage: obj[:likelyhood] }

@@ -80,22 +80,21 @@ class SurveysController < ApplicationController
     past_surveys = Survey.filter_by_user(current_user.id).where("created_at >= ?", date).where(household: @survey.household)
 
     if past_surveys.length == 2
-      render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
+      return render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
     elsif past_surveys[0] && past_surveys[0].symptom[0] && @survey.symptom[0]
-      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+      return render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
     elsif past_surveys[0] && !past_surveys[0].symptom[0] && !@survey.symptom[0]
-      render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
-    else
-      if @survey.save
-        @user.update_streak(@survey)
-        if @survey.symptom.length > 0
-          render json: { survey: @survey, feedback_message: @user.get_feedback_message(@survey), messages: @survey.get_message(@user) }, status: :created, location: user_survey_path(:id => @user)
-        else
-          render json: { survey: @survey, feedback_message: @user.get_feedback_message(@survey) }, status: :created, location: user_survey_path(:id => @user)
-        end
+      return render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+    end
+    if @survey.save
+      @user.update_streak(@survey)
+      if @survey.symptom.length > 0
+        render json: { survey: @survey, feedback_message: @user.get_feedback_message(@survey), messages: @survey.get_message(@user) }, status: :created, location: user_survey_path(:id => @user)
       else
-        render json: @survey.errors, status: :unprocessable_entity
+        render json: { survey: @survey, feedback_message: @user.get_feedback_message(@survey) }, status: :created, location: user_survey_path(:id => @user)
       end
+    else
+      render json: @survey.errors, status: :unprocessable_entity
     end
   end
 
