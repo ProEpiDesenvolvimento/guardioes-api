@@ -15,10 +15,14 @@ class PreRegistersController < ApplicationController
 
   # POST /pre_registers
   def create
+    if !PreRegister.where("email = ?", pre_register_params[:email]).empty?
+      return render json: {errors: "Email already registered"}, status: 409
+    end
     @pre_register = PreRegister.new(pre_register_params)
 
+
     if @pre_register.save
-      PreRegisterMailer.new_group_request(@pre_register).deliver
+      PreRegisterMailer.analyze_email(@pre_register).deliver
       render json: @pre_register, status: :created, location: @pre_register
     else
       render json: @pre_register.errors, status: :unprocessable_entity
