@@ -54,11 +54,11 @@ class Survey < ApplicationRecord
     top_3 = get_top_3_syndromes
     if top_3.any?
       group = Group.where("id = ?", user.group_id).first
+      group_manager = GroupManager.where("id = ?", group.group_manager_id).first
       symptoms_and_syndromes_data[:top_3] = top_3.map do |obj|
-        if user.is_vigilance == true and group[:vigilance_syndromes] != ""
-          group[:vigilance_syndromes].each do |vs|
+        if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
+          group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
-              puts obj[:syndrome].inspect
               VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end

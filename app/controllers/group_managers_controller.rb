@@ -28,6 +28,10 @@ class GroupManagersController < ApplicationController
   end
 
   def update
+    @hashes = params[:group_manager][:vigilance_syndromes].each { |vs| vs.to_s }
+    return if validate_hashes
+        
+    @group_manager.update_attribute(:vigilance_syndromes, @hashes)
     errors = {}
     update_params.each do |param|
       begin
@@ -99,7 +103,7 @@ class GroupManagersController < ApplicationController
     end
 
     def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :vigilance_syndromes)
     end
 
     def update_params
@@ -111,6 +115,20 @@ class GroupManagersController < ApplicationController
         return render json: {}, status: :ok
       end
     end
+
+    def validate_hashes
+      ids = []
+      @hashes.each do |h|
+        if ids.include? h[:syndrome_id]
+          return render json: {errors: "Duplicated key syndrome_id"}, status: :unprocessable_entity
+        elsif not h.key?("syndrome_id")
+          return render json: {errors: "Missing key syndrome_id"}, status: :unprocessable_entity
+        end
+        ids.append(h[:syndrome_id])
+      end
+      return false
+    end
+    
 end
 
 # THIS IS A GROUP MANAGER PERMISSION GIVING SYSTEM
