@@ -44,7 +44,7 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   def update
     return render json: 'Not enough permissions', status: :unprocessable_entity if !validate_manager_group_permissions
-    if @group.update(group_params.except [:vigilance_syndromes])
+    if @group.update(group_params)
       render json: @group
     else
       render json: @group.errors, status: :unprocessable_entity
