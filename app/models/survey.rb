@@ -53,8 +53,10 @@ class Survey < ApplicationRecord
     end
     top_3 = get_top_3_syndromes
     if top_3.any?
-      group = Group.where("id = ?", user.group_id).first
-      group_manager = GroupManager.where("id = ?", group.group_manager_id).first
+      if user.group_id
+        group = Group.where("id = ?", user.group_id).first
+        group_manager = GroupManager.where("id = ?", group.group_manager_id).first
+      end
       symptoms_and_syndromes_data[:top_3] = top_3.map do |obj|
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
