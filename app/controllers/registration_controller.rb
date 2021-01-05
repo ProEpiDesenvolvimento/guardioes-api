@@ -15,7 +15,7 @@ class RegistrationController < Devise::RegistrationsController
     else
       build_resource(@sign_up_params)
       resource.save
-  
+
       render_resource(resource)
     end
   end
@@ -76,6 +76,7 @@ class RegistrationController < Devise::RegistrationsController
   def create_group_manager
     if params[:group_manager] && (current_admin || current_group_manager)
       @sign_up_params = sign_up_params
+      @sign_up_params[:vigilance_syndromes] = []
     else
       @sign_up_params = nil
     end
@@ -122,7 +123,8 @@ class RegistrationController < Devise::RegistrationsController
         :group_name,
         :require_id,
         :id_code_length,
-        :twitter
+        :twitter,
+        :vigilance_syndromes
       )
     else
       params.require(:manager).permit(
