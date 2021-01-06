@@ -1,8 +1,10 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
+  require 'net/http'
   if !Rails.env.test?
     searchkick
   end
+
     
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
@@ -61,6 +63,7 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
+              report_go_data(group_manager)
               VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
@@ -119,6 +122,13 @@ class Survey < ApplicationRecord
     elastic_data["risk_group"] = user.risk_group || false
     
     return elastic_data 
+  end
+
+  def report_go_data(group_manager)
+    # logging in go data api
+    uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
+    res = Net::HTTP.post_form(uri, 'username' => group_manager.username_godata, 'password' => group_manager.password_godata, 'max' => '50')
+    puts res.body
   end
 
   def csv_data

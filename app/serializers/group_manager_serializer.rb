@@ -1,6 +1,7 @@
 class GroupManagerSerializer < ActiveModel::Serializer
   attributes :id, :email, :name, :group_name, :group_permissions,
-             :vigilance_email, :twitter, :require_id, :id_code_length, :app_id, :vigilance_syndromes
+             :vigilance_email, :twitter, :require_id, :id_code_length, :app_id,
+             :vigilance_syndromes, :username_godata, :password_godata
 
   def group_permissions
     list = []
