@@ -60,10 +60,10 @@ Rails.application.routes.draw do
     get "/panel", to: "users#panel_list"
   end
 
-  scope "/admin" do 
-    post "email_reset_password", to: "admin#email_reset_password"
-    post "show_reset_token", to: "admin#show_reset_token"
-    post "reset_password", to: "admin#reset_password"
+  scope "/admins" do 
+    post "email_reset_password", to: "admins#email_reset_password"
+    post "show_reset_token", to: "admins#show_reset_token"
+    post "reset_password", to: "admins#reset_password"
   end
   resources :admins, only: [:index, :update, :destroy]
   

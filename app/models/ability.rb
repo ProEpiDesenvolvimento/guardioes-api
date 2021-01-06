@@ -14,15 +14,18 @@ class Ability
           can :manage, :all
         else
           can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
+          can :update, Admin, :id => user.id
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
+        can :update, Manager, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
       when GroupManager
         can :manage, [ User, Group ]
+        can :update, GroupManager, :id => user.id
       when User
         can :manage, :all
     end

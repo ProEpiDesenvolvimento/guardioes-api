@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
     @groups = Group.where(
         group_manager_id: current_group_manager.id, 
         description: @group_manager.group_name
-      ).where.not(children_label: nil)
+      )
     
     render json: @groups
   end
@@ -26,8 +26,14 @@ class GroupsController < ApplicationController
     if (current_group_manager)
       ManagerGroupPermission::permit(current_group_manager, @group)
       @group.group_manager_id = current_group_manager.id
+    elsif (group_params[:group_manager_id])
+      group_manager = GroupManager.find(group_params[:group_manager_id])
+      ManagerGroupPermission::permit(group_manager, @group)
+      @group.group_manager_id = group_params[:group_manager_id]
     end
+    
     return render json: 'Not enough permissions' if !validate_manager_group_permissions
+
     if @group.save
       render json: @group, status: :created, location: @group
     else
@@ -37,7 +43,7 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
+    return render json: 'Not enough permissions', status: :unprocessable_entity if !validate_manager_group_permissions
     if @group.update(group_params)
       render json: @group
     else
@@ -279,7 +285,8 @@ class GroupsController < ApplicationController
         :address,
         :cep,
         :phone,
-        :email
+        :email,
+        :group_manager_id
       )
     end
 

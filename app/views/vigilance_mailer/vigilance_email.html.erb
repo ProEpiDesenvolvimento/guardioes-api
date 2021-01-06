@@ -1,5 +1,5 @@
 <p>Prezado(a),</p>
-<p>Um participante da Vigilância Ativa informou estar com sintomas de COVID-19</p><br>
+<p>Um participante da Vigilância Ativa informou estar com sintomas da síndrome: <%= @syndrome.description %></p><br>
 <h4>Usuário(a):</h4>
 <p>Id: <%= @user.id %></p>
 <p>Nome: <%= @user.user_name %></p>
@@ -16,7 +16,7 @@
   <p>Sexo: <%= @user.household.gender %></p>
   <p>Data de Nascimento: <%= @user.household.birthdate.strftime("%d, %m, %Y").gsub!(', ', '/') %></p>
   <p>Departamento: <%= @user.household.group.parent.description %></p>
-  <% end %>
+  <% end %> 
 
 <h4>Sintomas: </h4>
 <ul>
