@@ -27,7 +27,10 @@ class Ability
         can :manage, [ User, Group ]
         can :update, GroupManager, :id => user.id
       when User
-        can :manage, :all
+        can :read, :all
+        can :update, User, :id => user.id
+        can :update, Survey, :user_id => user.id
+        can :destroy, Survey, :user_id => user.id
     end
   end
 
