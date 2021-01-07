@@ -28,9 +28,11 @@ class Ability
         can :update, GroupManager, :id => user.id
       when User
         can :read, :all
+        can :create, [ Survey, Household ]
         can :update, User, :id => user.id
-        can :update, Survey, :user_id => user.id
-        can :destroy, Survey, :user_id => user.id
+        can :update, [ Survey, Household ], :user_id => user.id
+        can :destroy, User, :id => user.id
+        can :destroy, [ Survey, Household ], :user_id => user.id
     end
   end
 
