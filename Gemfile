@@ -58,6 +58,9 @@ gem 'crono'
 # Sets up the deamon to run alongside crono
 gem 'daemons'
 
+#simple jwt to work with metabase
+gem 'jwt'
+
 gem 'rubocop', ">=1", require: false
 gem 'rubocop-rails', require: false
 

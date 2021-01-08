@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
+    networks:
+      - web
   # dbbackup:
   #   image: postgres
   #   ports:
@@ -36,3 +38,6 @@ services:
       TWITTER_API_ACESS_TOKEN_SECRET:  
       VIGILANCE_EMAIL:
       CSV_DATA_KEY:
+networks:
+  web:
+    external: true
