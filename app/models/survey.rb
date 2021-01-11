@@ -63,7 +63,8 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
-              report_go_data(group_manager)
+              self.update_attribute(:syndrome_id, vs[:syndrome_id])
+              report_go_data(group_manager, vs) 
               VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
@@ -124,11 +125,35 @@ class Survey < ApplicationRecord
     return elastic_data 
   end
 
-  def report_go_data(group_manager)
+  def report_go_data(group_manager, vigilance_syndrome)
+    # todo: check if case with user already exists
+    
+    
     # logging in go data api
     uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
     res = Net::HTTP.post_form(uri, 'username' => group_manager.username_godata, 'password' => group_manager.password_godata, 'max' => '50')
     puts res.body
+
+    # registering case on outbreak
+    # caseData = {
+    #   'firstName' => "",
+    #   'gender' => "",
+    #   'isDateOfOnsetApproximate' => "",
+    #   'classification' => "",
+    #   'id' => "",
+    #   'outbreakId' => "",
+    #   'visualId' => "",
+    #   'middleName' => "",
+    #   'lastName' => "",
+    #   'dob' => "",
+    #   'age' => "",
+    #   'dateOfReporting' => "",
+    #   'dateOfOnset' => "",
+    #   'usualPlaceOfResidenceLocationId' => "",
+    #   'max' => '50'
+    # }
+    # uri = URI('https://inclusaodigital.unb.br/api/outbreak/#{vigilance_syndrome[:surto_id]}/cases')
+    # res = Net::HTTP.post_form(uri, )
   end
 
   def csv_data
