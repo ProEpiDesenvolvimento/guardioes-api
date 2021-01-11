@@ -38,6 +38,8 @@ services:
       TWITTER_API_ACESS_TOKEN_SECRET:  
       VIGILANCE_EMAIL:
       CSV_DATA_KEY:
+      METABASE_SITE_URL: http://localhost:3002
+      METABASE_SECRET_KEY: af294119ad618231d45901bc52f68b843e64b24510fc4183dcbf0add14d30c25
 networks:
   web:
     external: true
