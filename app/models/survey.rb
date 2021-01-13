@@ -63,9 +63,9 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
-              self.update_attribute(:syndrome_id, vs[:syndrome_id])
+              # self.update_attribute(:syndrome_id, vs[:syndrome_id])
               report_go_data(group_manager, vs) 
-              VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+              # VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
         end
@@ -126,33 +126,112 @@ class Survey < ApplicationRecord
   end
 
   def report_go_data(group_manager, vigilance_syndrome)
-    # todo: check if case with user already exists
-    
-    
     # logging in go data api
-    uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
-    res = Net::HTTP.post_form(uri, 'username' => group_manager.username_godata, 'password' => group_manager.password_godata, 'max' => '50')
-    puts res.body
+    # uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
+    # res = Net::HTTP.post_form(uri, 'username' => group_manager.username_godata, 'password' => group_manager.password_godata, 'max' => '50')
+    # token = JSON.parse(res.body.gsub('=>', ':'))['response']['access_token']
+    # puts token
+    
+    # todo: check if case with user already exists
 
     # registering case on outbreak
-    # caseData = {
-    #   'firstName' => "",
-    #   'gender' => "",
-    #   'isDateOfOnsetApproximate' => "",
-    #   'classification' => "",
-    #   'id' => "",
-    #   'outbreakId' => "",
-    #   'visualId' => "",
-    #   'middleName' => "",
-    #   'lastName' => "",
-    #   'dob' => "",
-    #   'age' => "",
-    #   'dateOfReporting' => "",
-    #   'dateOfOnset' => "",
-    #   'usualPlaceOfResidenceLocationId' => "",
-    #   'max' => '50'
-    # }
-    # uri = URI('https://inclusaodigital.unb.br/api/outbreak/#{vigilance_syndrome[:surto_id]}/cases')
+    now = Time.now.utc.to_date
+    age = now.year - self.user.birthdate.year - ((now.month > self.user.birthdate.month || (now.month == self.user.birthdate.month && now.day >= self.user.birthdate.day)) ? 0 : 1),
+    
+    races = {
+      'Branco' => '1',
+      'Indígena' => '2',
+      'Pardo' => '3',
+      'Preto' => '4',
+      'Amarelo' => '5'
+    }
+
+    symptoms = {
+      'Tosse' => '2',
+      'Febre' => '3',
+      'DorCabeca' => '4',
+      'paladareolfato' => '5',
+      'Bolhasna Pele' => '6',
+      'Calafrios' => '7',
+      'Cansaco' => '8',
+      'Coceira' => '9',
+      'CongestãoNasal' => '10',
+      'Diarreia' => '11',
+      'DificuldadeParaRespirar' => '12',
+      'DorDeEstômago' => '13',
+      'DordeGarganta' => '14',
+      'DorNasArticulações' => '15',
+      'DorNosMúsculos' => '16',
+      'DorNosOlhos' => '17',
+      'InguaOuGângliosInflamados' => '18',
+      'Mal-estar' => '19',
+      'ManchasRoxasPeloCorpo' => '20',
+      'NáuseaOuVômito' => '21',
+      'PeleEOlhosAmarelados' => '22',
+      'Sangramento' => '23',
+      'Cansaco' => '24',
+    }
+    
+    caseData = {
+      'firstName' => self.user.user_name.split(" ")[0],
+      'gender' => self.user.gender,
+      'isDateOfOnsetApproximate' => self.bad_since == nil ? true : false,
+      'classification' => "Suspeito",
+      'id' => "",
+      'outbreakId' => vigilance_syndrome[:surto_id],
+      'visualId' => "",
+      'dob' => self.user.birthdate,
+      'age' => age,
+      'dateOfReporting' => self.created_at,
+      'dateOfOnset' => self.bad_since != nil ? self.bad_since : self.created_at,
+      # 'usualPlaceOfResidenceLocationId' => "",
+      'max' => '50'
+    }
+
+    if self.user.user_name.split(" ").length > 1
+      caseData['lastName'] = self.user.user_name.split(" ").last
+
+    # QuestionnaireAnswers
+    q = {
+      'raca_cor' => [
+        {
+          'value' => races[self.user.race]
+        }
+      ],
+      'profissional_da_saude' => [
+        {
+          'value' => self.user.is_professional == true ? '1' : '2'
+        }
+      ],
+      'e_mail' => self.user.email,
+      'se_foi_ao_hospital' => [
+        {
+          'value' => self.went_to_hospital != nil ? '1' : '2'
+        }
+      ],
+      'se_saiu_de_casa_nos_ultimos_14_dias' => [
+        {
+          'value' => self.traveled_to != nil ? '1' : '2'
+        }
+      ],
+      'se_teve_contato_com_alguem_com_os_mesmos_sintomas' => [
+        {
+          'value' => self.contact_with_symptom != nil ? '1' : '2'
+        }
+      ],
+    }
+
+    if self.symptom.any?
+      self.symptom.each do |s|
+        caseData['sintomas'] = [{}]
+        caseData['sintomas'][0]['value'] = []
+        caseData['sintomas'][0]['value'].append(symptoms[s])
+      end
+    end
+
+    puts "aaaaaaaaaa"
+    puts caseData
+    # uri = URI('https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases')
     # res = Net::HTTP.post_form(uri, )
   end
 
