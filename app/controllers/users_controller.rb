@@ -128,6 +128,14 @@ class UsersController < ApplicationController
       else
         @user =  User.user_by_app_id(@current_user.app_id).where('email ~* ?', query_regex)
       end
+    elsif params[:identification_code]
+      query_regex = "^" + params[:identification_code]
+      if !current_group_manager.nil?
+        @groups = Group.where(group_manager_id: @current_user.id).ids
+        @user = User.where(group_id: @groups).where('identification_code ~* ?', query_regex)
+      else
+        @user =  User.user_by_app_id(@current_user.app_id).where('identification_code ~* ?', query_regex)
+      end
     else
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
