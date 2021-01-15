@@ -1,6 +1,7 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
   require 'net/http'
+  require 'httparty'
   if !Rails.env.test?
     searchkick
   end
@@ -127,17 +128,23 @@ class Survey < ApplicationRecord
 
   def report_go_data(group_manager, vigilance_syndrome)
     # logging in go data api
-    # uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
-    # res = Net::HTTP.post_form(uri, 'username' => group_manager.username_godata, 'password' => group_manager.password_godata, 'max' => '50')
-    # token = JSON.parse(res.body.gsub('=>', ':'))['response']['access_token']
-    # puts token
-    
-    # todo: check if case with user already exists
+    uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
+    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: group_manager.password_godata })
+    if (res.code != 200)
+      return
+    end
+    token = JSON.parse(res.body.gsub('=>', ':'))['response']['access_token']
 
-    # registering case on outbreak
-    now = Time.now.utc.to_date
-    age = now.year - self.user.birthdate.year - ((now.month > self.user.birthdate.month || (now.month == self.user.birthdate.month && now.day >= self.user.birthdate.day)) ? 0 : 1),
-    
+
+    # check if case with user already exists
+    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/generate-visual-id")
+    res = HTTParty.post(uri, body: { 'visualIdMask' => 'GDS_' + self.user.id.to_s }, headers: { Authorization: 'Bearer ' + token})
+    if res.code == 409
+      return
+    end
+
+    # creating case's data
+    age = ((Time.zone.now - self.user.birthdate.to_time) / 1.year.seconds).floor
     races = {
       'Branco' => '1',
       'Indígena' => '2',
@@ -171,28 +178,30 @@ class Survey < ApplicationRecord
       'Sangramento' => '23',
       'Cansaco' => '24',
     }
-    
+
     caseData = {
       'firstName' => self.user.user_name.split(" ")[0],
       'gender' => self.user.gender,
       'isDateOfOnsetApproximate' => self.bad_since == nil ? true : false,
-      'classification' => "Suspeito",
-      'id' => "",
+      'classification' => "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_SUSPECT",
+      # 'id' => "",
       'outbreakId' => vigilance_syndrome[:surto_id],
-      'visualId' => "",
+      'visualId' => "GDS_" + self.user.id.to_s,
       'dob' => self.user.birthdate,
-      'age' => age,
-      'dateOfReporting' => self.created_at,
-      'dateOfOnset' => self.bad_since != nil ? self.bad_since : self.created_at,
+      'age' => {
+        'years': age,
+      },
+      'dateOfReporting' => DateTime.now.in_time_zone('Montevideo'),
+      'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now.in_time_zone('Montevideo'),
       # 'usualPlaceOfResidenceLocationId' => "",
-      'max' => '50'
     }
 
     if self.user.user_name.split(" ").length > 1
       caseData['lastName'] = self.user.user_name.split(" ").last
+    end
 
     # QuestionnaireAnswers
-    q = {
+    caseData['questionnaireAnswers'] = {
       'raca_cor' => [
         {
           'value' => races[self.user.race]
@@ -203,7 +212,11 @@ class Survey < ApplicationRecord
           'value' => self.user.is_professional == true ? '1' : '2'
         }
       ],
-      'e_mail' => self.user.email,
+      'e_mail' => [
+        {
+          'value': self.user.email,
+        }
+      ],
       'se_foi_ao_hospital' => [
         {
           'value' => self.went_to_hospital != nil ? '1' : '2'
@@ -221,18 +234,19 @@ class Survey < ApplicationRecord
       ],
     }
 
+    # case symptoms
     if self.symptom.any?
       self.symptom.each do |s|
-        caseData['sintomas'] = [{}]
-        caseData['sintomas'][0]['value'] = []
-        caseData['sintomas'][0]['value'].append(symptoms[s])
+        caseData['questionnaireAnswers']['sintomas'] = [{}]
+        caseData['questionnaireAnswers']['sintomas'][0]['value'] = []
+        caseData['questionnaireAnswers']['sintomas'][0]['value'].append(symptoms[s])
       end
+    else
+      caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
     end
-
-    puts "aaaaaaaaaa"
-    puts caseData
-    # uri = URI('https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases')
-    # res = Net::HTTP.post_form(uri, )
+    
+    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/d2cadde1-6c37-41f5-95c5-f94422b017b0")
+    res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
   end
 
   def csv_data
