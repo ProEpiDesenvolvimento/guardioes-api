@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   post "groups/upload_group_file", to: 'groups#upload_group_file'
   get "groups/:id/get_path", to: 'groups#get_path'
   get "groups/:id/get_children", to: 'groups#get_children'
-  #get "groups/:id/get_twitter", to: 'groups#get_twitter'
+  get "groups/:id/get_twitter", to: 'groups#get_twitter'
   resources :groups
 
   get 'data_visualization/users_count', to: 'data_visualization#users_count'
