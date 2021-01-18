@@ -13,8 +13,10 @@ class Ability
         if user.is_god?
           can :manage, :all
         else
-          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
+          can :read, App
+          can :update, App, :id => user.app_id
           can :update, Admin, :id => user.id
+          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
