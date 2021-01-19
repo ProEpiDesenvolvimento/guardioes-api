@@ -3,6 +3,8 @@ class HouseholdsController < ApplicationController
   before_action :set_household, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
+  authorize_resource only: [:update, :destroy]
+
   # GET /households
   def index
     @households = Household.filter_by_user(current_user.id)
