@@ -64,9 +64,11 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
-              # self.update_attribute(:syndrome_id, vs[:syndrome_id])
-              report_go_data(group_manager, vs) 
-              # VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+              self.update_attribute(:syndrome_id, vs[:syndrome_id])
+              if vs[:surto_id]
+                report_go_data(group_manager, vs)
+              end
+              VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
         end
@@ -175,16 +177,22 @@ class Survey < ApplicationRecord
       'ManchasRoxasPeloCorpo' => '20',
       'NáuseaOuVômito' => '21',
       'PeleEOlhosAmarelados' => '22',
-      'Sangramento' => '23',
-      'Cansaco' => '24',
+      'Sangramento' => '23'
+    }
+
+    genders = {
+      'Homem Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Homem Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
     }
 
     caseData = {
       'firstName' => self.user.user_name.split(" ")[0],
-      'gender' => self.user.gender,
+      'gender' => genders[self.user.gender],
       'isDateOfOnsetApproximate' => self.bad_since == nil ? true : false,
       'classification' => "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_SUSPECT",
-      # 'id' => "",
+      'pregnancyStatus' => 'LNG_REFERENCE_DATA_CATEGORY_PREGNANCY_STATUS_NONE',
       'outbreakId' => vigilance_syndrome[:surto_id],
       'visualId' => "GDS_" + self.user.id.to_s,
       'dob' => self.user.birthdate,
@@ -234,7 +242,7 @@ class Survey < ApplicationRecord
       ],
     }
 
-    # case symptoms
+    # case's symptoms
     if self.symptom.any?
       self.symptom.each do |s|
         caseData['questionnaireAnswers']['sintomas'] = [{}]
@@ -245,7 +253,7 @@ class Survey < ApplicationRecord
       caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
     end
     
-    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/d2cadde1-6c37-41f5-95c5-f94422b017b0")
+    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
     res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
   end
 
