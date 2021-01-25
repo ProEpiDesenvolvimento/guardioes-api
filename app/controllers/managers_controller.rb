@@ -3,7 +3,7 @@ class ManagersController < ApplicationController
   before_action :set_manager, only: [:show, :update, :destroy]
   before_action :set_app, only: [:index]
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token] 
 
   def index
     if @app.managers.empty?
