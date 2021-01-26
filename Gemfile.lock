@@ -360,6 +360,7 @@ DEPENDENCIES
   factory_bot_rails (~> 4.0)
   faker
   geocoder
+  jwt
   kaminari
   listen (>= 3.0.5, < 3.2)
   pager_api
