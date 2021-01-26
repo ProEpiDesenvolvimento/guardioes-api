@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "remember_created_at"
     t.bigint "app_id"
     t.string "aux_code"
-    t.integer "permission_id"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
@@ -298,9 +297,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.bigint "message_id"
     t.bigint "app_id", default: 1
-    t.bigint "symptom_id"
     t.index ["message_id"], name: "index_syndromes_on_message_id"
-    t.index ["symptom_id"], name: "index_syndromes_on_symptom_id"
   end
 
   create_table "twitter_apis", force: :cascade do |t|
@@ -369,7 +366,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
   add_foreign_key "syndrome_symptom_percentages", "symptoms"
   add_foreign_key "syndrome_symptom_percentages", "syndromes"
   add_foreign_key "syndromes", "messages"
-  add_foreign_key "syndromes", "symptoms"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
   add_foreign_key "users", "school_units"
