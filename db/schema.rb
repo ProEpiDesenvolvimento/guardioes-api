@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_08_022432) do
+ActiveRecord::Schema.define(version: 2020_12_15_221201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 2020_12_08_022432) do
     t.integer "id_code_length"
     t.string "vigilance_email"
     t.string "aux_code"
+    t.text "vigilance_syndromes", default: ""
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -102,6 +103,7 @@ ActiveRecord::Schema.define(version: 2020_12_08_022432) do
     t.string "phone"
     t.string "email"
     t.integer "group_manager_id"
+    t.text "vigilance_syndromes", default: ""
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
@@ -169,9 +171,7 @@ ActiveRecord::Schema.define(version: 2020_12_08_022432) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
-    t.string "feedback_message"
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end

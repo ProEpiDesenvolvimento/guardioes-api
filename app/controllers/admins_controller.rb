@@ -1,7 +1,7 @@
 class AdminsController < ApplicationController
   before_action :authenticate_admin!, except: [:email_reset_password, :reset_password, :show_reset_token] 
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token] 
   
   def index
     @admins = Admin.all

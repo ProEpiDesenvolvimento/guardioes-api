@@ -3,10 +3,7 @@ Rails.application.routes.draw do
   resources :pre_registers
   resources :messages
   resources :syndromes
-  resources :school_units
   resources :permissions, only: [:create, :update, :show, :destory]
-  post "school_units_list", to: 'school_units#index_filtered'
-  post "upload_by_file", to: 'school_units#upload_by_file'
 
 
   get "groups/root", to: 'groups#root'
@@ -21,12 +18,11 @@ Rails.application.routes.draw do
   get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
   get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
   get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
+  post 'data_visualization/metabase_urls', to: 'data_visualization#metabase_urls'
 
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
-  resources :public_hospitals
-  post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
 
   get "apps/:id/get_twitter", to: 'apps#get_twitter'
@@ -37,12 +33,12 @@ Rails.application.routes.draw do
   get "surveys/school_unit/:id", to: "surveys#group_data"
   get "users/school_unit/:id", to: "users#group_data"
 
-  get "surveys/all_surveys", to: "surveys#all_surveys"
+  #get "surveys/all_surveys", to: "surveys#all_surveys"
   #get "surveys/week", to: "surveys#weekly_surveys"
   #get "surveys/week_limited", to: "surveys#limited_surveys"
   get "surveys/week", to: "surveys#limited_surveys"
   get "surveys/render_without_user", to: "surveys#render_without_user"
-  get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
+  #get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
   post "email_reset_password", to: "users#email_reset_password"
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"
@@ -60,7 +56,7 @@ Rails.application.routes.draw do
     get "/panel", to: "users#panel_list"
   end
 
-  scope "/admins" do 
+  scope "/admin" do 
     post "email_reset_password", to: "admins#email_reset_password"
     post "show_reset_token", to: "admins#show_reset_token"
     post "reset_password", to: "admins#reset_password"
@@ -80,7 +76,7 @@ Rails.application.routes.draw do
     }
 
     resources :group_managers
-    get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
+    #get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
     scope "/group_manager" do 
       post "email_reset_password", to: "group_managers#email_reset_password"
       post "show_reset_token", to: "group_managers#show_reset_token"

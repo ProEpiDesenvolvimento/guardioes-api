@@ -2,7 +2,6 @@ class App < ApplicationRecord
   has_many :admins
   has_many :users
   has_many :symptoms
-  has_many :public_hospitals
   has_many :contents
   has_many :group_managers
   has_many :managers
