@@ -200,9 +200,16 @@ class Survey < ApplicationRecord
         'years': age,
       },
       'dateOfReporting' => DateTime.now.in_time_zone('Montevideo'),
-      'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now.in_time_zone('Montevideo'),
-      # 'usualPlaceOfResidenceLocationId' => "",
+      'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now.in_time_zone('Montevideo')
     }
+
+    if self.user.group
+      self.user.group.get_path.each do |g|
+        if g[:description] == "Universidade de Brasilia"
+          caseDate['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
+        end
+      end
+    end
 
     if self.user.user_name.split(" ").length > 1
       caseData['lastName'] = self.user.user_name.split(" ").last
