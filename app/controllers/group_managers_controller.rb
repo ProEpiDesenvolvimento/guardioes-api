@@ -18,7 +18,10 @@ class GroupManagersController < ApplicationController
     if current_admin.nil? && current_group_manager != GroupManager.find(params[:id])
       return render json: GroupManager.new()
     end
-    render json: GroupManager.find(params[:id])
+    @group_manager = GroupManager.find(params[:id])
+    crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+    @group_manager.password_godata = crypt.decrypt_and_verify(@group_manager.password_godata)
+    render json: @group_manager
   end
   
   # GET /group_managers/:manager_id/:group_id
@@ -34,8 +37,13 @@ class GroupManagersController < ApplicationController
           
       @group_manager.update_attribute(:vigilance_syndromes, @hashes)
     end
+    if params[:group_manager][:password_godata]
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+      encrypted_password = crypt.encrypt_and_sign(params[:group_manager][:password_godata])
+      @group_manager.update_attribute(:password_godata, encrypted_password)
+    end
     errors = {}
-    update_params.each do |param|
+    update_params.except(:password_godata).each do |param|
       begin
         @group_manager.update_attribute(param[0], param[1])
       rescue ActiveRecord::InvalidForeignKey
