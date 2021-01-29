@@ -19,8 +19,13 @@ class GroupManagersController < ApplicationController
       return render json: GroupManager.new()
     end
     @group_manager = GroupManager.find(params[:id])
-    crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
-    @group_manager.password_godata = crypt.decrypt_and_verify(@group_manager.password_godata)
+    if @group_manager[:password_godata]
+      begin 
+        crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+        @group_manager.password_godata = crypt.decrypt_and_verify(@group_manager.password_godata)
+      rescue
+      end
+    end
     render json: @group_manager
   end
   
