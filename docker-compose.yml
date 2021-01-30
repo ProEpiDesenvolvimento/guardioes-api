@@ -9,8 +9,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
-    networks:
-      - web
   # dbbackup:
   #   image: postgres
   #   ports:
@@ -39,11 +37,5 @@ services:
       VIGILANCE_EMAIL:
       CSV_DATA_KEY:
       METABASE_SITE_URL: http://localhost:3002
-      METABASE_SECRET_KEY: af294119ad618231d45901bc52f68b843e64b24510fc4183dcbf0add14d30c25
-    links: 
-      - db
-    networks:
-      - web
-networks:
-  web:
-    external: true
+      METABASE_SECRET_KEY:
+      GODATA_KEY: 

@@ -64,7 +64,6 @@ class HouseholdsController < ApplicationController
         :kinship, 
         :user_id, 
         :picture, 
-        :school_unit_id, 
         :identification_code, 
         :risk_group,
         :group_id

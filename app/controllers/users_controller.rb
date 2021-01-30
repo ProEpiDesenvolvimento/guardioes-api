@@ -209,7 +209,6 @@ private
       :state,
       :city,
       :identification_code,
-      :school_unit_id,
       :group_id,
       :risk_group,
       :policy_version,

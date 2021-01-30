@@ -69,11 +69,6 @@ class User < ApplicationRecord
     else
       elastic_data[:group] = nil
     end
-    if !self.school_unit_id.nil? and SchoolUnit.where(id:self.school_unit_id).count > 0
-      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
-    else 
-      elastic_data[:enrolled_in] = nil 
-    end
     elastic_data[:household_count] = self.households.count
     return elastic_data 
   end
