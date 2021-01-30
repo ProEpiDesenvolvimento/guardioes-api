@@ -101,7 +101,6 @@ class RegistrationController < Devise::RegistrationsController
         :city,
         :identification_code,
         :group_id,
-        :school_unit_id,
         :risk_group,
         :policy_version
       )
