@@ -5,7 +5,7 @@ class GroupManagersController < ApplicationController
   before_action :set_manager_and_group, only: [:is_manager_permitted, :add_manager_permission, :remove_manager_permission]
   before_action :set_group_manager, only: [:destroy, :update]
   
-  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token] 
+  load_and_authorize_resource :except => [:show, :email_reset_password, :reset_password, :show_reset_token] 
 
   # GET /group_managers/
   def index
@@ -18,7 +18,15 @@ class GroupManagersController < ApplicationController
     if current_admin.nil? && current_group_manager != GroupManager.find(params[:id])
       return render json: GroupManager.new()
     end
-    render json: GroupManager.find(params[:id])
+    @group_manager = GroupManager.find(params[:id])
+    if @group_manager[:password_godata]
+      begin 
+        crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+        @group_manager.password_godata = crypt.decrypt_and_verify(@group_manager.password_godata)
+      rescue
+      end
+    end
+    render json: @group_manager
   end
   
   # GET /group_managers/:manager_id/:group_id
@@ -34,8 +42,13 @@ class GroupManagersController < ApplicationController
           
       @group_manager.update_attribute(:vigilance_syndromes, @hashes)
     end
+    if params[:group_manager][:password_godata]
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+      encrypted_password = crypt.encrypt_and_sign(params[:group_manager][:password_godata])
+      @group_manager.update_attribute(:password_godata, encrypted_password)
+    end
     errors = {}
-    update_params.each do |param|
+    update_params.except(:password_godata).each do |param|
       begin
         @group_manager.update_attribute(param[0], param[1])
       rescue ActiveRecord::InvalidForeignKey
@@ -105,11 +118,11 @@ class GroupManagersController < ApplicationController
     end
 
     def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :vigilance_syndromes)
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :vigilance_syndromes, :username_godata, :password_godata)
     end
 
     def update_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email)
+      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :username_godata, :password_godata)
     end
 
     def check_authenticated_admin_or_manager

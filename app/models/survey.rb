@@ -1,8 +1,11 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
+  require 'net/http'
+  require 'httparty'
   if !Rails.env.test?
     searchkick
   end
+
     
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
@@ -61,6 +64,10 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
+              self.update_attribute(:syndrome_id, vs[:syndrome_id])
+              if vs[:surto_id]
+                report_go_data(group_manager, vs)
+              end
               VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
@@ -119,6 +126,142 @@ class Survey < ApplicationRecord
     elastic_data["risk_group"] = user.risk_group || false
     
     return elastic_data 
+  end
+
+  def report_go_data(group_manager, vigilance_syndrome)
+    # logging in go data api
+    uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
+    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: group_manager.password_godata })
+    if (res.code != 200)
+      return
+    end
+    token = JSON.parse(res.body.gsub('=>', ':'))['response']['access_token']
+
+
+    # check if case with user already exists
+    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/generate-visual-id")
+    res = HTTParty.post(uri, body: { 'visualIdMask' => 'GDS_' + self.user.id.to_s }, headers: { Authorization: 'Bearer ' + token})
+    if res.code == 409
+      return
+    end
+
+    # creating case's data
+    age = ((Time.zone.now - self.user.birthdate.to_time) / 1.year.seconds).floor
+    races = {
+      'Branco' => '1',
+      'Indígena' => '2',
+      'Pardo' => '3',
+      'Preto' => '4',
+      'Amarelo' => '5'
+    }
+
+    symptoms = {
+      'Tosse' => '2',
+      'Febre' => '3',
+      'DorCabeca' => '4',
+      'paladareolfato' => '5',
+      'Bolhasna Pele' => '6',
+      'Calafrios' => '7',
+      'Cansaco' => '8',
+      'Coceira' => '9',
+      'CongestãoNasal' => '10',
+      'Diarreia' => '11',
+      'DificuldadeParaRespirar' => '12',
+      'DorDeEstômago' => '13',
+      'DordeGarganta' => '14',
+      'DorNasArticulações' => '15',
+      'DorNosMúsculos' => '16',
+      'DorNosOlhos' => '17',
+      'InguaOuGângliosInflamados' => '18',
+      'Mal-estar' => '19',
+      'ManchasRoxasPeloCorpo' => '20',
+      'NáuseaOuVômito' => '21',
+      'PeleEOlhosAmarelados' => '22',
+      'Sangramento' => '23'
+    }
+
+    genders = {
+      'Homem Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Homem Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+    }
+
+    caseData = {
+      'firstName' => self.user.user_name.split(" ")[0],
+      'gender' => genders[self.user.gender],
+      'isDateOfOnsetApproximate' => self.bad_since == nil ? true : false,
+      'classification' => "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_SUSPECT",
+      'pregnancyStatus' => 'LNG_REFERENCE_DATA_CATEGORY_PREGNANCY_STATUS_NONE',
+      'outbreakId' => vigilance_syndrome[:surto_id],
+      'visualId' => "GDS_" + self.user.id.to_s,
+      'dob' => self.user.birthdate,
+      'age' => {
+        'years': age,
+      },
+      'dateOfReporting' => DateTime.now.in_time_zone('Montevideo'),
+      'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now.in_time_zone('Montevideo')
+    }
+
+    if self.user.group
+      self.user.group.get_path.each do |g|
+        if g[:description] == "Universidade de Brasilia"
+          caseDate['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
+        end
+      end
+    end
+
+    if self.user.user_name.split(" ").length > 1
+      caseData['lastName'] = self.user.user_name.split(" ").last
+    end
+
+    # QuestionnaireAnswers
+    caseData['questionnaireAnswers'] = {
+      'raca_cor' => [
+        {
+          'value' => races[self.user.race]
+        }
+      ],
+      'profissional_da_saude' => [
+        {
+          'value' => self.user.is_professional == true ? '1' : '2'
+        }
+      ],
+      'e_mail' => [
+        {
+          'value': self.user.email,
+        }
+      ],
+      'se_foi_ao_hospital' => [
+        {
+          'value' => self.went_to_hospital != nil ? '1' : '2'
+        }
+      ],
+      'se_saiu_de_casa_nos_ultimos_14_dias' => [
+        {
+          'value' => self.traveled_to != nil ? '1' : '2'
+        }
+      ],
+      'se_teve_contato_com_alguem_com_os_mesmos_sintomas' => [
+        {
+          'value' => self.contact_with_symptom != nil ? '1' : '2'
+        }
+      ],
+    }
+
+    # case's symptoms
+    if self.symptom.any?
+      self.symptom.each do |s|
+        caseData['questionnaireAnswers']['sintomas'] = [{}]
+        caseData['questionnaireAnswers']['sintomas'][0]['value'] = []
+        caseData['questionnaireAnswers']['sintomas'][0]['value'].append(symptoms[s])
+      end
+    else
+      caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
+    end
+    
+    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
+    res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
   end
 
   def csv_data
