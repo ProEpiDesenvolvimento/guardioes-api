@@ -24,7 +24,7 @@ gem 'rails', '~> 5.2.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem "roo", "~> 2.8.0"
 gem 'roo-xls'
 gem 'searchkick'
