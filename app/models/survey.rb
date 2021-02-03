@@ -211,7 +211,7 @@ class Survey < ApplicationRecord
     if self.user.group
       self.user.group.get_path.each do |g|
         if g[:description] == "Universidade de Brasilia"
-          caseDate['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
+          caseData['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
         end
       end
     end
