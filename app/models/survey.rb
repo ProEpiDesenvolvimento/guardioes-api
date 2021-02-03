@@ -128,8 +128,13 @@ class Survey < ApplicationRecord
 
   def report_go_data(group_manager, vigilance_syndrome)
     # logging in go data api
+    begin 
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+      password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
+    rescue
+    end
     uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
-    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: group_manager.password_godata })
+    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
     if (res.code != 200)
       return
     end
@@ -204,7 +209,7 @@ class Survey < ApplicationRecord
     if self.user.group
       self.user.group.get_path.each do |g|
         if g[:description] == "Universidade de Brasilia"
-          caseDate['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
+          caseData['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
         end
       end
     end
