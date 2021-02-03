@@ -1,8 +1,26 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  belongs_to :app
+  
   acts_as_paranoid
-  searchkick
+  if !Rails.env.test?
+    searchkick
+  end
+
+  # Index name for a users is now:
+  # classname_environment[if survey user has group, _groupmanagergroupname]
+  # It has been overriden searchkick's class that sends data to elaticsearch, 
+  # such that the index name is now defined by the model that is being 
+  # evaluated using the function 'index_pattern_name'
+  def index_pattern_name
+    env = ENV['RAILS_ENV']
+    if self.group.nil?
+      return 'users_' + env
+    end
+    group_name = self.group.group_manager.group_name
+    group_name.downcase!
+    group_name.gsub! ' ', '-'
+    return 'users_' + env + '_' + group_name
+  end
 
   has_many :households,
     dependent: :destroy
@@ -15,8 +33,7 @@ class User < ApplicationRecord
 
   belongs_to :app
   belongs_to :group, optional: true
-  has_one :school_unit,
-    dependent: :destroy
+  has_one :school_unit
     
   validates :user_name,
     presence: true,
@@ -52,12 +69,46 @@ class User < ApplicationRecord
     else
       elastic_data[:group] = nil
     end
-    if !self.school_unit_id.nil? and SchoolUnit.where(id:self.school_unit_id).count > 0
-      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
-    else 
-      elastic_data[:enrolled_in] = nil 
-    end
     elastic_data[:household_count] = self.households.count
     return elastic_data 
   end
+
+  def update_streak(survey)
+    if survey.household_id
+      obj = survey.household
+      last_survey = Survey.where("household_id = ?", survey.household_id).order("id DESC").offset(1).first
+    else
+      obj = self
+      last_survey = Survey.where("user_id = ?", self.id).order("id DESC").offset(1).first
+    end
+
+    if last_survey
+      if last_survey.created_at.day == survey.created_at.prev_day.day
+        obj.streak += 1
+      elsif last_survey.created_at.day != survey.created_at.day
+        obj.streak = 1
+      end
+    else
+      obj.streak = 1
+    end
+    obj.update_attribute(:streak, obj.streak)
+  end
+
+  def get_feedback_message(survey)
+    if survey.household_id
+      obj = survey.household
+    else
+      obj = self
+    end
+    
+    message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
+    if !message
+      message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      index = obj.streak % message.size
+      message = message[index]
+    end
+    return message.feedback_message
+  end
+
+  scope :user_by_app_id, ->(current_user_app_id) { where(app_id: current_user_app_id) }
 end

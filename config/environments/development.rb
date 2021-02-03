@@ -64,4 +64,10 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::FileUpdateChecker
+
+  config.metabase = {
+    :site_url => ENV['METABASE_SITE_URL'],
+    :secret_key => ENV['METABASE_SECRET_KEY'],
+    :exp_time =>  (60 * 100) # 100 minute expiration
+  }
 end

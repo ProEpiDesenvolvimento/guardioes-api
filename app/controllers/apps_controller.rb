@@ -1,18 +1,21 @@
 class AppsController < ApplicationController
-  before_action :authenticate_admin!
-  before_action :authenticate_admin_is_god, except: [:update, :show]
-  before_action :set_app, only: [:show, :update, :destroy]
+  before_action :authenticate_admin!, except: [:get_twitter]
+  before_action :authenticate_admin_is_god, except: [:update, :show, :get_twitter]
+  before_action :set_app, only: [:show, :update, :destroy, :get_twitter]
+
+  load_and_authorize_resource
 
   # GET /apps
   def index
     @apps = App.all
-
     render json: @apps
   end
 
   # GET /apps/1
   def show
-    render json: @app
+    @admin = Admin.where(app_id: @app.id)
+    newApps = {app: @app}.merge({admin: @admin})
+    render json: newApps
   end
 
   # POST /apps
@@ -42,6 +45,11 @@ class AppsController < ApplicationController
     @app.destroy
   end
 
+  # GET /apps/:id/get_twitter
+  def get_twitter
+    render json: { twitter: @app.twitter }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_app
@@ -56,6 +64,6 @@ class AppsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def app_params
-      params.require(:app).permit(:app_name, :owner_country)
+      params.require(:app).permit(:app_name, :owner_country, :twitter)
     end
 end

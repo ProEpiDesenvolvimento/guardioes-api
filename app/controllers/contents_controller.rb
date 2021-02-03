@@ -1,11 +1,19 @@
 class ContentsController < ApplicationController
-  before_action :authenticate_user!, only: [:index]
-  before_action :authenticate_admin!, only: [:create, :destroy, :update]
+  # before_action :authenticate_admin!, only: [:create, :destroy, :update]
   before_action :set_content, only: [:show, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /contents
   def index
-    @contents = Content.user_country(current_user.app_id)
+    if current_user.nil? && current_manager.nil?
+      @user = current_admin
+    elsif current_admin.nil? && current_user.nil?
+      @user = current_manager
+    else
+      @user = current_user
+    end
+
+    @contents = Content.user_country(@user.app_id)
 
     render json: @contents
   end
@@ -52,4 +60,6 @@ class ContentsController < ApplicationController
     def content_params
       params.require(:content).permit(:title, :body, :icon, :content_type, :app_id, :source_link)
     end
+
+    
 end

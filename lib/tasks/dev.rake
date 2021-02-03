@@ -36,6 +36,19 @@ namespace :dev do
             app_id: 1
           )
         end
+        Permission.create!(
+          models_create: [:content, :symptom],
+          models_read: [:all],
+          models_update: [:content, :symptom],
+          models_destroy: [:content],
+          models_manage: [],
+        )
+        Manager.create!(
+          email: Faker::Internet.email,
+          password: "12345678",
+          name: Faker::Name.first_name,
+          app_id: 1
+        )
       end
     end
 
@@ -139,7 +152,8 @@ namespace :dev do
       show_spinner("Criando Aplicativo do Brasil...") do 
         App.create(
           owner_country: "Brasil",
-          app_name: "Guardiões da Saúde"
+          app_name: "Guardioes da Saude",
+          twitter: "appguardioes"
         )
       end
 

@@ -100,4 +100,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.metabase = {
+    :site_url => ENV['METABASE_SITE_URL'],
+    :secret_key => ENV['METABASE_SECRET_KEY'],
+    :exp_time =>  (60 * 100) # 100 minute expiration
+  }
 end

@@ -1,7 +1,27 @@
+# Add env RAILS_MASTER_KEY to travis CI configuration with master.key code 
+# Add env CC_TEST_REPORTER_ID to travis CI configuration with code climate reporter id
+
 language: ruby
+env:
+  global:
+    - CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}
 
 services:
   - docker
+install:
+  - touch config/master.key
+  - echo ${RAILS_MASTER_KEY} > config/master.key
+  - sudo docker-compose up -d
+  - sudo docker-compose exec db psql -U postgres -c 'create database myapp_test;'
+  - sudo docker-compose run web rails db:migrate RAILS_ENV=test
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build 
 script:
-  - bundle exec rake test
-    
+  # - sudo docker-compose run web bundle exec rubocop app/controllers
+  # - sudo docker-compose run web bundle exec rubocop app/models
+  - sudo docker-compose run web bundle exec rake spec
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code ${TRAVIS_TEST_RESULT}

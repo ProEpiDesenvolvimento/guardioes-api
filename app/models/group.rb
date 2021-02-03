@@ -28,7 +28,7 @@ class Group < ApplicationRecord
 
   # Call this function to initialize groups model inner workings
   def self.setup
-    group = Group.new(description: 'root_node', twitter: 'guardioesunb', children_label: 'Pais')
+    group = Group.new(description: 'root_node', children_label: 'Pais')
     group.save()
     return group
   end
@@ -67,7 +67,7 @@ class Group < ApplicationRecord
   # If none is found, returns app's standard twitter
   def get_twitter
     current_node = self
-    twitter = 'appguardioes'
+    twitter = nil
     loop do
       if current_node.group_manager != nil
         if current_node.group_manager.twitter != nil

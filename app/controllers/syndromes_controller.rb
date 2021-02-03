@@ -1,10 +1,25 @@
 class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [ :create ]
-  before_action :authenticate_admin!, except: %i[ index ]
+  #before_action :authenticate_admin!, except: %i[ index ]
+  load_and_authorize_resource except: [:create, :index]
+  authorize_resource only: [:create]
+
   # GET /syndromes
   def index
-    @syndromes = Syndrome.all
+    if not current_manager.nil?
+      @user = current_manager
+    elsif not current_group_manager.nil?
+      @user = current_group_manager
+    elsif not current_admin.nil?
+      @user = current_admin
+    elsif not current_user.nil?
+      @user = current_user
+    else
+      return render json: { errors: "Token not found" }, status: :unprocessable_entity
+    end
+    
+    @syndromes = Syndrome.filter_syndrome_by_app_id(@user.app_id)
 
     render json: @syndromes
   end
@@ -91,16 +106,17 @@ class SyndromesController < ApplicationController
     end
 
     def set_symptoms
-       @symptoms = params[:symptoms]
+      @symptoms = params[:symptom]
     end
 
     # Only allow a trusted parameter "white list" through.
     def syndrome_params
       params.require(:syndrome).permit(
         :description,
-        :details, 
-        :symptom => [[:description,:code,:percentage,:details,:priority,:app_id]],
-        message_attributes: [  :title, :warning_message, :go_to_hospital_message ]
+        :details,
+        :app_id,
+        :symptom => [[ :description, :code, :percentage, :details, :priority, :app_id ]],
+        message_attributes: [ :title, :warning_message, :go_to_hospital_message ]
       )
     end
 end

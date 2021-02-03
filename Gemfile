@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.3'
 
+gem 'httparty'
+
 # Repository for collecting Locale data for Ruby on Rails I18n as well as other interesting, Rails related I18n stuff http://rails-i18n.org
 gem 'rails-i18n', '~> 5.1'
 # acts_as_paranoid for Rails 3, 4 and 5
@@ -26,6 +28,10 @@ gem 'puma', '~> 3.11'
 gem "roo", "~> 2.8.0"
 gem 'roo-xls'
 gem 'searchkick'
+gem 'cancancan'
+gem 'kaminari' 
+gem 'pager_api'
+gem 'pagy'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -54,12 +60,19 @@ gem 'crono'
 # Sets up the deamon to run alongside crono
 gem 'daemons'
 
+#simple jwt to work with metabase
+gem 'jwt'
+
+gem 'rubocop', ">=1", require: false
+gem 'rubocop-rails', require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.5'
   gem 'faker'
   gem 'capybara'
+  gem 'simplecov', '~> 0.17.1', require: false # 0.17.1
 end
 
 group :development do

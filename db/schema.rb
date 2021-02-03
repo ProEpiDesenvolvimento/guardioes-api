@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_12_152255) do
+ActiveRecord::Schema.define(version: 2020_12_15_221201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.string "owner_country", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "twitter"
   end
 
   create_table "contents", force: :cascade do |t|
@@ -80,6 +82,9 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.string "twitter"
     t.boolean "require_id"
     t.integer "id_code_length"
+    t.string "vigilance_email"
+    t.string "aux_code"
+    t.text "vigilance_syndromes", default: ""
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -98,6 +103,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.string "phone"
     t.string "email"
     t.integer "group_manager_id"
+    t.text "vigilance_syndromes", default: ""
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
@@ -118,6 +124,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.string "identification_code"
     t.boolean "risk_group"
     t.integer "group_id"
+    t.integer "streak", default: 0
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
@@ -139,6 +146,23 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.index ["group_manager_id"], name: "index_manager_group_permissions_on_group_manager_id"
   end
 
+  create_table "managers", force: :cascade do |t|
+    t.string "name"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.bigint "app_id"
+    t.string "aux_code"
+    t.index ["app_id"], name: "index_managers_on_app_id"
+    t.index ["email"], name: "index_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "title"
     t.text "warning_message"
@@ -147,8 +171,25 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
+    t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.text "models_create"
+    t.text "models_read"
+    t.text "models_update"
+    t.text "models_destroy"
+    t.text "models_manage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "manager_id"
+    t.bigint "group_manager_id"
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_permissions_on_admin_id"
+    t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
   create_table "pre_registers", force: :cascade do |t|
@@ -162,6 +203,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.index ["app_id"], name: "index_pre_registers_on_app_id"
+    t.index ["email"], name: "index_pre_registers_on_email", unique: true
   end
 
   create_table "public_hospitals", force: :cascade do |t|
@@ -254,6 +296,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "message_id"
+    t.bigint "app_id", default: 1
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
@@ -288,6 +331,10 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
     t.boolean "risk_group"
     t.string "aux_code"
     t.bigint "school_unit_id"
+    t.integer "policy_version", default: 1, null: false
+    t.integer "streak", default: 0
+    t.string "phone"
+    t.boolean "is_vigilance", default: false
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -303,8 +350,12 @@ ActiveRecord::Schema.define(version: 2020_08_12_152255) do
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
+  add_foreign_key "managers", "apps"
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
+  add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_managers"
+  add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
   add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
