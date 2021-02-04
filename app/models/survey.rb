@@ -190,6 +190,8 @@ class Survey < ApplicationRecord
       'Mulher Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
       'Mulher Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
       'Homem Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Masculino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Feminino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE'
     }
 
     caseData = {
