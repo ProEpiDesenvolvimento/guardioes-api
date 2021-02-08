@@ -19,13 +19,6 @@ class GroupManagersController < ApplicationController
       return render json: GroupManager.new()
     end
     @group_manager = GroupManager.find(params[:id])
-    if @group_manager[:password_godata]
-      begin 
-        crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
-        @group_manager.password_godata = crypt.decrypt_and_verify(@group_manager.password_godata)
-      rescue
-      end
-    end
     render json: @group_manager
   end
   
@@ -41,11 +34,6 @@ class GroupManagersController < ApplicationController
       return if validate_hashes
           
       @group_manager.update_attribute(:vigilance_syndromes, @hashes)
-    end
-    if params[:group_manager][:password_godata]
-      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
-      encrypted_password = crypt.encrypt_and_sign(params[:group_manager][:password_godata])
-      @group_manager.update_attribute(:password_godata, encrypted_password)
     end
     errors = {}
     update_params.except(:password_godata).each do |param|

@@ -188,6 +188,8 @@ class Survey < ApplicationRecord
       'Mulher Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
       'Mulher Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
       'Homem Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Masculino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Feminino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE'
     }
 
     caseData = {
@@ -206,10 +208,24 @@ class Survey < ApplicationRecord
       'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now.in_time_zone('Montevideo')
     }
 
+    
+    
     if self.user.group
       self.user.group.get_path.each do |g|
-        if g[:description] == "Universidade de Brasilia"
-          caseData['usualPlaceOfResidenceLocationId'] = '783b11f6-f862-4fb0-a663-e26c342e7ab1'
+        if g[:description] == "UnB FGA"
+          caseData['addresses'] = [
+            {
+              "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
+              "country": 'Brasil',
+              "city": 'Brasília',
+              "addressLine1": 'Universidade de Brasília',
+              "postalCode": '70910-900',
+              "locationId": "783b11f6-f862-4fb0-a663-e26c342e7ab1",
+              "geoLocationAccurate": false,
+              "date": self.created_at,
+              "phoneNumber": self.user.phone
+            }
+          ]
         end
       end
     end
@@ -254,15 +270,15 @@ class Survey < ApplicationRecord
 
     # case's symptoms
     if self.symptom.any?
+      caseData['questionnaireAnswers']['sintomas'] = [{}]
+      caseData['questionnaireAnswers']['sintomas'][0]['value'] = []
       self.symptom.each do |s|
-        caseData['questionnaireAnswers']['sintomas'] = [{}]
-        caseData['questionnaireAnswers']['sintomas'][0]['value'] = []
         caseData['questionnaireAnswers']['sintomas'][0]['value'].append(symptoms[s])
       end
     else
       caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
     end
-    
+
     uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
     res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
   end
