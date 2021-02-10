@@ -138,7 +138,7 @@ class Survey < ApplicationRecord
     if (res.code != 200)
       return
     end
-    token = JSON.parse(res.body.gsub('=>', ':'))['response']['access_token']
+    token = JSON.parse(res.body.gsub('=>', ':'))['access_token']
 
 
     # check if case with user already exists
