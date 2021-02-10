@@ -212,7 +212,7 @@ class Survey < ApplicationRecord
     
     if self.user.group
       self.user.group.get_path.each do |g|
-        if g[:description] == "UnB FGA"
+        if g[:description] == "Universidade de Brasilia"
           caseData['addresses'] = [
             {
               "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
