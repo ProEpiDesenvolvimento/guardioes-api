@@ -226,7 +226,7 @@ class Survey < ApplicationRecord
               "geoLocationAccurate": false,
               "date": self.created_at,
               "phoneNumber": self.user.phone,
-              "email": self.user.email
+              "emailAddress": self.user.email
             }
           ]
         end
