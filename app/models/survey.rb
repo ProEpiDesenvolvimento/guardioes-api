@@ -225,7 +225,8 @@ class Survey < ApplicationRecord
               "locationId": "783b11f6-f862-4fb0-a663-e26c342e7ab1",
               "geoLocationAccurate": false,
               "date": self.created_at,
-              "phoneNumber": self.user.phone
+              "phoneNumber": self.user.phone,
+              "email": self.user.email
             }
           ]
         end
@@ -246,11 +247,6 @@ class Survey < ApplicationRecord
       'profissional_da_saude' => [
         {
           'value' => self.user.is_professional == true ? '1' : '2'
-        }
-      ],
-      'e_mail' => [
-        {
-          'value': self.user.email,
         }
       ],
       'se_foi_ao_hospital' => [
