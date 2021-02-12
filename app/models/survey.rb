@@ -133,7 +133,7 @@ class Survey < ApplicationRecord
       password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
     rescue
     end
-    uri = URI('https://inclusaodigital.unb.br/api/oauth/token')
+    uri = URI("#{ENV['GODATA_URL']}/api/oauth/token")
     res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
     if (res.code != 200)
       return
@@ -142,7 +142,7 @@ class Survey < ApplicationRecord
 
 
     # check if case with user already exists
-    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/generate-visual-id")
+    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/generate-visual-id")
     res = HTTParty.post(uri, body: { 'visualIdMask' => 'GDS_' + self.user.id.to_s }, headers: { Authorization: 'Bearer ' + token})
     if res.code == 409
       return
@@ -212,21 +212,25 @@ class Survey < ApplicationRecord
     
     if self.user.group
       self.user.group.get_path.each do |g|
-        if g[:description] == "Universidade de Brasilia"
+        if g[:group_manager_id] == 4
+          group_location_id = "783b11f6-f862-4fb0-a663-e26c342e7ab1"   
+          elsif g[:group_manager_id] == 7
+            group_location_id = "9f7eea8d-4034-4bf2-8032-5c2726368819"
+        end
           caseData['addresses'] = [
             {
               "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
               "country": 'Brasil',
-              "city": 'Brasília',
-              "addressLine1": 'Universidade de Brasília',
-              "postalCode": '70910-900',
-              "locationId": "783b11f6-f862-4fb0-a663-e26c342e7ab1",
+              "city": self.user.city,
+              "addressLine1": g[:description],
+              #"postalCode": '70910-900', #Nao posuimos CEP em nossos cadastros
+              "locationId": group_location_id,
               "geoLocationAccurate": false,
               "date": self.created_at,
-              "phoneNumber": self.user.phone
+              "phoneNumber": self.user.phone,
+              "emailAddress": self.user.email
             }
           ]
-        end
       end
     end
 
@@ -279,7 +283,7 @@ class Survey < ApplicationRecord
       caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
     end
 
-    uri = URI("https://inclusaodigital.unb.br/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
+    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
     res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
   end
 
