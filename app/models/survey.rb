@@ -65,8 +65,8 @@ class Survey < ApplicationRecord
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
               self.update_attribute(:syndrome_id, vs[:syndrome_id])
-              if vs[:surto_id]
-                report_go_data(group_manager, vs)
+              if vs[:surto_id]  && self.household_id == nil
+                report_go_data(group_manager, vs) 
               end
               VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end

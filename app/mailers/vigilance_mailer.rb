@@ -10,8 +10,6 @@ class VigilanceMailer < ActionMailer::Base
     if survey.household_id != nil
       @household = Household.find(survey.household_id)
     end
-
-    puts user.inspect
     
     @date = @user.birthdate.strftime("%d, %m, %Y")
     @date.gsub!(', ', '/')
