@@ -144,11 +144,8 @@ class Survey < ApplicationRecord
     # check if case with user already exists
     uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases/generate-visual-id")
     res = HTTParty.post(uri, body: { 'visualIdMask' => 'GDS_' + self.user.id.to_s }, headers: { Authorization: 'Bearer ' + token})
-    if res.code == 409
-      return
-    end
-
-    # creating case's data
+    if res.code != 409
+    #creating case's data
     age = ((Time.zone.now - self.user.birthdate.to_time) / 1.year.seconds).floor
     races = {
       'Branco' => '1',
@@ -285,6 +282,7 @@ class Survey < ApplicationRecord
 
     uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
     res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token})
+    end
   end
 
   def csv_data
