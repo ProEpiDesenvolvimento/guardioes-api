@@ -207,19 +207,23 @@ class Survey < ApplicationRecord
 
     
     
-    if self.user.group
-      self.user.group.get_path.each do |g|
-        if g[:group_manager_id] == 4
-          group_location_id = "783b11f6-f862-4fb0-a663-e26c342e7ab1"   
-          elsif g[:group_manager_id] == 7
-            group_location_id = "9f7eea8d-4034-4bf2-8032-5c2726368819"
-        end
-          caseData['addresses'] = [
+    if self.user.group      
+      if self.user.group.location_id_godata == nil
+          if self.user.group.group_manager_id == 4
+              group_location_id = "783b11f6-f862-4fb0-a663-e26c342e7ab1"   
+            elsif self.user.group.group_manager_id == 7
+              group_location_id = "9f7eea8d-4034-4bf2-8032-5c2726368819"
+          end
+        else
+          group_location_id = self.user.group.location_id_godata
+      end
+
+      caseData['addresses'] = [
             {
               "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
               "country": 'Brasil',
               "city": self.user.city,
-              "addressLine1": g[:description],
+              "addressLine1": self.user.group.description,
               #"postalCode": '70910-900', #Nao posuimos CEP em nossos cadastros
               "locationId": group_location_id,
               "geoLocationAccurate": false,
@@ -228,7 +232,6 @@ class Survey < ApplicationRecord
               "emailAddress": self.user.email
             }
           ]
-      end
     end
 
     if self.user.user_name.split(" ").length > 1
