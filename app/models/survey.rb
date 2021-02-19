@@ -247,11 +247,6 @@ class Survey < ApplicationRecord
           'value' => self.user.is_professional == true ? '1' : '2'
         }
       ],
-      'e_mail' => [
-        {
-          'value': self.user.email,
-        }
-      ],
       'se_foi_ao_hospital' => [
         {
           'value' => self.went_to_hospital != nil ? '1' : '2'
