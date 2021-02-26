@@ -210,9 +210,9 @@ class Survey < ApplicationRecord
     if self.user.group      
       if self.user.group.location_id_godata == nil
           if self.user.group.group_manager_id == 4
-              group_location_id = "783b11f6-f862-4fb0-a663-e26c342e7ab1"   
+              group_location_id = "8101b71b-dbaa-4d3e-b585-459513c1f23a"   
             elsif self.user.group.group_manager_id == 7
-              group_location_id = "9f7eea8d-4034-4bf2-8032-5c2726368819"
+              group_location_id = "a3e632e3-3955-4f45-978a-4e835204420c"
           end
         else
           group_location_id = self.user.group.location_id_godata
