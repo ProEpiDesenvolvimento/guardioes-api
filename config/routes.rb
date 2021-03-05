@@ -75,6 +75,18 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+  devise_for :city_managers,
+    path: 'city_manager/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
     resources :group_managers
     #get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
     scope "/group_manager" do 

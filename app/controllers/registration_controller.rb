@@ -1,8 +1,9 @@
 class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
-  before_action :create_group_manager, if: -> { params[:group_manager] }
   before_action :create_manager, if: -> { params[:manager] }
+  before_action :create_city_manager, if: -> { params[:city_manager] }
+  before_action :create_group_manager, if: -> { params[:group_manager] }
 
   respond_to :json
   
@@ -111,6 +112,12 @@ class RegistrationController < Devise::RegistrationsController
         :first_name,
         :last_name,
         :is_god,
+        :app_id
+      )
+    elsif params[:city_manager]
+      params.require(:city_manager).permit(
+        :email,
+        :password,
         :app_id
       )
     elsif params[:group_manager]
