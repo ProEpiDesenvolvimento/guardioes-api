@@ -81,8 +81,15 @@ class RegistrationController < Devise::RegistrationsController
     else
       @sign_up_params = nil
     end
-  end 
+  end
 
+  def create_city_manager
+    if params[:city_manager] && current_admin
+      @sign_up_params = sign_up_params
+    else
+      @sign_up_params = nil
+    end
+  end
 
   def sign_up_params
     if params[:user]
@@ -116,8 +123,10 @@ class RegistrationController < Devise::RegistrationsController
       )
     elsif params[:city_manager]
       params.require(:city_manager).permit(
+        :name,
         :email,
         :password,
+        :city,
         :app_id
       )
     elsif params[:group_manager]

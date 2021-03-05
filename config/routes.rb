@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   resources :syndromes
   resources :permissions, only: [:create, :update, :show, :destory]
 
-
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
   post "groups/upload_group_file", to: 'groups#upload_group_file'
@@ -74,6 +73,8 @@ Rails.application.routes.draw do
       sessions: 'session',
       registrations: 'registration'
     }
+
+  resources :city_managers
 
   devise_for :city_managers,
     path: 'city_manager/',
