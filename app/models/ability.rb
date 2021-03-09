@@ -28,6 +28,8 @@ class Ability
       when GroupManager
         can :manage, [ User, Group ]
         can :update, GroupManager, :id => user.id
+      when CityManager
+        can :manage, :all
       when User
         can :read, :all
         can :create, [ Survey, Household ]
