@@ -108,25 +108,33 @@ class UsersController < ApplicationController
   end
   
   def panel_list
-    if current_user.nil? && current_manager.nil? && current_group_manager.nil?
+    if current_user.nil? && current_manager.nil? && current_city_manager.nil? && current_group_manager.nil?
       @current_user = current_admin
-    elsif current_admin.nil? && current_user.nil? && current_group_manager.nil?
+    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_group_manager.nil?
       @current_user = current_manager
-    elsif current_admin.nil? && current_user.nil? && current_manager.nil?
+    elsif current_admin.nil? && current_user.nil? && current_manager.nil? && current_group_manager.nil?
+      @current_user = current_city_manager
+    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_manager.nil?
       @current_user = current_group_manager
     else
       @current_user = current_user
     end
 
-    #Se o GROUP do USER possuir o GROUP_MANAGER_ID igual ao ID do GROUP_MANAGER ele é retornado
-
-    if params[:email] 
+    # Se o GROUP do USER possuir o GROUP_MANAGER_ID igual ao ID do GROUP_MANAGER ele é retornado
+    if params[:email]
       query_regex = "^" + params[:email]
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
         @user = User.where(group_id: @groups).where('email ~* ?', query_regex)
       else
         @user =  User.user_by_app_id(@current_user.app_id).where('email ~* ?', query_regex)
+      end
+    elsif params[:city]
+      city = params[:city]
+      if !current_city_manager.nil?
+        @user = User.where(city: current_city_manager.city)
+      else
+        @user = User.where(city: city)
       end
     else
       if !current_group_manager.nil?

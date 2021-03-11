@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if !user.has_attribute?('is_god') && !user.has_attribute?('country') && !user.has_attribute?('vigilance_email')
+    if user && !user.has_attribute?('is_god') && !user.has_attribute?('country') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
 
