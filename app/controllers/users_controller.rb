@@ -120,21 +120,20 @@ class UsersController < ApplicationController
       @current_user = current_user
     end
 
-    # Se o GROUP do USER possuir o GROUP_MANAGER_ID igual ao ID do GROUP_MANAGER ele é retornado
-    if params[:email]
+    if !current_city_manager.nil?
+      if params[:email]
+        query_regex = "^" + params[:email]
+        @user = User.where(city: current_city_manager.city).where('email ~* ?', query_regex)
+      else
+        @user = User.where(city: current_city_manager.city)
+      end
+    elsif params[:email]
       query_regex = "^" + params[:email]
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
         @user = User.where(group_id: @groups).where('email ~* ?', query_regex)
       else
         @user =  User.user_by_app_id(@current_user.app_id).where('email ~* ?', query_regex)
-      end
-    elsif params[:city]
-      city = params[:city]
-      if !current_city_manager.nil?
-        @user = User.where(city: current_city_manager.city)
-      else
-        @user = User.where(city: city)
       end
     else
       if !current_group_manager.nil?

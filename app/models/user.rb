@@ -33,7 +33,6 @@ class User < ApplicationRecord
 
   belongs_to :app
   belongs_to :group, optional: true
-  has_one :school_unit
     
   validates :user_name,
     presence: true,

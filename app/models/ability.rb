@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    if user && !user.has_attribute?('is_god') && !user.has_attribute?('country') && !user.has_attribute?('vigilance_email')
+    if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
 
@@ -29,7 +29,8 @@ class Ability
         can :manage, [ User, Group ]
         can :update, GroupManager, :id => user.id
       when CityManager
-        can :manage, :all
+        can :manage, User, :city => user.city
+        can :update, CityManager, :id => user.id
       when User
         can :read, :all
         can :create, [ Survey, Household ]
