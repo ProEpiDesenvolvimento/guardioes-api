@@ -38,6 +38,8 @@ class ApplicationController < ActionController::API
         @current_ability ||= Ability.new(current_admin)
       elsif manager_signed_in?
         @current_ability ||= Ability.new(current_manager)
+      elsif city_manager_signed_in?
+        @current_ability ||= Ability.new(current_city_manager)
       elsif group_manager_signed_in?
         @current_ability ||= Ability.new(current_group_manager)
       else
