@@ -75,6 +75,11 @@ Rails.application.routes.draw do
     }
 
   resources :city_managers
+  scope "/city_manager" do 
+    post "email_reset_password", to: "city_managers#email_reset_password"
+    post "show_reset_token", to: "city_managers#show_reset_token"
+    post "reset_password", to: "city_managers#reset_password"
+  end
 
   devise_for :city_managers,
     path: 'city_manager/',
