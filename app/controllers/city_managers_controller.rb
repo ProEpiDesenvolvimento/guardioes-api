@@ -3,7 +3,7 @@ class CityManagersController < ApplicationController
   before_action :set_app, only: [:index]
   before_action :set_city_manager, only: [:show, :update, :destroy]
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:show, :email_reset_password, :reset_password, :show_reset_token]
 
   # GET /city_managers
   def index
@@ -29,6 +29,40 @@ class CityManagersController < ApplicationController
   # DELETE /city_managers/1
   def destroy
     @city_manager.destroy!
+  end
+
+  def email_reset_password
+    @city_manager = CityManager.find_by_email(params[:email])
+    aux_code = rand(36**4).to_s(36)
+    reset_password_token = rand(36**10).to_s(36)
+    @city_manager.update_attribute(:aux_code, aux_code)
+    @city_manager.update_attribute(:reset_password_token, reset_password_token)
+    if @city_manager.present?
+      CityManagerMailer.reset_password_email(@city_manager).deliver
+    end
+    render json: {message: "Email enviado com sucesso"}, status: :ok
+  end
+
+  def show_reset_token
+    city_manager = CityManager.where(aux_code: params[:code]).first
+    if city_manager.present?
+      render json: {reset_password_token: city_manager.reset_password_token}, status: :ok
+    else
+      render json: {error: true, message: "Codigo invalido"}, status: :bad_request
+    end
+  end
+
+  def reset_password
+    @city_manager = CityManager.where(reset_password_token: params[:reset_password_token]).first
+    if @city_manager.present?
+      if @city_manager.reset_password(params[:password], params[:password_confirmation])
+        render json: {error: false, message: "Senha redefinida com sucesso"}, status: :ok
+      else
+        render json: {error: true, data: @city_manager.errors}, status: :bad_request
+      end
+    else
+      render json: {error: true, message: "Token invalido"}, status: :bad_request
+    end
   end
 
   private
