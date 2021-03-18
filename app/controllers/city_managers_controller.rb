@@ -9,18 +9,18 @@ class CityManagersController < ApplicationController
   def index
     @city_managers = CityManager.all
 
-    render json: { city_managers: @city_managers }
+    render json: @city_managers
   end
 
   # GET /city_managers/1
   def show
-    render json: { city_manager: @city_manager }
+    render json: @city_manager
   end
 
   # PATCH/PUT /city_managers/1
   def update
     if @city_manager.update(city_manager_params)
-      render json: { city_manager: @city_manager }
+      render json: @city_manager
     else
       render json: @city_manager.errors, status: :unprocessable_entity
     end
