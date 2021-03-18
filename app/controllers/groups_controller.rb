@@ -23,19 +23,24 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-    if (current_group_manager)
-      ManagerGroupPermission::permit(current_group_manager, @group)
-      @group.group_manager_id = current_group_manager.id
-    elsif (group_params[:group_manager_id])
-      group_manager = GroupManager.find(group_params[:group_manager_id])
-      ManagerGroupPermission::permit(group_manager, @group)
-      @group.group_manager_id = group_params[:group_manager_id]
-    end
     
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
+    if (group_params[:parent_id] != nil)
+      if (current_group_manager)
+        ManagerGroupPermission::permit(current_group_manager, @group)
+        @group.group_manager_id = current_group_manager.id
+      elsif (group_params[:group_manager_id])
+        group_manager = GroupManager.find(group_params[:group_manager_id])
+        ManagerGroupPermission::permit(group_manager, @group)
+        @group.group_manager_id = group_params[:group_manager_id]
+      end
 
-    if @group.save
-      render json: @group, status: :created, location: @group
+      return render json: 'Not enough permissions' if !validate_manager_group_permissions
+
+      if @group.save
+        render json: @group, status: :created, location: @group
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
     else
       render json: @group.errors, status: :unprocessable_entity
     end
