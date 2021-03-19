@@ -3,7 +3,7 @@ class CityManagersController < ApplicationController
   before_action :set_app, only: [:index]
   before_action :set_city_manager, only: [:show, :update, :destroy]
 
-  load_and_authorize_resource :except => [:show, :email_reset_password, :reset_password, :show_reset_token]
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token]
 
   # GET /city_managers
   def index

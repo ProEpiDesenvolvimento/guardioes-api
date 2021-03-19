@@ -14,14 +14,18 @@ class Ability
           can :manage, :all
         else
           can :read, App
+          can :read, [ CityManager ], :app_id => user.app_id
           can :update, App, :id => user.app_id
+          can :update, [ CityManager ], :app_id => user.app_id
           can :update, Admin, :id => user.id
           can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
+        can :read, [ CityManager ], :app_id => user.app_id
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
+        can :update, [ CityManager ], :app_id => user.app_id
         can :update, Manager, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
@@ -30,7 +34,7 @@ class Ability
         can :update, GroupManager, :id => user.id
       when CityManager
         can :manage, User, :city => user.city
-        can :update, CityManager, :id => user.id
+        can :manage, CityManager, :id => user.id
       when User
         can :read, :all
         can :create, [ Survey, Household ]
@@ -56,6 +60,8 @@ class Ability
         models << Syndrome
       elsif new_array == "content"
         models << Content
+      elsif new_array == "citymanager"
+        models << CityManager
       else 
         models << User
       end
