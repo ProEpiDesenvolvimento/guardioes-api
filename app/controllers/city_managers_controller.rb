@@ -19,7 +19,13 @@ class CityManagersController < ApplicationController
 
   # PATCH/PUT /city_managers/1
   def update
-    if @city_manager.update(city_manager_params)
+    if current_city_manager
+      has_updated = @city_manager.update(city_manager_update_params)
+    else
+      has_updated = @city_manager.update(city_manager_params)
+    end
+
+    if has_updated
       render json: @city_manager
     else
       render json: @city_manager.errors, status: :unprocessable_entity
@@ -82,6 +88,14 @@ class CityManagersController < ApplicationController
         :email,
         :password,
         :city,
+        :app_id
+      )
+    end
+    def city_manager_update_params
+      params.require(:city_manager).permit(
+        :name,
+        :email,
+        :password,
         :app_id
       )
     end
