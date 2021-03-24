@@ -84,8 +84,14 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_city_manager
-    if params[:city_manager] && current_admin
+    if params[:city_manager] && (current_admin || current_manager)
+      authorize! :create, CityManager
       @sign_up_params = sign_up_params
+      if current_admin
+        @sign_up_params[:app_id] = current_admin.app_id
+      elsif current_manager
+        @sign_up_params[:app_id] = current_manager.app_id
+      end
     else
       @sign_up_params = nil
     end
