@@ -35,6 +35,7 @@ class Ability
       when CityManager
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
+        cannot :destroy, CityManager, :id => user.id
       when User
         can :read, :all
         can :create, [ Survey, Household ]
