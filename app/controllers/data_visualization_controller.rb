@@ -30,7 +30,7 @@ before_action :set_current_request_user, only: [:metabase_urls]
     when current_city_manager
       payload = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
     when current_group_manager
-      payload = {'params' => {'group' => @current_request_user.group}, 'resource' => {'dashboard' => 5}}
+      payload = {'params' => {'group' => @current_request_user.group_id}, 'resource' => {'dashboard' => 5}}
     when current_user
       puts "Common user"
     end
