@@ -34,7 +34,8 @@ class Survey < ApplicationRecord
   end
   
   reverse_geocoded_by :latitude, :longitude do |obj,results|
-    if geo = results.first
+    geo = results.first
+    if !geo.data['error']
       obj.city    = geo.city
       obj.country = geo.country
       obj.street  = geo.street
