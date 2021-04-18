@@ -20,23 +20,29 @@ before_action :set_current_request_user, only: [:metabase_urls]
   end
 
   def metabase_urls
+    payload = {
+      'surveys' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => nil}},
+      'users' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => nil}},
+      'biosecurity' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => nil}}
+    }
+
     case @current_request_user
     when current_admin
-      payloadSurveys = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-      payloadUsers = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-      payloadBiosecurity = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
+      payload['surveys']['resource'] = 1
+      payload['users']['resource'] = 1
+      payload['biosecurity']['resource'] = 1
     when current_manager
-      payloadSurveys = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-      payloadUsers = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-      payloadBiosecurity = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
+      payload['surveys']['resource'] = 1
+      payload['users']['resource'] = 1
+      payload['biosecurity']['resource'] = 1
     when current_city_manager
-      payloadSurveys = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
-      payloadUsers = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
-      payloadBiosecurity = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
+      payload['surveys']['resource'] = 6
+      payload['users']['resource'] = 6
+      payload['biosecurity']['resource'] = 6
     when current_group_manager
-      payloadSurveys = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => 5}}
-      payloadUsers = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => 5}}
-      payloadBiosecurity = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => 5}}
+      payload['surveys']['resource'] = 5
+      payload['users']['resource'] = 5
+      payload['biosecurity']['resource'] = 5
     when current_user
       puts "Common user"
     end
@@ -47,27 +53,13 @@ before_action :set_current_request_user, only: [:metabase_urls]
     iframe_urls = []
     exp_time = Time.now.to_i + metabase_config[:exp_time]
 
-    payloadSurveys['exp'] = exp_time
-    payloadUsers['exp'] = exp_time
-    payloadBiosecurity['exp'] = exp_time
+    payload['exp'] = exp_time
 
-    tokenSurveys = JWT.encode payloadSurveys, metabase_config[:secret_key]
-    tokenUsers = JWT.encode payloadUsers, metabase_config[:secret_key]
-    tokenBiosecurity = JWT.encode payloadBiosecurity, metabase_config[:secret_key]
+    token = JWT.encode payload, metabase_config[:secret_key]
 
     iframe_urls.append({
-      :dashboard => payloadSurveys['resource']['dashboard'],
-      :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenSurveys}#bordered=true&titled=true"
-    })
-
-    iframe_urls.append({
-      :dashboard => payloadUsers['resource']['dashboard'],
-      :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenUsers}#bordered=true&titled=true"
-    })
-
-    iframe_urls.append({
-      :dashboard => payloadBiosecurity['resource']['dashboard'],
-      :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenBiosecurity}#bordered=true&titled=true"
+      :dashboard => payload['resource']['dashboard'],
+      :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{token}#bordered=true&titled=true"
     })
 
     return render json: {
