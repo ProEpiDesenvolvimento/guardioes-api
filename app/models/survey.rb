@@ -66,10 +66,18 @@ class Survey < ApplicationRecord
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
               self.update_attribute(:syndrome_id, vs[:syndrome_id])
-              if vs[:surto_id]  && self.household_id == nil
-                report_go_data(group_manager, vs) 
+
+              date = DateTime.now.in_time_zone(Time.zone).beginning_of_day - obj[:syndrome].days_period.days
+              surveys_with_syndrome = Survey.filter_by_user(user.id).where("created_at >= ?", date)
+                .where(syndrome_id: obj[:syndrome].id)
+                .where(household: self.household)
+
+              if surveys_with_syndrome.length <= 1
+                if vs[:surto_id] && self.household_id == nil
+                  report_go_data(group_manager, vs) 
+                end
+                VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
               end
-              VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
             end
           end
         end

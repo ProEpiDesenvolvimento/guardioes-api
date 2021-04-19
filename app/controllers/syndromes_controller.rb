@@ -114,6 +114,7 @@ class SyndromesController < ApplicationController
       params.require(:syndrome).permit(
         :description,
         :details,
+        :days_period,
         :app_id,
         :symptom => [[ :description, :code, :percentage, :details, :priority, :app_id ]],
         message_attributes: [ :title, :warning_message, :go_to_hospital_message ]

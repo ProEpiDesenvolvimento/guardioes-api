@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_06_223922) do
+ActiveRecord::Schema.define(version: 2021_04_19_162331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(version: 2021_04_06_223922) do
     t.datetime "updated_at", null: false
     t.bigint "message_id"
     t.bigint "app_id", default: 1
+    t.integer "days_period", null: false
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
