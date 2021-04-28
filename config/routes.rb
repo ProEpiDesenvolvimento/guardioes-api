@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :form_answers
+  resources :form_options
+  resources :form_questions
+  resources :forms
   resources :twitter_apis
   resources :pre_registers
   resources :messages
