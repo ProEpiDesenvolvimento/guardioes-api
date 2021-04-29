@@ -34,7 +34,8 @@ class Survey < ApplicationRecord
   end
   
   reverse_geocoded_by :latitude, :longitude do |obj,results|
-    if geo = results.first
+    geo = results.first
+    if !geo.data['error']
       obj.city    = geo.city
       obj.country = geo.country
       obj.street  = geo.street
@@ -223,7 +224,7 @@ class Survey < ApplicationRecord
               "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
               "country": 'Brasil',
               "city": self.user.city,
-              "addressLine1": self.user.group.description,
+              #"addressLine1": self.user.group.description,
               #"postalCode": '70910-900', #Nao posuimos CEP em nossos cadastros
               "locationId": group_location_id,
               "geoLocationAccurate": false,

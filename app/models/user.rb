@@ -103,6 +103,9 @@ class User < ApplicationRecord
     message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
     if !message
       message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      if message.size == 0
+        return "Sua participação foi registrada."
+      end
       index = obj.streak % message.size
       message = message[index]
     end

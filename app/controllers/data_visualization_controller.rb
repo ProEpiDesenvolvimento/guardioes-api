@@ -20,6 +20,19 @@ before_action :set_current_request_user, only: [:metabase_urls]
   end
 
   def metabase_urls
+    case @current_request_user
+    when current_admin
+      payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
+    when current_manager
+      payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
+    when current_city_manager
+      payload = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
+    when current_group_manager
+      payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => 5}}
+    when current_user
+      puts "Common user"
+    end
+
     metabase_config = Rails.application.config.metabase
     req = JSON.parse(request.raw_post)
 
