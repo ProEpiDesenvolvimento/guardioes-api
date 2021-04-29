@@ -1,4 +1,6 @@
 class FormQuestionSerializer < ActiveModel::Serializer
-  attributes :id, :type, :text, :active, :order
+  attributes :id, :kind, :text, :order
+
+  has_many :form_options
   has_one :form
 end
