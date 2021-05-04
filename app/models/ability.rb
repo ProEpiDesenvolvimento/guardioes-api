@@ -4,6 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    # not admin, user, city manager and group manager
     if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
@@ -31,18 +32,22 @@ class Ability
         can :manage, convert_symbol(@permission.models_manage)
       when GroupManager
         can :manage, [ User, Group ]
+        can :manage, [ Form ], :id => user.form.id
+        can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form.id
         can :update, GroupManager, :id => user.id
       when CityManager
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
         cannot :destroy, CityManager, :id => user.id
       when User
-        can :read, :all
-        can :create, [ Survey, Household ]
+        can :read, [ App, Content, Household, Survey, Symptom, FormAnswer ]
+        can :read, User, :id => user.id
+        can :read, [ Form ], :group_manager => { :groups => { :id => user.group_id } }
+        can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
-        can :update, [ Survey, Household ], :user_id => user.id
+        can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
         can :destroy, User, :id => user.id
-        can :destroy, [ Survey, Household ], :user_id => user.id
+        can :destroy, [ Household, Survey, FormAnswer ], :user_id => user.id
     end
   end
 

@@ -87,12 +87,14 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
 
   create_table "form_answers", force: :cascade do |t|
     t.bigint "form_id"
+    t.bigint "form_question_id"
     t.bigint "form_option_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["form_id"], name: "index_form_answers_on_form_id"
     t.index ["form_option_id"], name: "index_form_answers_on_form_option_id"
+    t.index ["form_question_id"], name: "index_form_answers_on_form_question_id"
     t.index ["user_id"], name: "index_form_answers_on_user_id"
   end
 
@@ -375,6 +377,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
   add_foreign_key "form_answers", "form_options"
+  add_foreign_key "form_answers", "form_questions"
   add_foreign_key "form_answers", "forms"
   add_foreign_key "form_answers", "users"
   add_foreign_key "form_options", "form_questions"

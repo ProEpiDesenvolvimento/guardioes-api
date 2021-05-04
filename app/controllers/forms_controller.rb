@@ -2,6 +2,8 @@ class FormsController < ApplicationController
   before_action :set_form, only: [:show, :update, :destroy]
   before_action :set_questions, only: [ :create ]
 
+  load_and_authorize_resource
+
   # GET /forms
   def index
     @forms = Form.all
@@ -12,6 +14,10 @@ class FormsController < ApplicationController
   # GET /forms/1
   def show
     render json: @form
+  end
+
+  # GET forms/1/answers
+  def form_answers
   end
 
   # POST /forms

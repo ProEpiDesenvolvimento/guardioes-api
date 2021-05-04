@@ -1,6 +1,8 @@
 class FormAnswersController < ApplicationController
   before_action :set_form_answer, only: [:show, :update, :destroy]
 
+  load_and_authorize_resource
+
   # GET /form_answers
   def index
     @form_answers = FormAnswer.all
@@ -15,12 +17,30 @@ class FormAnswersController < ApplicationController
 
   # POST /form_answers
   def create
-    @form_answer = FormAnswer.new(form_answer_params)
+    if params[:form_answers].nil?
+      @form_answer = FormAnswer.new(form_answer_params)
 
-    if @form_answer.save
-      render json: @form_answer, status: :created, location: @form_answer
+      if @form_answer.save
+        render json: @form_answer, status: :created, location: @form_answer
+      else
+        render json: @form_answer.errors, status: :unprocessable_entity
+      end
     else
-      render json: @form_answer.errors, status: :unprocessable_entity
+      @form_answers = []
+      save = true
+
+      params[:form_answers].each do |form_answer|
+        fr = FormAnswer.new(form_answers_params(form_answer))
+        save = fr.save
+        puts fr
+        @form_answers << fr
+      end
+
+      if save
+        render json: { form_answers: @form_answers }, status: :created
+      else
+        render json: @form_answers.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -46,6 +66,10 @@ class FormAnswersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def form_answer_params
-      params.require(:form_answer).permit(:form_id, :form_option_id, :user_id)
+      params.require(:form_answer).permit(:form_id, :form_question_id, :form_option_id, :user_id)
+    end
+
+    def form_answers_params(form_answer)
+      form_answer.permit(:form_id, :form_question_id, :form_option_id, :user_id)
     end
 end
