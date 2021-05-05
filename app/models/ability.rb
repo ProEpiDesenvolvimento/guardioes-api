@@ -40,9 +40,10 @@ class Ability
         can :manage, CityManager, :id => user.id
         cannot :destroy, CityManager, :id => user.id
       when User
-        can :read, [ App, Content, Household, Survey, Symptom, FormAnswer ]
+        can :read, [ App, Content, Household, Survey, Symptom ]
         can :read, User, :id => user.id
         can :read, [ Form ], :group_manager => { :groups => { :id => user.group_id } }
+        can :read, [ FormAnswer ], :form => { :group_manager => { :groups => { :id => user.group_id } } }
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
         can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
