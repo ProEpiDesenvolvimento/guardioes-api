@@ -32,7 +32,6 @@ class FormAnswersController < ApplicationController
       params[:form_answers].each do |form_answer|
         fr = FormAnswer.new(form_answers_params(form_answer))
         save = fr.save
-        puts fr
         @form_answers << fr
       end
 

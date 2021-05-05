@@ -27,7 +27,7 @@ class FormsController < ApplicationController
 
     if @form.save
       if !form_params[:questions].nil?
-        create_questions_for_form
+        create_questions_and_options_for_form
       end
       render json: @form, status: :created, location: @form
     else
@@ -54,7 +54,7 @@ class FormsController < ApplicationController
   end
 
   private
-    def create_questions_for_form
+    def create_questions_and_options_for_form
       @questions.each do |question|
         created_question = FormQuestion.create(
           kind: question[:kind],
