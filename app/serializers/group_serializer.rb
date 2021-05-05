@@ -10,6 +10,6 @@ class GroupSerializer < ActiveModel::Serializer
   end
 
   def form_id
-    object.form.id
+    object.form_id
   end
 end

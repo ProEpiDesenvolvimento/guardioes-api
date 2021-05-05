@@ -102,10 +102,10 @@ class Group < ApplicationRecord
     delete
   end
 
-  def form
+  def form_id
     if group_manager != nil
       if group_manager.form != nil
-        return group_manager.form
+        return group_manager.form.id
       end
     end
     return nil
