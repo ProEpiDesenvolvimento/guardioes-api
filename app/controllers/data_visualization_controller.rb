@@ -42,7 +42,7 @@ before_action :set_current_request_user, only: [:metabase_urls]
         when "biosecurity"
           @dashboard_id = 0
         when "vigilance"
-          @dashboard_id = 0
+          @dashboard_id = 18
       end
         payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_user
