@@ -20,70 +20,46 @@ before_action :set_current_request_user, only: [:metabase_urls]
   end
 
   def metabase_urls
-    case @current_request_user
-    when current_admin
-      payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-    when current_manager
-      payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 1}}
-    when current_city_manager
-      payload = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => 6}}
-    when current_group_manager
-      payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => 5}}
-    when current_user
-      puts "Common user"
-    end
-
     metabase_config = Rails.application.config.metabase
-    req = JSON.parse(request.raw_post)
-
     exp_time = Time.now.to_i + metabase_config[:exp_time]
 
-    payload = {
-      'surveys' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 0}, 'exp' => exp_time},
-      'users' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 0}, 'exp' => exp_time},
-      'biosecurity' => {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => 0}, 'exp' => exp_time}
-    }
-
     case @current_request_user
-    when current_admin
-      payload['surveys']['resource']['dashboard'] = 7
-      payload['users']['resource']['dashboard'] = 8
-      payload['biosecurity']['resource']['dashboard'] = 7
-    when current_manager
-      payload['surveys']['resource']['dashboard'] = 7
-      payload['users']['resource']['dashboard'] = 8
-      payload['biosecurity']['resource']['dashboard'] = 7
-    when current_city_manager
-      payload['surveys']['resource']['dashboard'] = 6
-      payload['users']['resource']['dashboard'] = 6
-      payload['biosecurity']['resource']['dashboard'] = 6
-    when current_group_manager
-      payload['surveys']['resource']['dashboard'] = 5
-      payload['users']['resource']['dashboard'] = 5
-      payload['biosecurity']['resource']['dashboard'] = 5
-    when current_user
-      puts "Common user"
+      when current_admin
+        params[:type] == "users" ? @dashboard_id = 8 : @dashboard_id = 7
+        payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => @dashboard_id}}
+      when current_manager
+        params[:type] == "users" ? @dashboard_id = 8 : @dashboard_id = 7
+        payload = {'params' => {'app' => @current_request_user.app_id}, 'resource' => {'dashboard' => @dashboard_id}}
+      when current_city_manager
+        params[:type] == "users" ? @dashboard_id = 12 : @dashboard_id = 11
+        payload = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => @dashboard_id}}
+      when current_group_manager
+        case params[:type]
+        when "users"
+          @dashboard_id = 9
+        when "surveys"
+          @dashboard_id = 10
+        when "biosecurity"
+          @dashboard_id = 0
+        when "vigilance"
+          @dashboard_id = 18
+      end
+        payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
+      when current_user
+        puts "Common user"
     end
 
+    puts payload.inspect
+
     iframe_urls = []
-
-    tokenSurveys = JWT.encode payload['surveys'], metabase_config[:secret_key]
-    tokenUsers = JWT.encode payload['users'], metabase_config[:secret_key]
-    tokenBiosecurity = JWT.encode payload['biosecurity'], metabase_config[:secret_key]
-
+    exp_time = Time.now.to_i + metabase_config[:exp_time]
+    payload['exp'] = exp_time
+    token = JWT.encode payload, metabase_config[:secret_key]
     iframe_urls.append({
-        :dashboard => payload['surveys']['resource']['dashboard'],
-        :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenSurveys}#bordered=true&titled=true"
-      },
-      {
-        :dashboard => payload['users']['resource']['dashboard'],
-        :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenUsers}#bordered=true&titled=true"
-      },
-      {
-        :dashboard => payload['biosecurity']['resource']['dashboard'],
-        :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{tokenBiosecurity}#bordered=true&titled=true"
-      }
-    )
+      :dashboard => payload['resource']['dashboard'],
+      :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{token}#bordered=true&titled=true"
+    })
+
 
     return render json: {
       'urls': iframe_urls
@@ -103,5 +79,10 @@ before_action :set_current_request_user, only: [:metabase_urls]
       else
         return render json: { errors: "Token not found" }, status: :unprocessable_entity 
       end
-    end 
+    end
+    
+    # Only allow a trusted parameter "white list" through.
+    def data_visualization_params
+      params.require(:data_visualization).permit(:type)
+    end
 end
