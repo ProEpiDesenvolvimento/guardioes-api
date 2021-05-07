@@ -78,7 +78,7 @@ class GroupsController < ApplicationController
   def get_children
     is_child = @group.children_label == nil
     children = @group.children.each.map {|x| GroupSimpleSerializer.new(x) }
-    render json: { label: @group.children_label, is_child: is_child, require_id: @group.require_id || false, children: children }, status: :ok
+    render json: { label: @group.children_label, is_child: is_child || false, children: children }, status: :ok
   end
 
   # POST /groups/upload_group_file/

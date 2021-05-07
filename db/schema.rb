@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_06_223922) do
+ActiveRecord::Schema.define(version: 2021_04_29_213022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,46 @@ ActiveRecord::Schema.define(version: 2021_04_06_223922) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
+  end
+
+  create_table "form_answers", force: :cascade do |t|
+    t.bigint "form_id"
+    t.bigint "form_question_id"
+    t.bigint "form_option_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_id"], name: "index_form_answers_on_form_id"
+    t.index ["form_option_id"], name: "index_form_answers_on_form_option_id"
+    t.index ["form_question_id"], name: "index_form_answers_on_form_question_id"
+    t.index ["user_id"], name: "index_form_answers_on_user_id"
+  end
+
+  create_table "form_options", force: :cascade do |t|
+    t.boolean "value"
+    t.string "text"
+    t.integer "order"
+    t.bigint "form_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_question_id"], name: "index_form_options_on_form_question_id"
+  end
+
+  create_table "form_questions", force: :cascade do |t|
+    t.string "kind"
+    t.string "text"
+    t.integer "order"
+    t.bigint "form_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_id"], name: "index_form_questions_on_form_id"
+  end
+
+  create_table "forms", force: :cascade do |t|
+    t.bigint "group_manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_manager_id"], name: "index_forms_on_group_manager_id"
   end
 
   create_table "group_managers", force: :cascade do |t|
@@ -369,6 +409,13 @@ ActiveRecord::Schema.define(version: 2021_04_06_223922) do
   add_foreign_key "admins", "apps"
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "form_answers", "form_options"
+  add_foreign_key "form_answers", "form_questions"
+  add_foreign_key "form_answers", "forms"
+  add_foreign_key "form_answers", "users"
+  add_foreign_key "form_options", "form_questions"
+  add_foreign_key "form_questions", "forms"
+  add_foreign_key "forms", "group_managers"
   add_foreign_key "group_managers", "apps"
   add_foreign_key "households", "school_units"
   add_foreign_key "manager_group_permissions", "group_managers"
