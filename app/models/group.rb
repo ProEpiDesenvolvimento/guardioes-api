@@ -102,6 +102,24 @@ class Group < ApplicationRecord
     delete
   end
 
+  def require_id
+    if group_manager != nil
+      if group_manager.require_id != nil
+        return group_manager.require_id
+      end
+    end
+    return false
+  end
+
+  def id_code_length
+    if group_manager != nil
+      if group_manager.id_code_length != nil
+        return group_manager.id_code_length
+      end
+    end
+    return nil
+  end
+
   def form_id
     if group_manager != nil
       if group_manager.form != nil
