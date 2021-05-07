@@ -2,7 +2,7 @@ class FormsController < ApplicationController
   before_action :set_form, only: [:show, :update, :destroy]
   before_action :set_questions, only: [ :create ]
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:create] 
 
   # GET /forms
   def index
@@ -26,6 +26,10 @@ class FormsController < ApplicationController
     @form = Form.new(form_params.except(:questions))
 
     if @form.save
+      @group_manager = GroupManager.find_by(id: form_params[:group_manager_id])
+      if @group_manager
+        @group_manager.update(:form => @form)
+      end
       if !form_params[:questions].nil?
         create_questions_and_options_for_form
       end

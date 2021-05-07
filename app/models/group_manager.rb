@@ -33,4 +33,13 @@ class GroupManager < ApplicationRecord
     rescue
     end
   end
+
+  def form_id
+    if self != nil
+      if self.form != nil
+        return self.form.id
+      end
+    end
+    return nil
+  end
 end

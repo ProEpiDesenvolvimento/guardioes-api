@@ -32,8 +32,8 @@ class Ability
         can :manage, convert_symbol(@permission.models_manage)
       when GroupManager
         can :manage, [ User, Group ]
-        can :manage, [ Form ], :id => user.form.id
-        can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form.id
+        can :manage, [ Form ], :id => user.form_id
+        can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :update, GroupManager, :id => user.id
       when CityManager
         can :manage, User, :city => user.city
@@ -43,7 +43,7 @@ class Ability
         can :read, [ App, Content, Household, Survey, Symptom ]
         can :read, User, :id => user.id
         can :read, [ Form ], :group_manager => { :groups => { :id => user.group_id } }
-        can :read, [ FormAnswer ], :form => { :group_manager => { :groups => { :id => user.group_id } } }
+        can :read, [ FormQuestion, FormAnswer ], :form => { :group_manager => { :groups => { :id => user.group_id } } }
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
         can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
