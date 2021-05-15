@@ -105,7 +105,7 @@ class Group < ApplicationRecord
   def require_id
     if group_manager != nil
       if group_manager.require_id != nil
-        return true
+        return group_manager.require_id
       end
     end
     return false
@@ -115,6 +115,15 @@ class Group < ApplicationRecord
     if group_manager != nil
       if group_manager.id_code_length != nil
         return group_manager.id_code_length
+      end
+    end
+    return nil
+  end
+
+  def form_id
+    if group_manager != nil
+      if group_manager.form != nil
+        return group_manager.form.id
       end
     end
     return nil
