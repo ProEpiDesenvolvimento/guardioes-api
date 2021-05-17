@@ -199,7 +199,7 @@ class Survey < ApplicationRecord
 
     visualID = "GDS_" + self.user.id.to_s
 
-    if last_user_case == []?
+    if last_user_case == {}
       visualID += ""
     elsif !case_count_string.nil?
       counter = case_count_string.to_i + 1
