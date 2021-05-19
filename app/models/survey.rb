@@ -73,7 +73,7 @@ class Survey < ApplicationRecord
                   date = DateTime.now.utc.beginning_of_day - obj[:syndrome].days_period.days
 
                   if !token.nil?
-                    user_cases = get_user_cases_go_data(token, date)
+                    user_cases = get_user_cases_go_data(token, date, vs)
 
                     if !is_user_already_on_case_go_data(user_cases, date)
                       VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
@@ -102,7 +102,7 @@ class Survey < ApplicationRecord
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
       end
     end
-
+    
     return symptoms_and_syndromes_data
   end
 
@@ -162,7 +162,7 @@ class Survey < ApplicationRecord
     return JSON.parse(res.body.gsub('=>', ':'))['access_token']
   end
 
-  def get_user_cases_go_data(token, date)
+  def get_user_cases_go_data(token, date, vigilance_syndrome)
     # Get user related cases on GO.Data and do a filter
     query = {"where": {"and": [{"visualId": {"regexp": "/^GDS_#{self.user.id.to_s}/i"}}]}}
     uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases?filter=#{query.to_json}")
@@ -193,19 +193,19 @@ class Survey < ApplicationRecord
 
   def report_go_data(token, user_cases, vigilance_syndrome, group_manager)
     # Check user reocurrence to syndrome to generate a unique visualID
-    last_user_case = user_cases.last
-    last_user_case_name = last_user_case['visualId']
-    case_count_string = last_user_case_name.split('_')[2]
-
     visualID = "GDS_" + self.user.id.to_s
 
-    if last_user_case.blank?
-      visualID += ""
-    elsif !case_count_string.nil?
-      counter = case_count_string.to_i + 1
-      visualID += "_" + counter.to_s
-    else
-      visualID += "_2"
+    if !user_cases.blank?
+      last_user_case = user_cases.last
+      last_user_case_name = last_user_case['visualId']
+      case_count_string = last_user_case_name.split('_')[2]
+
+      if !case_count_string.nil?
+        counter = case_count_string.to_i + 1
+        visualID += "_" + counter.to_s
+      else
+        visualID += "_2"
+      end
     end
 
     # Creating case's data
