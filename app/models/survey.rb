@@ -185,7 +185,7 @@ class Survey < ApplicationRecord
       c['classification'] != cases_discarted_label2
     }
 
-    if (cases_on_period == [])
+    if cases_on_period.blank?
       return false
     end
     return true
@@ -199,7 +199,7 @@ class Survey < ApplicationRecord
 
     visualID = "GDS_" + self.user.id.to_s
 
-    if last_user_case == {}
+    if last_user_case.blank?
       visualID += ""
     elsif !case_count_string.nil?
       counter = case_count_string.to_i + 1
