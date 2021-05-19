@@ -361,6 +361,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.datetime "updated_at", null: false
     t.bigint "message_id"
     t.bigint "app_id", default: 1
+    t.integer "days_period"
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
