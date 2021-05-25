@@ -15,7 +15,6 @@ class Ability
           can :manage, :all
         else
           can :read, App
-          can :read, [ CityManager ], :app_id => user.app_id
           can :update, App, :id => user.app_id
           can :update, [ CityManager ], :app_id => user.app_id
           can :update, Admin, :id => user.id
@@ -23,7 +22,6 @@ class Ability
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
-        can :read, [ CityManager ], :app_id => user.app_id
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
         can :update, [ CityManager ], :app_id => user.app_id

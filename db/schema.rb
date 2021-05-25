@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_29_213022) do
+ActiveRecord::Schema.define(version: 2021_05_25_001628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,9 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.string "name"
     t.string "city"
     t.string "aux_code"
+    t.datetime "deleted_at"
     t.index ["app_id"], name: "index_city_managers_on_app_id"
+    t.index ["deleted_at"], name: "index_city_managers_on_deleted_at"
     t.index ["email"], name: "index_city_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_city_managers_on_reset_password_token", unique: true
   end
@@ -181,13 +183,11 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "picture"
-    t.bigint "school_unit_id"
     t.string "identification_code"
     t.boolean "risk_group"
     t.integer "group_id"
     t.integer "streak", default: 0
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
-    t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
   end
 
@@ -232,8 +232,8 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
+    t.string "feedback_message"
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
   end
@@ -268,19 +268,6 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.index ["email"], name: "index_pre_registers_on_email", unique: true
   end
 
-  create_table "public_hospitals", force: :cascade do |t|
-    t.string "description"
-    t.float "latitude"
-    t.float "longitude"
-    t.string "kind"
-    t.string "phone"
-    t.text "details"
-    t.bigint "app_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_id"], name: "index_public_hospitals_on_app_id"
-  end
-
   create_table "rumors", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -288,23 +275,6 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.integer "confirmed_deaths"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "school_units", force: :cascade do |t|
-    t.string "code"
-    t.string "description"
-    t.string "address"
-    t.string "cep"
-    t.string "phone"
-    t.string "fax"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "category"
-    t.string "zone"
-    t.string "level"
-    t.string "city"
-    t.string "state"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -395,16 +365,15 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
     t.bigint "group_id"
     t.boolean "risk_group"
     t.string "aux_code"
-    t.bigint "school_unit_id"
     t.integer "policy_version", default: 1, null: false
     t.integer "streak", default: 0
     t.string "phone"
     t.boolean "is_vigilance", default: false
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["school_unit_id"], name: "index_users_on_school_unit_id"
   end
 
   add_foreign_key "admins", "apps"
@@ -418,7 +387,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
   add_foreign_key "form_questions", "forms"
   add_foreign_key "forms", "group_managers"
   add_foreign_key "group_managers", "apps"
-  add_foreign_key "households", "school_units"
+  add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
   add_foreign_key "managers", "apps"
@@ -428,9 +397,9 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
-  add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "syndromes"
+  add_foreign_key "surveys", "users"
   add_foreign_key "symptoms", "apps"
   add_foreign_key "symptoms", "messages"
   add_foreign_key "symptoms", "syndromes"
@@ -439,5 +408,4 @@ ActiveRecord::Schema.define(version: 2021_04_29_213022) do
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
-  add_foreign_key "users", "school_units"
 end
