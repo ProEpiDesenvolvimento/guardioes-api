@@ -1,5 +1,5 @@
 class SyndromeSerializer < ActiveModel::Serializer
-  attributes :id, :description, :details, :days_period, :app
+  attributes :id, :description, :details, :days_period, :created_by, :updated_by, :deleted_by, :app
 
   has_one :message
   has_many :symptoms
