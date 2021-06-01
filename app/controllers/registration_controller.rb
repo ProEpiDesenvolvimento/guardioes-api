@@ -10,13 +10,17 @@ class RegistrationController < Devise::RegistrationsController
   def create
     if params[:user]
       build_resource(@new_sign_up_params)
-      resource.save
-  
+
+      if resource.save && current_devise_user
+        resource.update(:created_by => current_devise_user.email)
+      end
       render_resource(resource)
     else
       build_resource(@sign_up_params)
-      resource.save
 
+      if resource.save
+        resource.update(:created_by => current_devise_user.email)
+      end
       render_resource(resource)
     end
   end
@@ -57,7 +61,7 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if ( params[:admin] && current_admin )
+    if (params[:admin] && current_admin)
       if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
         @sign_up_params = nil
       else

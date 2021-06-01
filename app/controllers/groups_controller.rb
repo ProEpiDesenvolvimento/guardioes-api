@@ -37,6 +37,7 @@ class GroupsController < ApplicationController
       return render json: 'Not enough permissions' if !validate_manager_group_permissions
 
       if @group.save
+        @group.update_attribute(:created_by, current_devise_user.email)
         render json: @group, status: :created, location: @group
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -50,6 +51,7 @@ class GroupsController < ApplicationController
   def update
     return render json: 'Not enough permissions', status: :unprocessable_entity if !validate_manager_group_permissions
     if @group.update(group_params)
+      @group.update_attribute(:updated_by, current_devise_user.email)
       render json: @group
     else
       render json: @group.errors, status: :unprocessable_entity

@@ -26,6 +26,7 @@ class CityManagersController < ApplicationController
     end
 
     if has_updated
+      @city_manager.update_attribute(:updated_by, current_devise_user.email)
       render json: @city_manager
     else
       render json: @city_manager.errors, status: :unprocessable_entity
@@ -34,6 +35,7 @@ class CityManagersController < ApplicationController
 
   # DELETE /city_managers/1
   def destroy
+    @city_manager.update_attribute(:deleted_by, current_devise_user.email)
     @city_manager.destroy!
   end
 

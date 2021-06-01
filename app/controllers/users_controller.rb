@@ -40,6 +40,7 @@ class UsersController < ApplicationController
       end
     end
     if errors.length == 0
+      @user.update_attribute(:updated_by, current_devise_user.email)
       render json: @user
     else
       render json: {errors: errors, user: @user}, status: :unprocessable_entity
@@ -86,6 +87,7 @@ class UsersController < ApplicationController
   
   def destroy
     @user = User.find(params[:id])
+    @user.update_attribute(:deleted_by, current_devise_user.email)
     @user.destroy!
   end
 
