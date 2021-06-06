@@ -6,16 +6,28 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-App.create(
-    {
-        app_name: "top dos tops"
-    }
-)
+# print "Creating App\n"
 
-Admin.create(
-    {
-        email: 'jp@email.com',
-        password: '12345678',
-        app_id: 1,
-    }
-)
+# App.create!(
+#         app_name: 'top dos top',
+#         owner_country: "Brasil",
+# )
+
+# print "App finished, creating Admin now\n"
+
+# Admin.create(
+#     {
+#         email: 'jp@email.com',
+#         password: '12345678',
+#         app_id: 1,
+#     }
+# )
+
+# print "Admin finished, creating Survey now\n"
+
+# Survey.create(
+#     {
+#         latitude: 50.0,
+#         longitude: 40.0,
+#     }
+# )
