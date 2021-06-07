@@ -73,6 +73,7 @@ class AdminsController < ApplicationController
     params.require(:admin).permit(
         :email,
         :password,
+        :password_changed,
         :first_name,
         :last_name,
         :is_god,
