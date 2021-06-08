@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_06_05_233453) do
 
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +34,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.datetime "updated_at", null: false
     t.bigint "app_id"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -59,6 +63,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.string "city"
     t.string "aux_code"
     t.datetime "deleted_at"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_city_managers_on_app_id"
     t.index ["deleted_at"], name: "index_city_managers_on_deleted_at"
     t.index ["email"], name: "index_city_managers_on_email", unique: true
@@ -74,6 +81,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.datetime "updated_at", null: false
     t.string "source_link"
     t.string "icon"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
@@ -147,6 +157,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.text "username_godata", default: ""
     t.text "password_godata", default: ""
     t.text "userid_godata"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -167,6 +180,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.integer "group_manager_id"
     t.text "location_name_godata"
     t.text "location_id_godata"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
@@ -219,6 +235,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.datetime "remember_created_at"
     t.bigint "app_id"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
@@ -312,6 +331,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.datetime "updated_at", null: false
     t.bigint "syndrome_id"
     t.bigint "message_id"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_symptoms_on_app_id"
     t.index ["message_id"], name: "index_symptoms_on_message_id"
     t.index ["syndrome_id"], name: "index_symptoms_on_syndrome_id"
@@ -333,6 +355,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.bigint "message_id"
     t.bigint "app_id", default: 1
     t.integer "days_period"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
@@ -370,6 +395,9 @@ ActiveRecord::Schema.define(version: 2021_06_05_233453) do
     t.integer "streak", default: 0
     t.string "phone"
     t.boolean "is_vigilance", default: false
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true

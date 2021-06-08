@@ -27,6 +27,8 @@ class ManagersController < ApplicationController
 
   def update
     if @manager.update(manager_params.except(:permissions))
+      @manager.update_attribute(:updated_by, current_devise_user.email)
+
       @permission = Permission.where(manager_id: @manager.id).first
       if params['manager'].has_key?(:permissions)
         if @permission.update({models_manage: manager_params.fetch(:permissions)})

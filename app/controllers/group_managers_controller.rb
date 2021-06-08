@@ -58,6 +58,7 @@ class GroupManagersController < ApplicationController
       end
     end
     if errors.length == 0
+      @group_manager.update_attribute(:updated_by, current_devise_user.email)
       render json: @group_manager
     else
       render json: {errors: errors, group_manager: @group_manager}, status: :unprocessable_entity
