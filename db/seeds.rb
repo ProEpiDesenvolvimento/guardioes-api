@@ -6,12 +6,12 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-# print "Creating App\n"
+print "Creating App\n"
 
-# App.create!(
-#         app_name: 'app de teste',
-#         owner_country: "Brasil",
-# )
+App.create!(
+        app_name: 'app de teste',
+        owner_country: "Brasil",
+)
 
 # print "App finished, creating Admin now\n"
 
