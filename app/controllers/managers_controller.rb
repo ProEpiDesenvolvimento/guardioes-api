@@ -98,8 +98,8 @@ class ManagersController < ApplicationController
     params.require(:manager).permit(
         :name,
         :email,
-        :password_changed,
         :password,
+        :first_access,
         :permission_id,
         :permissions => []
       )

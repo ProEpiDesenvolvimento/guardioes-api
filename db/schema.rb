@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_28_203817) do
+ActiveRecord::Schema.define(version: 2021_06_08_204338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_05_28_203817) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 2021_05_28_203817) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_city_managers_on_app_id"
     t.index ["deleted_at"], name: "index_city_managers_on_deleted_at"
     t.index ["email"], name: "index_city_managers_on_email", unique: true
@@ -159,6 +161,7 @@ ActiveRecord::Schema.define(version: 2021_05_28_203817) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -237,6 +240,7 @@ ActiveRecord::Schema.define(version: 2021_05_28_203817) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true

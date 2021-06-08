@@ -89,8 +89,8 @@ class CityManagersController < ApplicationController
         :name,
         :email,
         :password,
-        :password_changed,
         :city,
+        :first_access,
         :app_id
       )
     end
@@ -99,7 +99,7 @@ class CityManagersController < ApplicationController
         :name,
         :email,
         :password,
-        :password_changed,
+        :first_access,
         :app_id
       )
     end
