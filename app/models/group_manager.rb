@@ -9,6 +9,7 @@ class GroupManager < ApplicationRecord
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission', dependent: :delete_all
   has_many :groups, :through => :manager_group_permission 
   has_one :form, dependent: :destroy
+  has_one :group_manager_team, dependent: :destroy
   has_one :permission, dependent: :destroy
 
   serialize :vigilance_syndromes, Array

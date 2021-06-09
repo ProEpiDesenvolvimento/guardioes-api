@@ -4,9 +4,10 @@ class RegistrationController < Devise::RegistrationsController
   before_action :create_manager, if: -> { params[:manager] }
   before_action :create_city_manager, if: -> { params[:city_manager] }
   before_action :create_group_manager, if: -> { params[:group_manager] }
+  before_action :create_group_manager_team, if: -> { params[:group_manager_team] }
 
   respond_to :json
-  
+
   def create
     if params[:user]
       build_resource(@new_sign_up_params)
@@ -18,7 +19,7 @@ class RegistrationController < Devise::RegistrationsController
     else
       build_resource(@sign_up_params)
 
-      if resource.save
+      if resource.save && current_devise_user
         resource.update(:created_by => current_devise_user.email)
       end
       render_resource(resource)
@@ -78,15 +79,6 @@ class RegistrationController < Devise::RegistrationsController
     end
   end 
 
-  def create_group_manager
-    if params[:group_manager] && (current_admin || current_group_manager)
-      @sign_up_params = sign_up_params
-      @sign_up_params[:vigilance_syndromes] = []
-    else
-      @sign_up_params = nil
-    end
-  end
-
   def create_city_manager
     if params[:city_manager] && (current_admin || current_manager)
       authorize! :create, CityManager
@@ -96,6 +88,23 @@ class RegistrationController < Devise::RegistrationsController
       elsif current_manager
         @sign_up_params[:app_id] = current_manager.app_id
       end
+    else
+      @sign_up_params = nil
+    end
+  end
+
+  def create_group_manager
+    if params[:group_manager] && (current_admin || current_group_manager)
+      @sign_up_params = sign_up_params
+      @sign_up_params[:vigilance_syndromes] = []
+    else
+      @sign_up_params = nil
+    end
+  end
+
+  def create_group_manager_team
+    if params[:group_manager_team]
+      @sign_up_params = sign_up_params
     else
       @sign_up_params = nil
     end
@@ -150,6 +159,14 @@ class RegistrationController < Devise::RegistrationsController
         :id_code_length,
         :twitter,
         :vigilance_syndromes
+      )
+    elsif params[:group_manager_team]
+      params.require(:group_manager_team).permit(
+        :name,
+        :email,
+        :password,
+        :group_manager_id,
+        :app_id
       )
     else
       params.require(:manager).permit(
