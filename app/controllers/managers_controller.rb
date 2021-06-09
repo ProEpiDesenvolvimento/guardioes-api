@@ -99,6 +99,7 @@ class ManagersController < ApplicationController
         :name,
         :email,
         :password,
+        :first_access,
         :permission_id,
         :permissions => []
       )

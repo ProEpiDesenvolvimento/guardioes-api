@@ -1,8 +1,8 @@
 class GroupManagerSerializer < ActiveModel::Serializer
-  attributes :id, :email, :name, :group_name, :group_permissions,
+  attributes :id, :name, :email, :group_name, :group_permissions,
              :vigilance_email, :twitter, :require_id, :id_code_length,
              :vigilance_syndromes, :username_godata, :password_godata,
-             :created_by, :updated_by, :app_id
+             :created_by, :updated_by, :first_access, :app_id
   has_one :form
 
   def password_godata
