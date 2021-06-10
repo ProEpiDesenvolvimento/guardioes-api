@@ -90,6 +90,7 @@ class CityManagersController < ApplicationController
         :email,
         :password,
         :city,
+        :first_access,
         :app_id
       )
     end
@@ -98,6 +99,7 @@ class CityManagersController < ApplicationController
         :name,
         :email,
         :password,
+        :first_access,
         :app_id
       )
     end

@@ -76,6 +76,7 @@ class AdminsController < ApplicationController
         :first_name,
         :last_name,
         :is_god,
+        :first_access,
         :app_id
       )
   end
