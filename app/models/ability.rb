@@ -65,10 +65,12 @@ class Ability
         models << Syndrome
       elsif new_array == "content"
         models << Content
+      elsif new_array == "group"
+        models << Group
+      elsif new_array == "user"
+        models << User
       elsif new_array == "citymanager"
         models << CityManager
-      else 
-        models << User
       end
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_09_223456) do
+ActiveRecord::Schema.define(version: 2021_06_11_195602) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 2021_06_09_223456) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "aux_code"
     t.index ["app_id"], name: "index_group_manager_teams_on_app_id"
     t.index ["deleted_at"], name: "index_group_manager_teams_on_deleted_at"
     t.index ["email"], name: "index_group_manager_teams_on_email", unique: true
@@ -290,8 +291,10 @@ ActiveRecord::Schema.define(version: 2021_06_09_223456) do
     t.bigint "manager_id"
     t.bigint "group_manager_id"
     t.bigint "admin_id"
+    t.bigint "group_manager_team_id"
     t.index ["admin_id"], name: "index_permissions_on_admin_id"
     t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["group_manager_team_id"], name: "index_permissions_on_group_manager_team_id"
     t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
@@ -444,6 +447,7 @@ ActiveRecord::Schema.define(version: 2021_06_09_223456) do
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_manager_teams"
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
