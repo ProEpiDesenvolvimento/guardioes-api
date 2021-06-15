@@ -37,6 +37,13 @@ class Ability
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
         cannot :destroy, CityManager, :id => user.id
+      when GroupManagerTeam
+        can :read, convert_symbol(@permission.models_read)
+        can :create, convert_symbol(@permission.models_create)
+        can :update, convert_symbol(@permission.models_update)
+        can :update, GroupManagerTeam, :id => user.id
+        can :destroy, convert_symbol(@permission.models_destroy)
+        can :manage, convert_symbol(@permission.models_manage)
       when User
         can :read, [ App, Content, Household, Survey, Symptom ]
         can :read, User, :id => user.id
