@@ -342,6 +342,7 @@ ActiveRecord::Schema.define(version: 2021_06_15_185303) do
     t.string "contact_with_symptom"
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
+    t.string "postal_code"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
