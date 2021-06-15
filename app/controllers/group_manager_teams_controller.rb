@@ -2,10 +2,15 @@ class GroupManagerTeamsController < ApplicationController
   # before_action :authenticate_admin!, only: [:index]
   # before_action :set_app, only: [:index]
   before_action :set_group_manager_team, only: [:show, :update, :destroy]
-  
+
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token]
+
   # GET /group_manager_teams
   def index
-    @group_manager_teams = GroupManagerTeam.all
+    if current_group_manager
+      @user = current_group_manager
+      @group_manager_teams = GroupManagerTeam.where(group_manager_id: @user.id)
+    end
   
     render json: @group_manager_teams
   end
