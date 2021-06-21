@@ -119,6 +119,19 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+    resources :group_manager_teams
+    devise_for :group_manager_teams,
+      path: "group_manager_team/",
+      path_names: {
+        sign_in: "login",
+        sign_out: "logout",
+        registration: "signup"
+      },
+      controllers: {
+        sessions: "session",
+        registrations: "registration",
+      }
+
     resources :managers
     scope "/manager" do 
       post "email_reset_password", to: "managers#email_reset_password"
