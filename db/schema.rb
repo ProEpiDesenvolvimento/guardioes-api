@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_10_220935) do
+ActiveRecord::Schema.define(version: 2021_06_15_185303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_city_managers_on_app_id"
     t.index ["deleted_at"], name: "index_city_managers_on_deleted_at"
     t.index ["email"], name: "index_city_managers_on_email", unique: true
@@ -149,6 +151,9 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_group_manager_teams_on_app_id"
     t.index ["deleted_at"], name: "index_group_manager_teams_on_deleted_at"
     t.index ["email"], name: "index_group_manager_teams_on_email", unique: true
@@ -179,6 +184,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -257,6 +263,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
@@ -287,8 +294,10 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.bigint "manager_id"
     t.bigint "group_manager_id"
     t.bigint "admin_id"
+    t.bigint "group_manager_team_id"
     t.index ["admin_id"], name: "index_permissions_on_admin_id"
     t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["group_manager_team_id"], name: "index_permissions_on_group_manager_team_id"
     t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
@@ -333,6 +342,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
     t.string "contact_with_symptom"
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
+    t.string "postal_code"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
@@ -441,6 +451,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_220935) do
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_manager_teams"
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"

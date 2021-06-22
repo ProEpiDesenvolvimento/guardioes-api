@@ -187,6 +187,7 @@ class SurveysController < ApplicationController
         :country,
         :went_to_hospital,
         :contact_with_symptom,
+        :postal_code,
         symptom: []
       ) 
     end
