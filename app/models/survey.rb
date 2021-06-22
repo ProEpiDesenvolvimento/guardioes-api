@@ -36,10 +36,11 @@ class Survey < ApplicationRecord
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     geo = results.first
     if !geo.data['error']
-      obj.city    = geo.city
-      obj.country = geo.country
-      obj.street  = geo.street
-      obj.state   = geo.state
+      obj.city        = geo.city
+      obj.country     = geo.country
+      obj.street      = geo.street
+      obj.state       = geo.state
+      obj.postal_code = geo.postal_code
     end
   end
   

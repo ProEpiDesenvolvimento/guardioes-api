@@ -104,7 +104,11 @@ class RegistrationController < Devise::RegistrationsController
 
   def create_group_manager_team
     if params[:group_manager_team]
+      authorize! :create, GroupManagerTeam
       @sign_up_params = sign_up_params
+      if current_group_manager
+        @sign_up_params[:group_manager_id] = current_group_manager.id
+      end
     else
       @sign_up_params = nil
     end

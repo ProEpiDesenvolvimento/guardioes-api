@@ -28,10 +28,15 @@ class Ability
         can :update, Manager, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+      when CityManager
+        can :manage, User, :city => user.city
+        can :manage, CityManager, :id => user.id
+        cannot :destroy, CityManager, :id => user.id
       when GroupManager
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
+        can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
         can :update, GroupManager, :id => user.id
       when CityManager
         can :manage, User, :city => user.city

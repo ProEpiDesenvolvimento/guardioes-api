@@ -151,6 +151,9 @@ ActiveRecord::Schema.define(version: 2021_06_11_195602) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_group_manager_teams_on_app_id"
     t.index ["deleted_at"], name: "index_group_manager_teams_on_deleted_at"
     t.index ["email"], name: "index_group_manager_teams_on_email", unique: true
@@ -339,6 +342,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_195602) do
     t.string "contact_with_symptom"
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
+    t.string "postal_code"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
