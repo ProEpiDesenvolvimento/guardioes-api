@@ -170,7 +170,14 @@ class RegistrationController < Devise::RegistrationsController
         :email,
         :password,
         :group_manager_id,
-        :app_id
+        :app_id,
+        permission_attributes: [
+          models_create: [],
+          models_read: [],
+          models_update: [],
+          models_destroy: [],
+          models_manage: []
+        ]
       )
     else
       params.require(:manager).permit(

@@ -38,6 +38,17 @@ class Ability
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
         can :update, GroupManager, :id => user.id
+      when CityManager
+        can :manage, User, :city => user.city
+        can :manage, CityManager, :id => user.id
+        cannot :destroy, CityManager, :id => user.id
+      when GroupManagerTeam
+        can :read, convert_symbol(@permission.models_read)
+        can :create, convert_symbol(@permission.models_create)
+        can :update, convert_symbol(@permission.models_update)
+        can :update, GroupManagerTeam, :id => user.id
+        can :destroy, convert_symbol(@permission.models_destroy)
+        can :manage, convert_symbol(@permission.models_manage)
       when User
         can :read, [ App, Content, Household, Survey, Symptom ]
         can :read, User, :id => user.id
@@ -66,10 +77,12 @@ class Ability
         models << Syndrome
       elsif new_array == "content"
         models << Content
+      elsif new_array == "group"
+        models << Group
+      elsif new_array == "user"
+        models << User
       elsif new_array == "citymanager"
         models << CityManager
-      else 
-        models << User
       end
     end
 

@@ -22,19 +22,24 @@ class GroupManagerTeamsController < ApplicationController
   
   # PATCH/PUT /group_manager_teams/1
   def update
-    if current_group_manager_team
-      has_updated = @group_manager_team.update(group_manager_team_update_params)
-    else
-      has_updated = @group_manager_team.update(group_manager_team_params)
-    end
-  
+    has_updated = @group_manager_team.update(group_manager_team_params.except(:permission))
+
     if has_updated
-      render json: @group_manager_team
+      @permission = Permission.where(group_manager_team_id: @group_manager_team.id).first
+      if params[:group_manager_team].has_key?(:permission)
+        if @permission.update({ models_manage: group_manager_team_params.fetch(:permission) })
+          render json: @group_manager_team, status: :ok
+        else
+          render json: @permission.errors, status: :unprocessable_entity
+        end
+      else
+        render json: @group_manager_team, status: :ok
+      end
     else
       render json: @group_manager_team.errors, status: :unprocessable_entity
     end
   end
-  
+
   # DELETE /group_manager_teams/1
   def destroy
     @group_manager_team.destroy!
@@ -57,15 +62,8 @@ class GroupManagerTeamsController < ApplicationController
         :email,
         :password,
         :group_manager_id,
-        :app_id
-      )
-    end
-    def group_manager_team_update_params
-      params.require(:group_manager_team).permit(
-        :name,
-        :email,
-        :password,
-        :app_id
+        :app_id,
+        :permission => []
       )
     end
 end
