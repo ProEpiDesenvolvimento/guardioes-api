@@ -43,6 +43,8 @@ class ApplicationController < ActionController::API
       @current_ability ||= Ability.new(current_city_manager)
     elsif group_manager_signed_in?
       @current_ability ||= Ability.new(current_group_manager)
+    elsif group_manager_team_signed_in?
+      @current_ability ||= Ability.new(current_group_manager_team)
     else
       @current_ability ||= Ability.new(current_user)
     end
@@ -57,6 +59,8 @@ class ApplicationController < ActionController::API
       return current_city_manager
     elsif group_manager_signed_in?
       return current_group_manager
+    elsif group_manager_team_signed_in?
+      return current_group_manager_team
     else
       return current_user
     end
