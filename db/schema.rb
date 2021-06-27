@@ -33,6 +33,10 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.bigint "app_id"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_admins_on_app_id"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
@@ -46,6 +50,29 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.string "twitter"
   end
 
+  create_table "city_managers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.string "name"
+    t.string "city"
+    t.string "aux_code"
+    t.datetime "deleted_at"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
+    t.boolean "first_access", default: true
+    t.index ["app_id"], name: "index_city_managers_on_app_id"
+    t.index ["deleted_at"], name: "index_city_managers_on_deleted_at"
+    t.index ["email"], name: "index_city_managers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_city_managers_on_reset_password_token", unique: true
+  end
+
   create_table "contents", force: :cascade do |t|
     t.string "title", default: "", null: false
     t.text "body", default: "", null: false
@@ -55,6 +82,9 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.string "source_link"
     t.string "icon"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_contents_on_app_id"
   end
 
@@ -66,6 +96,69 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
+  end
+
+  create_table "form_answers", force: :cascade do |t|
+    t.bigint "form_id"
+    t.bigint "form_question_id"
+    t.bigint "form_option_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_id"], name: "index_form_answers_on_form_id"
+    t.index ["form_option_id"], name: "index_form_answers_on_form_option_id"
+    t.index ["form_question_id"], name: "index_form_answers_on_form_question_id"
+    t.index ["user_id"], name: "index_form_answers_on_user_id"
+  end
+
+  create_table "form_options", force: :cascade do |t|
+    t.boolean "value"
+    t.string "text"
+    t.integer "order"
+    t.bigint "form_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_question_id"], name: "index_form_options_on_form_question_id"
+  end
+
+  create_table "form_questions", force: :cascade do |t|
+    t.string "kind"
+    t.string "text"
+    t.integer "order"
+    t.bigint "form_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_id"], name: "index_form_questions_on_form_id"
+  end
+
+  create_table "forms", force: :cascade do |t|
+    t.bigint "group_manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_manager_id"], name: "index_forms_on_group_manager_id"
+  end
+
+  create_table "group_manager_teams", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "name"
+    t.bigint "group_manager_id"
+    t.bigint "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
+    t.index ["app_id"], name: "index_group_manager_teams_on_app_id"
+    t.index ["deleted_at"], name: "index_group_manager_teams_on_deleted_at"
+    t.index ["email"], name: "index_group_manager_teams_on_email", unique: true
+    t.index ["group_manager_id"], name: "index_group_manager_teams_on_group_manager_id"
+    t.index ["reset_password_token"], name: "index_group_manager_teams_on_reset_password_token", unique: true
   end
 
   create_table "group_managers", force: :cascade do |t|
@@ -85,6 +178,13 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.string "vigilance_email"
     t.string "aux_code"
     t.text "vigilance_syndromes", default: ""
+    t.text "username_godata", default: ""
+    t.text "password_godata", default: ""
+    t.text "userid_godata"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -103,6 +203,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.string "phone"
     t.string "email"
     t.integer "group_manager_id"
+    t.text "location_name_godata"
+    t.text "location_id_godata"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["deleted_at"], name: "index_groups_on_deleted_at"
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
@@ -119,13 +224,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "picture"
-    t.bigint "school_unit_id"
     t.string "identification_code"
     t.boolean "risk_group"
     t.integer "group_id"
     t.integer "streak", default: 0
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
-    t.index ["school_unit_id"], name: "index_households_on_school_unit_id"
     t.index ["user_id"], name: "index_households_on_user_id"
   end
 
@@ -157,6 +260,10 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "remember_created_at"
     t.bigint "app_id"
     t.string "aux_code"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_managers_on_app_id"
     t.index ["email"], name: "index_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_managers_on_reset_password_token", unique: true
@@ -170,7 +277,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "symptom_id"
-    t.string "feedback_message"
     t.integer "day", default: -1
     t.index ["symptom_id"], name: "index_messages_on_symptom_id"
     t.index ["syndrome_id"], name: "index_messages_on_syndrome_id"
@@ -187,8 +293,10 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.bigint "manager_id"
     t.bigint "group_manager_id"
     t.bigint "admin_id"
+    t.bigint "group_manager_team_id"
     t.index ["admin_id"], name: "index_permissions_on_admin_id"
     t.index ["group_manager_id"], name: "index_permissions_on_group_manager_id"
+    t.index ["group_manager_team_id"], name: "index_permissions_on_group_manager_team_id"
     t.index ["manager_id"], name: "index_permissions_on_manager_id"
   end
 
@@ -206,19 +314,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.index ["email"], name: "index_pre_registers_on_email", unique: true
   end
 
-  create_table "public_hospitals", force: :cascade do |t|
-    t.string "description"
-    t.float "latitude"
-    t.float "longitude"
-    t.string "kind"
-    t.string "phone"
-    t.text "details"
-    t.bigint "app_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_id"], name: "index_public_hospitals_on_app_id"
-  end
-
   create_table "rumors", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -226,23 +321,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.integer "confirmed_deaths"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "school_units", force: :cascade do |t|
-    t.string "code"
-    t.string "description"
-    t.string "address"
-    t.string "cep"
-    t.string "phone"
-    t.string "fax"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "category"
-    t.string "zone"
-    t.string "level"
-    t.string "city"
-    t.string "state"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -262,8 +340,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.string "traveled_to"
     t.string "contact_with_symptom"
     t.boolean "went_to_hospital"
+    t.bigint "syndrome_id"
+    t.string "postal_code"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
+    t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
     t.index ["user_id"], name: "index_surveys_on_user_id"
   end
 
@@ -277,6 +358,9 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.bigint "syndrome_id"
     t.bigint "message_id"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_symptoms_on_app_id"
     t.index ["message_id"], name: "index_symptoms_on_message_id"
     t.index ["syndrome_id"], name: "index_symptoms_on_syndrome_id"
@@ -297,6 +381,10 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.datetime "updated_at", null: false
     t.bigint "message_id"
     t.bigint "app_id", default: 1
+    t.integer "days_period"
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
@@ -330,23 +418,31 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
     t.bigint "group_id"
     t.boolean "risk_group"
     t.string "aux_code"
-    t.bigint "school_unit_id"
     t.integer "policy_version", default: 1, null: false
     t.integer "streak", default: 0
     t.string "phone"
     t.boolean "is_vigilance", default: false
+    t.string "created_by"
+    t.string "updated_by"
+    t.string "deleted_by"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["school_unit_id"], name: "index_users_on_school_unit_id"
   end
 
   add_foreign_key "admins", "apps"
+  add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "form_answers", "form_options"
+  add_foreign_key "form_answers", "form_questions"
+  add_foreign_key "form_answers", "forms"
+  add_foreign_key "form_answers", "users"
+  add_foreign_key "form_options", "form_questions"
+  add_foreign_key "form_questions", "forms"
+  add_foreign_key "forms", "group_managers"
   add_foreign_key "group_managers", "apps"
-  add_foreign_key "households", "school_units"
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
@@ -354,11 +450,12 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
   add_foreign_key "messages", "symptoms"
   add_foreign_key "messages", "syndromes"
   add_foreign_key "permissions", "admins"
+  add_foreign_key "permissions", "group_manager_teams"
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
-  add_foreign_key "public_hospitals", "apps"
   add_foreign_key "surveys", "households"
+  add_foreign_key "surveys", "syndromes"
   add_foreign_key "surveys", "users"
   add_foreign_key "symptoms", "apps"
   add_foreign_key "symptoms", "messages"
@@ -368,5 +465,4 @@ ActiveRecord::Schema.define(version: 2020_12_15_221201) do
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
-  add_foreign_key "users", "school_units"
 end

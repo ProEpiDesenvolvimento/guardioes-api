@@ -1,5 +1,5 @@
 class PanelUserSerializer < ActiveModel::Serializer
-  attributes :id, :user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :picture, :city, :state, :identification_code, :group_id, :school_unit_id, :risk_group, :group, :streak, :policy_version, :created_at, :is_vigilance, :phone
+  attributes :id, :user_name, :email, :birthdate, :country, :gender, :race, :is_professional, :picture, :city, :state, :identification_code, :group_id, :risk_group, :group, :streak, :policy_version, :created_at, :is_vigilance, :phone
 
   def group
     if object.group.nil?

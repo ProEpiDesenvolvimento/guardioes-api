@@ -1,21 +1,27 @@
 class RegistrationController < Devise::RegistrationsController
   before_action :set_app, only: :create, if: -> { params[:user] }
   before_action :create_admin, if: -> { params[:admin] }
-  before_action :create_group_manager, if: -> { params[:group_manager] }
   before_action :create_manager, if: -> { params[:manager] }
+  before_action :create_city_manager, if: -> { params[:city_manager] }
+  before_action :create_group_manager, if: -> { params[:group_manager] }
+  before_action :create_group_manager_team, if: -> { params[:group_manager_team] }
 
   respond_to :json
-  
+
   def create
     if params[:user]
       build_resource(@new_sign_up_params)
-      resource.save
-  
+
+      if resource.save && current_devise_user
+        resource.update(:created_by => current_devise_user.email)
+      end
       render_resource(resource)
     else
       build_resource(@sign_up_params)
-      resource.save
 
+      if resource.save && current_devise_user
+        resource.update(:created_by => current_devise_user.email)
+      end
       render_resource(resource)
     end
   end
@@ -56,7 +62,7 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_admin
-    if ( params[:admin] && current_admin )
+    if (params[:admin] && current_admin)
       if ((current_admin.is_god == false) && (params[:admin][:is_god] == true))
         @sign_up_params = nil
       else
@@ -73,6 +79,20 @@ class RegistrationController < Devise::RegistrationsController
     end
   end 
 
+  def create_city_manager
+    if params[:city_manager] && (current_admin || current_manager)
+      authorize! :create, CityManager
+      @sign_up_params = sign_up_params
+      if current_admin
+        @sign_up_params[:app_id] = current_admin.app_id
+      elsif current_manager
+        @sign_up_params[:app_id] = current_manager.app_id
+      end
+    else
+      @sign_up_params = nil
+    end
+  end
+
   def create_group_manager
     if params[:group_manager] && (current_admin || current_group_manager)
       @sign_up_params = sign_up_params
@@ -80,8 +100,19 @@ class RegistrationController < Devise::RegistrationsController
     else
       @sign_up_params = nil
     end
-  end 
+  end
 
+  def create_group_manager_team
+    if params[:group_manager_team]
+      authorize! :create, GroupManagerTeam
+      @sign_up_params = sign_up_params
+      if current_group_manager
+        @sign_up_params[:group_manager_id] = current_group_manager.id
+      end
+    else
+      @sign_up_params = nil
+    end
+  end
 
   def sign_up_params
     if params[:user]
@@ -101,7 +132,6 @@ class RegistrationController < Devise::RegistrationsController
         :city,
         :identification_code,
         :group_id,
-        :school_unit_id,
         :risk_group,
         :policy_version
       )
@@ -112,6 +142,14 @@ class RegistrationController < Devise::RegistrationsController
         :first_name,
         :last_name,
         :is_god,
+        :app_id
+      )
+    elsif params[:city_manager]
+      params.require(:city_manager).permit(
+        :name,
+        :email,
+        :password,
+        :city,
         :app_id
       )
     elsif params[:group_manager]
@@ -125,6 +163,21 @@ class RegistrationController < Devise::RegistrationsController
         :id_code_length,
         :twitter,
         :vigilance_syndromes
+      )
+    elsif params[:group_manager_team]
+      params.require(:group_manager_team).permit(
+        :name,
+        :email,
+        :password,
+        :group_manager_id,
+        :app_id,
+        permission_attributes: [
+          models_create: [],
+          models_read: [],
+          models_update: [],
+          models_destroy: [],
+          models_manage: []
+        ]
       )
     else
       params.require(:manager).permit(

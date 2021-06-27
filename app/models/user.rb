@@ -28,12 +28,14 @@ class User < ApplicationRecord
   has_many :surveys,
     dependent: :destroy
 
+  has_many :form_answers,
+    dependent: :destroy
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
   belongs_to :group, optional: true
-  has_one :school_unit
     
   validates :user_name,
     presence: true,
@@ -68,11 +70,6 @@ class User < ApplicationRecord
       elastic_data[:group] = self.group.get_path(string_only=true, labeled=false).join('/')
     else
       elastic_data[:group] = nil
-    end
-    if !self.school_unit_id.nil? and SchoolUnit.where(id:self.school_unit_id).count > 0
-      elastic_data[:enrolled_in] = SchoolUnit.where(id:self.school_unit_id)[0].description 
-    else 
-      elastic_data[:enrolled_in] = nil 
     end
     elastic_data[:household_count] = self.households.count
     return elastic_data 
@@ -109,6 +106,9 @@ class User < ApplicationRecord
     message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
     if !message
       message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      if message.size == 0
+        return "Sua participação foi registrada."
+      end
       index = obj.streak % message.size
       message = message[index]
     end

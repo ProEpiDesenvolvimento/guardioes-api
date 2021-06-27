@@ -40,6 +40,7 @@ class UsersController < ApplicationController
       end
     end
     if errors.length == 0
+      @user.update_attribute(:updated_by, current_devise_user.email)
       render json: @user
     else
       render json: {errors: errors, user: @user}, status: :unprocessable_entity
@@ -86,6 +87,7 @@ class UsersController < ApplicationController
   
   def destroy
     @user = User.find(params[:id])
+    @user.update_attribute(:deleted_by, current_devise_user.email)
     @user.destroy!
   end
 
@@ -108,19 +110,26 @@ class UsersController < ApplicationController
   end
   
   def panel_list
-    if current_user.nil? && current_manager.nil? && current_group_manager.nil?
+    if current_user.nil? && current_manager.nil? && current_city_manager.nil? && current_group_manager.nil?
       @current_user = current_admin
-    elsif current_admin.nil? && current_user.nil? && current_group_manager.nil?
+    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_group_manager.nil?
       @current_user = current_manager
-    elsif current_admin.nil? && current_user.nil? && current_manager.nil?
+    elsif current_admin.nil? && current_user.nil? && current_manager.nil? && current_group_manager.nil?
+      @current_user = current_city_manager
+    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_manager.nil?
       @current_user = current_group_manager
     else
       @current_user = current_user
     end
 
-    #Se o GROUP do USER possuir o GROUP_MANAGER_ID igual ao ID do GROUP_MANAGER ele é retornado
-
-    if params[:email] 
+    if !current_city_manager.nil?
+      if params[:email]
+        query_regex = "^" + params[:email]
+        @user = User.where(city: current_city_manager.city).where('email ~* ?', query_regex)
+      else
+        @user = User.where(city: current_city_manager.city)
+      end
+    elsif params[:email]
       query_regex = "^" + params[:email]
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
@@ -238,7 +247,6 @@ private
       :state,
       :city,
       :identification_code,
-      :school_unit_id,
       :group_id,
       :risk_group,
       :policy_version,

@@ -3,7 +3,7 @@ class ManagersController < ApplicationController
   before_action :set_manager, only: [:show, :update, :destroy]
   before_action :set_app, only: [:index]
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token] 
 
   def index
     if @app.managers.empty?
@@ -11,8 +11,8 @@ class ManagersController < ApplicationController
     end
     data = { 'managers' => [] }
     @app.managers.each do |manager|
-      permissions = Permission.where(manager_id: manager.id).first
-      data['managers'].append({manager: manager}.merge({permissions: permissions}))
+      permission = Permission.where(manager_id: manager.id).first
+      data['managers'].append({manager: manager}.merge({permission: permission}))
     end
     render json: data, status: :ok
   end
@@ -20,17 +20,19 @@ class ManagersController < ApplicationController
   # GET /managers/:id
   def show
     @manager = Manager.find(params[:id])
-    @permissions = Permission.where(manager_id: @manager.id) 
-    data = {manager: @manager}.merge({permissions: @permissions})
+    @permission = Permission.where(manager_id: @manager.id) 
+    data = {manager: @manager}.merge({permission: @permission})
     render json: data, status: :ok
   end
 
   def update
-    if @manager.update(manager_params.except(:permissions))
+    if @manager.update(manager_params.except(:permission))
+      @manager.update_attribute(:updated_by, current_devise_user.email)
+
       @permission = Permission.where(manager_id: @manager.id).first
-      if params['manager'].has_key?(:permissions)
-        if @permission.update({models_manage: manager_params.fetch(:permissions)})
-          data = {manager: @manager}.merge({permissions: @permission})
+      if params['manager'].has_key?(:permission)
+        if @permission.update({models_manage: manager_params.fetch(:permission)})
+          data = {manager: @manager}.merge({permission: @permission})
           render json: data, status: :ok
         else
           render json: @permission.errors, status: :unprocessable_entity
@@ -97,8 +99,8 @@ class ManagersController < ApplicationController
         :name,
         :email,
         :password,
-        :permission_id,
-        :permissions => []
+        :first_access,
+        :permission => []
       )
   end 
 end

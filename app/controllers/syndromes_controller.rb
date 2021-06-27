@@ -7,18 +7,7 @@ class SyndromesController < ApplicationController
 
   # GET /syndromes
   def index
-    if not current_manager.nil?
-      @user = current_manager
-    elsif not current_group_manager.nil?
-      @user = current_group_manager
-    elsif not current_admin.nil?
-      @user = current_admin
-    elsif not current_user.nil?
-      @user = current_user
-    else
-      return render json: { errors: "Token not found" }, status: :unprocessable_entity
-    end
-    
+    @user = current_devise_user
     @syndromes = Syndrome.filter_syndrome_by_app_id(@user.app_id)
 
     render json: @syndromes
@@ -34,6 +23,7 @@ class SyndromesController < ApplicationController
     @symptoms = syndrome_params[:symptom]
     @syndrome = Syndrome.new(syndrome_params.except(:symptom))
     if @syndrome.save
+      @syndrome.update_attribute(:created_by, current_devise_user.email)
       if !syndrome_params[:symptom].nil?
         create_symptoms_and_connections
       end
@@ -47,6 +37,7 @@ class SyndromesController < ApplicationController
   def update
     @symptoms = syndrome_params[:symptom]
     if @syndrome.update(syndrome_params.except(:symptom))
+      @syndrome.update_attribute(:updated_by, current_devise_user.email)
       if !syndrome_params[:symptom].nil?
         update_symptoms_and_connections
       end
@@ -114,6 +105,7 @@ class SyndromesController < ApplicationController
       params.require(:syndrome).permit(
         :description,
         :details,
+        :days_period,
         :app_id,
         :symptom => [[ :description, :code, :percentage, :details, :priority, :app_id ]],
         message_attributes: [ :title, :warning_message, :go_to_hospital_message ]

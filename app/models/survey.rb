@@ -1,8 +1,11 @@
 class Survey < ApplicationRecord
   acts_as_paranoid
+  require 'net/http'
+  require 'httparty'
   if !Rails.env.test?
     searchkick
   end
+
     
   # Index name for a survey is now:
   # classname_environment[if survey user has group, _groupmanagergroupname]
@@ -31,11 +34,13 @@ class Survey < ApplicationRecord
   end
   
   reverse_geocoded_by :latitude, :longitude do |obj,results|
-    if geo = results.first
-      obj.city    = geo.city
-      obj.country = geo.country
-      obj.street  = geo.street
-      obj.state   = geo.state
+    geo = results.first
+    if !geo.data['error']
+      obj.city        = geo.city
+      obj.country     = geo.country
+      obj.street      = geo.street
+      obj.state       = geo.state
+      obj.postal_code = geo.postal_code
     end
   end
   
@@ -61,7 +66,31 @@ class Survey < ApplicationRecord
         if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
           group_manager[:vigilance_syndromes].each do |vs|
             if vs[:syndrome_id] == obj[:syndrome].id
-              VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+              self.update_attribute(:syndrome_id, vs[:syndrome_id])
+
+              if vs[:surto_id]
+                if self.household_id == nil
+                  token = auth_go_data(group_manager)
+                  date = DateTime.now.utc.beginning_of_day - obj[:syndrome].days_period.days
+
+                  if !token.nil?
+                    user_cases = get_user_cases_go_data(token, date, vs)
+
+                    if !is_user_already_on_case_go_data(user_cases, date)
+                      VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+                      report_go_data(token, user_cases, vs, group_manager)
+                    end
+                  end
+                else
+                  surveys_with_syndrome = Survey.filter_by_user(user.id).where("created_at >= ?", date)
+                    .where(syndrome_id: obj[:syndrome].id)
+                    .where(household: self.household)
+
+                  if surveys_with_syndrome.length <= 1
+                    VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
+                  end
+                end
+              end
             end
           end
         end
@@ -74,7 +103,7 @@ class Survey < ApplicationRecord
         symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
       end
     end
-
+    
     return symptoms_and_syndromes_data
   end
 
@@ -96,8 +125,6 @@ class Survey < ApplicationRecord
     # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
       elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
-    elsif !user.school_unit_id.nil?
-      elastic_data[:group] = SchoolUnit.find(user.school_unit_id).description
     else
       elastic_data[:group] = nil 
     end
@@ -119,6 +146,207 @@ class Survey < ApplicationRecord
     elastic_data["risk_group"] = user.risk_group || false
     
     return elastic_data 
+  end
+
+  def auth_go_data(group_manager)
+    # Login on GO.Data API
+    begin 
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+      password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
+    rescue
+    end
+    uri = URI("#{ENV['GODATA_URL']}/api/oauth/token")
+    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
+    if (res.code != 200)
+      return nil
+    end
+    return JSON.parse(res.body.gsub('=>', ':'))['access_token']
+  end
+
+  def get_user_cases_go_data(token, date, vigilance_syndrome)
+    # Get user related cases on GO.Data and do a filter
+    query = {"where": {"and": [{"visualId": {"regexp": "/^GDS_#{self.user.id.to_s}/i"}}]}}
+    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases?filter=#{query.to_json}")
+    res = HTTParty.get(uri, headers: { Authorization: 'Bearer ' + token })
+
+    cases = JSON.parse(res.body)
+    return cases.select { |c|
+      c['visualId'][/^GDS_#{self.user.id.to_s}_.*|^GDS_#{self.user.id.to_s}\b/i]
+    }
+  end
+
+  def is_user_already_on_case_go_data(user_cases, date)
+    # Check if user has already a confirmed/pending case on GO.Data
+    cases_discarted_label = "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_NOT_A_CASE_DISCARDED"
+    cases_discarted_label2 = "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_DESCARTADO"
+
+    cases_on_period = user_cases.select { |c| 
+      DateTime.parse(c['dateOfOnset']) > date && 
+      c['classification'] != cases_discarted_label &&
+      c['classification'] != cases_discarted_label2
+    }
+
+    if cases_on_period.blank?
+      return false
+    end
+    return true
+  end
+
+  def report_go_data(token, user_cases, vigilance_syndrome, group_manager)
+    # Check user reocurrence to syndrome to generate a unique visualID
+    visualID = "GDS_" + self.user.id.to_s
+
+    if !user_cases.blank?
+      last_user_case = user_cases.last
+      last_user_case_name = last_user_case['visualId']
+      case_count_string = last_user_case_name.split('_')[2]
+
+      if !case_count_string.nil?
+        counter = case_count_string.to_i + 1
+        visualID += "_" + counter.to_s
+      else
+        visualID += "_2"
+      end
+    end
+
+    # Creating case's data
+    age = ((Time.zone.now - self.user.birthdate.to_time) / 1.year.seconds).floor
+    races = {
+      'Branco' => '1',
+      'Indígena' => '2',
+      'Pardo' => '3',
+      'Preto' => '4',
+      'Amarelo' => '5'
+    }
+
+    symptoms = {
+      'Tosse' => '2',
+      'Febre' => '3',
+      'DorCabeca' => '4',
+      'paladareolfato' => '5',
+      'Bolhasna Pele' => '6',
+      'Calafrios' => '7',
+      'Cansaco' => '8',
+      'Coceira' => '9',
+      'CongestãoNasal' => '10',
+      'Diarreia' => '11',
+      'DificuldadeParaRespirar' => '12',
+      'DorDeEstômago' => '13',
+      'DordeGarganta' => '14',
+      'DorNasArticulações' => '15',
+      'DorNosMúsculos' => '16',
+      'DorNosOlhos' => '17',
+      'InguaOuGângliosInflamados' => '18',
+      'Mal-estar' => '19',
+      'ManchasRoxasPeloCorpo' => '20',
+      'NáuseaOuVômito' => '21',
+      'PeleEOlhosAmarelados' => '22',
+      'Sangramento' => '23'
+    }
+
+    genders = {
+      'Homem Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Mulher Cis' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Homem Trans' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE',
+      'Masculino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE',
+      'Feminino' => 'LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE'
+    }
+
+    caseData = {
+      'firstName' => self.user.user_name.split(" ")[0],
+      'gender' => genders[self.user.gender],
+      'isDateOfOnsetApproximate' => self.bad_since == nil ? true : false,
+      'classification' => "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_SUSPECT",
+      'pregnancyStatus' => 'LNG_REFERENCE_DATA_CATEGORY_PREGNANCY_STATUS_NONE',
+      'outbreakId' => vigilance_syndrome[:surto_id],
+      'visualId' => visualID,
+      'dob' => self.user.birthdate,
+      'age' => {
+        'years': age,
+      },
+      'dateOfReporting' => DateTime.now,
+      'dateOfOnset' => self.bad_since != nil ? self.bad_since : DateTime.now
+    }
+
+    if self.user.group
+      if self.user.group.location_id_godata == nil
+        if self.user.group.group_manager_id == 4
+          group_location_id = "8101b71b-dbaa-4d3e-b585-459513c1f23a"   
+        elsif self.user.group.group_manager_id == 7
+          group_location_id = "a3e632e3-3955-4f45-978a-4e835204420c"
+        end
+      else
+        group_location_id = self.user.group.location_id_godata
+      end
+
+      caseData['addresses'] = [
+        {
+          "typeId": "LNG_REFERENCE_DATA_CATEGORY_ADDRESS_TYPE_USUAL_PLACE_OF_RESIDENCE",
+          "country": 'Brasil',
+          "city": self.user.city,
+          #"addressLine1": self.user.group.description,
+          #"postalCode": '70910-900', #Nao posuimos CEP em nossos cadastros
+          "locationId": group_location_id,
+          "geoLocationAccurate": false,
+          "date": self.created_at,
+          "phoneNumber": self.user.phone,
+          "emailAddress": self.user.email
+        }
+      ]
+    end
+
+    if self.user.user_name.split(" ").length > 1
+      caseData['lastName'] = self.user.user_name.split(" ").last
+    end
+
+    # QuestionnaireAnswers
+    caseData['questionnaireAnswers'] = {
+      'raca_cor' => [
+        {
+          'value' => races[self.user.race]
+        }
+      ],
+      'profissional_da_saude' => [
+        {
+          'value' => self.user.is_professional == true ? '1' : '2'
+        }
+      ],
+      'se_foi_ao_hospital' => [
+        {
+          'value' => self.went_to_hospital != nil ? '1' : '2'
+        }
+      ],
+      'se_saiu_de_casa_nos_ultimos_14_dias' => [
+        {
+          'value' => self.traveled_to != nil ? '1' : '2'
+        }
+      ],
+      'se_teve_contato_com_alguem_com_os_mesmos_sintomas' => [
+        {
+          'value' => self.contact_with_symptom != nil ? '1' : '2'
+        }
+      ],
+    }
+
+    # case's symptoms
+    if self.symptom.any?
+      caseData['questionnaireAnswers']['sintomas'] = [{}]
+      caseData['questionnaireAnswers']['sintomas'][0]['value'] = []
+      self.symptom.each do |s|
+        caseData['questionnaireAnswers']['sintomas'][0]['value'].append(symptoms[s])
+      end
+    else
+      caseData['questionnaireAnswers']['sintomas'] = [{'value': '1'}]
+    end
+
+    # Active Outbreak before report case
+    uri = URI("#{ENV['GODATA_URL']}/api/users/#{group_manager.userid_godata}")
+    res = HTTParty.patch(uri, body: {activeOutbreakId: vigilance_syndrome[:surto_id]}, headers: { Authorization: 'Bearer ' + token })
+
+    # Report case
+    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
+    res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token })
   end
 
   def csv_data

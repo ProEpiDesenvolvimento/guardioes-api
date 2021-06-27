@@ -1,7 +1,9 @@
 class Permission < ApplicationRecord
   belongs_to :admin, optional: true
   belongs_to :manager, optional: true
+  belongs_to :city_manager, optional: true
   belongs_to :group_manager, optional: true
+  belongs_to :group_manager_team, optional: true
 
   serialize :models_create, Array 
   serialize :models_read, Array

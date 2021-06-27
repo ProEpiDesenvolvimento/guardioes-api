@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
+  resources :form_answers
+  resources :form_options
+  resources :form_questions
+  resources :forms
   resources :twitter_apis
   resources :pre_registers
   resources :messages
   resources :syndromes
-  resources :school_units
   resources :permissions, only: [:create, :update, :show, :destory]
-  post "school_units_list", to: 'school_units#index_filtered'
-  post "upload_by_file", to: 'school_units#upload_by_file'
-
 
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
@@ -21,12 +21,11 @@ Rails.application.routes.draw do
   get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
   get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
   get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
+  post 'data_visualization/metabase_urls', to: 'data_visualization#metabase_urls'
 
   get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
-  resources :public_hospitals
-  post "public_hospital_admin", to: "public_hospitals#render_public_hospital_admin"
   resources :contents
 
   get "apps/:id/get_twitter", to: 'apps#get_twitter'
@@ -37,12 +36,12 @@ Rails.application.routes.draw do
   get "surveys/school_unit/:id", to: "surveys#group_data"
   get "users/school_unit/:id", to: "users#group_data"
 
-  get "surveys/all_surveys", to: "surveys#all_surveys"
+  #get "surveys/all_surveys", to: "surveys#all_surveys"
   #get "surveys/week", to: "surveys#weekly_surveys"
   #get "surveys/week_limited", to: "surveys#limited_surveys"
   get "surveys/week", to: "surveys#limited_surveys"
   get "surveys/render_without_user", to: "surveys#render_without_user"
-  get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
+  #get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"
   post "email_reset_password", to: "users#email_reset_password"
   post "show_reset_token", to: "users#show_reset_token"
   post "reset_password", to: "users#reset_password"
@@ -61,7 +60,7 @@ Rails.application.routes.draw do
     post "/filtered_list", to: "users#filtered_list"
   end
 
-  scope "/admins" do 
+  scope "/admin" do 
     post "email_reset_password", to: "admins#email_reset_password"
     post "show_reset_token", to: "admins#show_reset_token"
     post "reset_password", to: "admins#reset_password"
@@ -80,8 +79,26 @@ Rails.application.routes.draw do
       registrations: 'registration'
     }
 
+  resources :city_managers
+  scope "/city_manager" do 
+    post "email_reset_password", to: "city_managers#email_reset_password"
+    post "show_reset_token", to: "city_managers#show_reset_token"
+    post "reset_password", to: "city_managers#reset_password"
+  end
+  devise_for :city_managers,
+    path: 'city_manager/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
     resources :group_managers
-    get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
+    #get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
     scope "/group_manager" do 
       post "email_reset_password", to: "group_managers#email_reset_password"
       post "show_reset_token", to: "group_managers#show_reset_token"
@@ -101,6 +118,24 @@ Rails.application.routes.draw do
       sessions: 'session',
       registrations: 'registration'
     }
+
+    resources :group_manager_teams
+    scope "/group_manager_team" do 
+      post "email_reset_password", to: "group_manager_teams#email_reset_password"
+      post "show_reset_token", to: "group_manager_teams#show_reset_token"
+      post "reset_password", to: "group_manager_teams#reset_password"
+    end
+    devise_for :group_manager_teams,
+      path: "group_manager_team/",
+      path_names: {
+        sign_in: "login",
+        sign_out: "logout",
+        registration: "signup"
+      },
+      controllers: {
+        sessions: "session",
+        registrations: "registration",
+      }
 
     resources :managers
     scope "/manager" do 

@@ -5,6 +5,8 @@ class SurveysController < ApplicationController
   before_action :set_user, only: [:index, :create]
   before_action :set_group, only: [:group_data]
 
+  authorize_resource only: [:update, :destroy]
+
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
 
@@ -185,6 +187,7 @@ class SurveysController < ApplicationController
         :country,
         :went_to_hospital,
         :contact_with_symptom,
+        :postal_code,
         symptom: []
       ) 
     end
