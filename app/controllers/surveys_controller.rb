@@ -1,9 +1,8 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[render_without_user all_surveys limited_surveys surveys_to_csv]
-  before_action :authenticate_group_manager!, only: [:group_data]
+  before_action :authenticate_user!, except: %i[group_cases render_without_user all_surveys limited_surveys surveys_to_csv]
+  before_action :authenticate_group_manager!, only: [:group_cases]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
-  before_action :set_group, only: [:group_data]
 
   authorize_resource only: [:update, :destroy]
 
@@ -18,16 +17,14 @@ class SurveysController < ApplicationController
     render json: @surveys, each_serializer: SurveyDailyReportsSerializer
   end
 
-  # GET /surveys/group/1 id of group
-  def group_data
-    @surveys = []
-    User.where("group_id = ?", params[:id]).find_each do |user|
-      @surveys.concat(Survey.filter_by_user(user.id).to_a)
-    end
-    respond_to do |format|
-      format.all {render json: @surveys}
-      format.csv { send_data to_csv_search_data, filename: "surveys-#{Date.today}.csv" }
-    end
+  # GET /surveys/group_cases
+  # GET group_manager related surveys with vigilance_syndromes
+  def group_cases
+    @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    @users = User.where(group_id: @groups).ids
+    @surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil)
+
+    render json: @surveys
   end
 
   def surveys_to_csv
