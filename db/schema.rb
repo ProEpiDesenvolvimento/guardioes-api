@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 
-ActiveRecord::Schema.define(version: 2021_06_21_213948) do
+ActiveRecord::Schema.define(version: 2021_06_22_214806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,7 +174,7 @@ ActiveRecord::Schema.define(version: 2021_06_21_213948) do
     t.bigint "app_id"
     t.string "group_name"
     t.string "twitter"
-    t.boolean "require_id"
+    t.string "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
     t.string "aux_code"
