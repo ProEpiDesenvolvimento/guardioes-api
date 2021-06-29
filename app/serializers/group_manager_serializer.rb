@@ -3,7 +3,7 @@ class GroupManagerSerializer < ActiveModel::Serializer
              :vigilance_email, :twitter, :require_id, :id_code_length,
              :vigilance_syndromes, :url_godata, :username_godata, :password_godata,
              :created_by, :updated_by, :app_id
-  has_one :group_manager_team
+  has_many :group_manager_teams
   has_one :form
 
   def password_godata
