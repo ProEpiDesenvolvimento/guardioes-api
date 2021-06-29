@@ -84,7 +84,6 @@ Rails.application.routes.draw do
     post "show_reset_token", to: "city_managers#show_reset_token"
     post "reset_password", to: "city_managers#reset_password"
   end
-
   devise_for :city_managers,
     path: 'city_manager/',
     path_names: {
@@ -118,6 +117,24 @@ Rails.application.routes.draw do
       sessions: 'session',
       registrations: 'registration'
     }
+
+    resources :group_manager_teams
+    scope "/group_manager_team" do 
+      post "email_reset_password", to: "group_manager_teams#email_reset_password"
+      post "show_reset_token", to: "group_manager_teams#show_reset_token"
+      post "reset_password", to: "group_manager_teams#reset_password"
+    end
+    devise_for :group_manager_teams,
+      path: "group_manager_team/",
+      path_names: {
+        sign_in: "login",
+        sign_out: "logout",
+        registration: "signup"
+      },
+      controllers: {
+        sessions: "session",
+        registrations: "registration",
+      }
 
     resources :managers
     scope "/manager" do 

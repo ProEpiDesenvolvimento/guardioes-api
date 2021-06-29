@@ -119,11 +119,41 @@ class GroupManagersController < ApplicationController
     end
 
     def group_manager_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :vigilance_syndromes, :username_godata, :password_godata, :first_access)
+      params.require(:group_manager).permit(
+        :email,
+        :password,
+        :name,
+        :group_name,
+        :twitter,
+        :require_id,
+        :id_code_length,
+        :vigilance_email,
+        :vigilance_syndromes,
+        :url_godata,
+        :username_godata,
+        :password_godata,
+        :first_access,
+        :app_id,
+      )
     end
 
     def update_params
-      params.require(:group_manager).permit(:email, :password, :name, :app_id, :group_name, :twitter, :require_id, :id_code_length, :vigilance_email, :username_godata, :password_godata, :userid_godata, :first_access)
+      params.require(:group_manager).permit(
+        :email,
+        :password,
+        :name,
+        :group_name,
+        :twitter,
+        :require_id,
+        :id_code_length,
+        :vigilance_email,
+        :url_godata,
+        :username_godata,
+        :password_godata,
+        :userid_godata,
+        :first_access,
+        :app_id,
+      )
     end
 
     def check_authenticated_admin_or_manager

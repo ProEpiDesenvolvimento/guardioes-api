@@ -1,13 +1,14 @@
 class GroupManagerSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :group_name, :group_permissions,
              :vigilance_email, :twitter, :require_id, :id_code_length,
-             :vigilance_syndromes, :username_godata, :password_godata,
-             :created_by, :updated_by, :first_access, :app_id
+             :vigilance_syndromes, :url_godata, :username_godata, :password_godata,
+             :created_by, :updated_by, :app_id
+  has_many :group_manager_teams
   has_one :form
 
   def password_godata
     if object.password_godata
-      begin 
+      begin
         crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
         return crypt.decrypt_and_verify(object.password_godata)
       rescue

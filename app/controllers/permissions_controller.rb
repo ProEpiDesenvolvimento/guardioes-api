@@ -40,7 +40,9 @@ class PermissionsController < ApplicationController
     params.require(:permission).permit(
       :admin_id,
       :manager_id,
+      :city_manager_id,
       :group_manager_id,
+      :group_manager_team_id,
       models_create: [],
       models_read: [],
       models_update: [],
