@@ -28,12 +28,14 @@ class User < ApplicationRecord
   has_many :surveys,
     dependent: :destroy
 
+  has_many :form_answers,
+    dependent: :destroy
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
 
   belongs_to :app
   belongs_to :group, optional: true
-  has_one :school_unit
     
   validates :user_name,
     presence: true,
@@ -104,6 +106,9 @@ class User < ApplicationRecord
     message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", obj.streak).first
     if !message
       message = Message.where.not(feedback_message: [nil, ""]).where("day = ?", -1)
+      if message.size == 0
+        return "Sua participação foi registrada."
+      end
       index = obj.streak % message.size
       message = message[index]
     end

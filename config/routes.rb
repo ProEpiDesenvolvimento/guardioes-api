@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
+  resources :form_answers
+  resources :form_options
+  resources :form_questions
+  resources :forms
   resources :twitter_apis
   resources :pre_registers
   resources :messages
   resources :syndromes
   resources :permissions, only: [:create, :update, :show, :destory]
-
 
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
@@ -54,6 +57,7 @@ Rails.application.routes.draw do
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
     get "/panel", to: "users#panel_list"
+    post "/filtered_list", to: "users#filtered_list"
   end
 
   scope "/admin" do 
@@ -65,6 +69,24 @@ Rails.application.routes.draw do
   
   devise_for :admins,
     path: 'admin/',
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      registration: "signup"
+    },
+    controllers: {
+      sessions: 'session',
+      registrations: 'registration'
+    }
+
+  resources :city_managers
+  scope "/city_manager" do 
+    post "email_reset_password", to: "city_managers#email_reset_password"
+    post "show_reset_token", to: "city_managers#show_reset_token"
+    post "reset_password", to: "city_managers#reset_password"
+  end
+  devise_for :city_managers,
+    path: 'city_manager/',
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -96,6 +118,24 @@ Rails.application.routes.draw do
       sessions: 'session',
       registrations: 'registration'
     }
+
+    resources :group_manager_teams
+    scope "/group_manager_team" do 
+      post "email_reset_password", to: "group_manager_teams#email_reset_password"
+      post "show_reset_token", to: "group_manager_teams#show_reset_token"
+      post "reset_password", to: "group_manager_teams#reset_password"
+    end
+    devise_for :group_manager_teams,
+      path: "group_manager_team/",
+      path_names: {
+        sign_in: "login",
+        sign_out: "logout",
+        registration: "signup"
+      },
+      controllers: {
+        sessions: "session",
+        registrations: "registration",
+      }
 
     resources :managers
     scope "/manager" do 

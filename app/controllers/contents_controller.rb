@@ -5,14 +5,7 @@ class ContentsController < ApplicationController
 
   # GET /contents
   def index
-    if current_user.nil? && current_manager.nil?
-      @user = current_admin
-    elsif current_admin.nil? && current_user.nil?
-      @user = current_manager
-    else
-      @user = current_user
-    end
-
+    @user = current_devise_user
     @contents = Content.user_country(@user.app_id)
 
     render json: @contents
@@ -28,6 +21,7 @@ class ContentsController < ApplicationController
     @content = Content.new(content_params)
 
     if @content.save
+      @content.update_attribute(:created_by, current_devise_user.email)
       render json: @content, status: :created, location: @content
     else
       render json: @content.errors, status: :unprocessable_entity
@@ -37,6 +31,7 @@ class ContentsController < ApplicationController
   # PATCH/PUT /contents/1
   def update
     if @content.update(content_params)
+      @content.update_attribute(:updated_by, current_devise_user.email)
       render json: @content
     else
       render json: @content.errors, status: :unprocessable_entity

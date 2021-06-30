@@ -1,19 +1,11 @@
 class SymptomsController < ApplicationController
-  #before_action :authenticate_admin!, except: [:index]
+  # before_action :authenticate_admin!, except: [:index]
   before_action :set_symptom, only: [:show, :update, :destroy]
-  
   load_and_authorize_resource
 
   # GET /symptoms
   def index
-    if current_user.nil? && current_manager.nil?
-      @user = current_admin
-    elsif current_admin.nil? && current_user.nil?
-      @user = current_manager
-    else
-      @user = current_user
-    end
-
+    @user = current_devise_user
     @symptoms = Symptom.filter_symptom_by_app_id(@user.app_id)
 
     render json: @symptoms
@@ -29,6 +21,7 @@ class SymptomsController < ApplicationController
     @symptom = Symptom.new(symptom_params)
 
     if @symptom.save
+      @symptom.update_attribute(:created_by, current_devise_user.email)
       render json: @symptom, status: :created, location: @symptom
     else
       render json: @symptom.errors, status: :unprocessable_entity
@@ -38,6 +31,7 @@ class SymptomsController < ApplicationController
   # PATCH/PUT /symptoms/1
   def update
     if @symptom.update(symptom_params)
+      @symptom.update_attribute(:updated_by, current_devise_user.email)
       render json: @symptom
     else
       render json: @symptom.errors, status: :unprocessable_entity

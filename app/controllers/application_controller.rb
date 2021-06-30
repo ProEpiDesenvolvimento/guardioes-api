@@ -2,13 +2,14 @@ class ApplicationController < ActionController::API
   # before_action :ensure_json_request
   # protect_from_forgery
   include ActionController::MimeResponds
+
   rescue_from CanCan::AccessDenied do |exception|
     render json: { error: exception.message }, status: :unauthorized
   end
 
   def ensure_json_request
-      return if request.headers["Accept"] =~ /vnd\.api\+json/
-      render :nothing => true, :status => 406
+    return if request.headers["Accept"] =~ /vnd\.api\+json/
+    render :nothing => true, :status => 406
   end
 
   # methods used on Admin and User registration
@@ -34,14 +35,34 @@ class ApplicationController < ActionController::API
   end
 
   def current_ability
-      if admin_signed_in?
-        @current_ability ||= Ability.new(current_admin)
-      elsif manager_signed_in?
-        @current_ability ||= Ability.new(current_manager)
-      elsif group_manager_signed_in?
-        @current_ability ||= Ability.new(current_group_manager)
-      else
-        @current_ability ||= Ability.new(current_user)
-      end
+    if admin_signed_in?
+      @current_ability ||= Ability.new(current_admin)
+    elsif manager_signed_in?
+      @current_ability ||= Ability.new(current_manager)
+    elsif city_manager_signed_in?
+      @current_ability ||= Ability.new(current_city_manager)
+    elsif group_manager_signed_in?
+      @current_ability ||= Ability.new(current_group_manager)
+    elsif group_manager_team_signed_in?
+      @current_ability ||= Ability.new(current_group_manager_team)
+    else
+      @current_ability ||= Ability.new(current_user)
+    end
+  end
+
+  def current_devise_user
+    if admin_signed_in?
+      return current_admin
+    elsif manager_signed_in?
+      return current_manager
+    elsif city_manager_signed_in?
+      return current_city_manager
+    elsif group_manager_signed_in?
+      return current_group_manager
+    elsif group_manager_team_signed_in?
+      return current_group_manager_team
+    else
+      return current_user
+    end
   end
 end

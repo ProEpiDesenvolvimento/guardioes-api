@@ -17,6 +17,7 @@ class AdminsController < ApplicationController
     	errors << e
     end
     if errors.length == 0
+      @admin.update_attribute(:updated_by, current_devise_user.email)
       render json: @admin
     else
       render json: {errors: errors, user: @admin}, status: :unprocessable_entity
@@ -75,6 +76,7 @@ class AdminsController < ApplicationController
         :first_name,
         :last_name,
         :is_god,
+        :first_access,
         :app_id
       )
   end

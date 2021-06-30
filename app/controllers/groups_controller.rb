@@ -23,19 +23,25 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-    if (current_group_manager)
-      ManagerGroupPermission::permit(current_group_manager, @group)
-      @group.group_manager_id = current_group_manager.id
-    elsif (group_params[:group_manager_id])
-      group_manager = GroupManager.find(group_params[:group_manager_id])
-      ManagerGroupPermission::permit(group_manager, @group)
-      @group.group_manager_id = group_params[:group_manager_id]
-    end
     
-    return render json: 'Not enough permissions' if !validate_manager_group_permissions
+    if (group_params[:parent_id] != nil)
+      if (current_group_manager)
+        ManagerGroupPermission::permit(current_group_manager, @group)
+        @group.group_manager_id = current_group_manager.id
+      elsif (group_params[:group_manager_id])
+        group_manager = GroupManager.find(group_params[:group_manager_id])
+        ManagerGroupPermission::permit(group_manager, @group)
+        @group.group_manager_id = group_params[:group_manager_id]
+      end
 
-    if @group.save
-      render json: @group, status: :created, location: @group
+      return render json: 'Not enough permissions' if !validate_manager_group_permissions
+
+      if @group.save
+        @group.update_attribute(:created_by, current_devise_user.email)
+        render json: @group, status: :created, location: @group
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
     else
       render json: @group.errors, status: :unprocessable_entity
     end
@@ -45,6 +51,7 @@ class GroupsController < ApplicationController
   def update
     return render json: 'Not enough permissions', status: :unprocessable_entity if !validate_manager_group_permissions
     if @group.update(group_params)
+      @group.update_attribute(:updated_by, current_devise_user.email)
       render json: @group
     else
       render json: @group.errors, status: :unprocessable_entity
@@ -73,7 +80,7 @@ class GroupsController < ApplicationController
   def get_children
     is_child = @group.children_label == nil
     children = @group.children.each.map {|x| GroupSimpleSerializer.new(x) }
-    render json: { label: @group.children_label, is_child: is_child, require_id: @group.require_id || false, children: children }, status: :ok
+    render json: { label: @group.children_label, is_child: is_child || false, children: children }, status: :ok
   end
 
   # POST /groups/upload_group_file/
@@ -286,7 +293,9 @@ class GroupsController < ApplicationController
         :cep,
         :phone,
         :email,
-        :group_manager_id
+        :group_manager_id,
+        :location_name_godata,
+        :location_id_godata
       )
     end
 

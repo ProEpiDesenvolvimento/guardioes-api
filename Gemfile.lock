@@ -138,6 +138,9 @@ GEM
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
+    httparty (0.18.1)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
     i18n (1.5.3)
       concurrent-ruby (~> 1.0)
     json (2.3.1)
@@ -169,12 +172,18 @@ GEM
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.9.2)
-    mimemagic (0.3.3)
+    mime-types (3.3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2020.1104)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake (>= 0)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     msgpack (1.2.6)
     multi_json (1.14.1)
+    multi_xml (0.6.0)
     multipart-post (2.1.1)
     naught (1.1.0)
     nio4r (2.3.1)
@@ -192,6 +201,8 @@ GEM
       equatable (~> 0.5.0)
       tty-color (~> 0.4.0)
     pg (1.1.4)
+    polyamorous (2.3.2)
+      activerecord (>= 5.2.1)
     public_suffix (4.0.6)
     puma (3.12.0)
     rack (2.2.3)
@@ -227,6 +238,11 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
     rake (12.3.2)
+    ransack (2.3.2)
+      activerecord (>= 5.2.1)
+      activesupport (>= 5.2.1)
+      i18n
+      polyamorous (= 2.3.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -360,6 +376,7 @@ DEPENDENCIES
   factory_bot_rails (~> 4.0)
   faker
   geocoder
+  httparty
   jwt
   kaminari
   listen (>= 3.0.5, < 3.2)
@@ -372,6 +389,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.2.2)
   rails-i18n (~> 5.1)
+  ransack
   roo (~> 2.8.0)
   roo-xls
   rspec-rails (~> 3.5)
