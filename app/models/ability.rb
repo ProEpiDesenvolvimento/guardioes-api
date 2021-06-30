@@ -8,7 +8,7 @@ class Ability
     if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
-
+    Rails.logger.debug("USER: #{user}")
     case user
       when Admin
         if user.is_god?

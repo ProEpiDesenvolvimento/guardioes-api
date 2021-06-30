@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # before_action :authenticate_admin!, only: [:query_by_param, :admin_update]
-  before_action :authenticate_user!, except: [:index, :panel_list, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
+  before_action :authenticate_user!, except: [:filtered_list, :index, :panel_list, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
   before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
@@ -137,6 +137,14 @@ class UsersController < ApplicationController
       else
         @user =  User.user_by_app_id(@current_user.app_id).where('email ~* ?', query_regex)
       end
+    elsif params[:identification_code]
+      query_regex = "^" + params[:identification_code]
+      if !current_group_manager.nil?
+        @groups = Group.where(group_manager_id: @current_user.id).ids
+        @user = User.where(group_id: @groups).where('identification_code ~* ?', query_regex)
+      else
+        @user =  User.user_by_app_id(@current_user.app_id).where('identification_code ~* ?', query_regex)
+      end
     else
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
@@ -145,6 +153,27 @@ class UsersController < ApplicationController
         @user = User.user_by_app_id(@current_user.app_id)
       end 
     end
+    paginate @user, per_page: 50
+  end
+
+  def filtered_list
+    if current_user.nil? && current_manager.nil? && current_group_manager.nil?
+      @current_user = current_admin
+    elsif current_admin.nil? && current_user.nil? && current_group_manager.nil?
+      @current_user = current_manager
+    elsif current_admin.nil? && current_user.nil? && current_manager.nil?
+      @current_user = current_group_manager
+    else
+      @current_user = current_user
+    end
+
+    if !current_group_manager.nil?
+      @groups = Group.where(group_manager_id: @current_user.id).ids
+      @user = User.where(group_id: @groups).ransack(params[:filters]).result
+    else
+      @user =  User.user_by_app_id(@current_user.app_id).ransack(params[:filters]).result
+    end
+   
     paginate @user, per_page: 50
   end
 
