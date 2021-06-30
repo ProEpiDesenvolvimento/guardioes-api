@@ -177,14 +177,15 @@ class SurveysController < ApplicationController
         :latitude, 
         :longitude, 
         :bad_since, 
-        :traveled_to,
+        :postal_code,
         :street, 
         :city, 
         :state, 
         :country,
+        :traveled_to,
         :went_to_hospital,
         :contact_with_symptom,
-        :postal_code,
+        :reviewed,
         symptom: []
       ) 
     end

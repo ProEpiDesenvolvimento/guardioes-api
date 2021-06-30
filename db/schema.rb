@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_195602) do
+ActiveRecord::Schema.define(version: 2021_06_30_003630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_195602) do
     t.string "updated_by"
     t.string "deleted_by"
     t.boolean "first_access", default: true
+    t.text "url_godata", default: ""
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
@@ -343,6 +344,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_195602) do
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
     t.string "postal_code"
+    t.boolean "reviewed"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
