@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
     t.string "updated_by"
     t.string "deleted_by"
     t.boolean "first_access", default: true
+    t.text "url_godata", default: ""
     t.index ["app_id"], name: "index_group_managers_on_app_id"
     t.index ["email"], name: "index_group_managers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_group_managers_on_reset_password_token", unique: true
