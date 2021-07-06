@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
-  before_action :authenticate_user!, except: %i[group_cases render_without_user all_surveys limited_surveys surveys_to_csv]
-  before_action :authenticate_group_manager!, only: [:group_cases]
+  before_action :authenticate_user!, except: %i[group_cases render_without_user all_surveys update limited_surveys surveys_to_csv]
+  before_action :authenticate_group_manager!, only: [:group_cases, :update]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
@@ -22,9 +22,27 @@ class SurveysController < ApplicationController
   def group_cases
     @groups = Group.where(group_manager_id: current_group_manager.id).ids
     @users = User.where(group_id: @groups).ids
-    @surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil)
+    surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
+    cases = surveys.clone.to_a
 
-    render json: @surveys
+    surveys.each_with_index do |survey1, index1|
+      surveys.each_with_index do |survey2, index2|
+        if index1 > index2
+          if survey1.user.id == survey2.user.id && survey1.syndrome_id == survey2.syndrome_id
+            syndrome = Syndrome.find_by_id(survey1.syndrome_id)
+            date1 = survey1.created_at
+            date2 = survey2.created_at
+
+            surveys_period = (date2.to_date - date1.to_date).to_i
+            if syndrome.days_period && surveys_period < syndrome.days_period
+              cases.delete_at(index1)
+            end
+          end
+        end
+      end
+    end
+
+    render json: cases, each_serializer: SurveySerializer
   end
 
   def surveys_to_csv
@@ -92,6 +110,15 @@ class SurveysController < ApplicationController
       else
         render json: { survey: @survey, feedback_message: @user.get_feedback_message(@survey) }, status: :created, location: user_survey_path(:id => @user)
       end
+    else
+      render json: @survey.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /surveys/1
+  def update
+    if @survey.update(survey_update_params)
+      render json: @survey
     else
       render json: @survey.errors, status: :unprocessable_entity
     end
@@ -185,8 +212,11 @@ class SurveysController < ApplicationController
         :traveled_to,
         :went_to_hospital,
         :contact_with_symptom,
-        :reviewed,
         symptom: []
       ) 
+    end
+
+    def survey_update_params
+      params.require(:survey).permit(:reviewed)
     end
 end

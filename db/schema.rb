@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2021_06_30_003630) do
     t.bigint "app_id"
     t.string "group_name"
     t.string "twitter"
-    t.boolean "require_id"
+    t.string "require_id"
     t.integer "id_code_length"
     t.string "vigilance_email"
     t.string "aux_code"
