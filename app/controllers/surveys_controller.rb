@@ -42,7 +42,7 @@ class SurveysController < ApplicationController
       end
     end
 
-    render json: cases, each_serializer: SurveySerializer
+    render json: cases, root: 'surveys', each_serializer: SurveySerializer
   end
 
   def surveys_to_csv
