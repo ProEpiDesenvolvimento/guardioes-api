@@ -108,6 +108,7 @@ class SurveysController < ApplicationController
   def weekly_surveys
     # Rails.cache.fetch tries to get that key 'week_surveys', if it fails,
     # it runs the block and sets the cache as the return of the block
+    Rails.cache.clear
     json = Rails.cache.fetch('week_surveys', expires_in: @WEEK_SURVEY_CACHE_EXPIRATION) do
       render_to_string json: @surveys = Survey.where("created_at >= ?", 1.week.ago.utc), each_serializer: SurveyForMapSerializer
     end
@@ -123,6 +124,7 @@ class SurveysController < ApplicationController
   def limited_surveys
     # Rails.cache.fetch tries to get that key 'limited_surveys', if it fails,
     # it runs the block and sets the cache as the return of the block
+    Rails.cache.clear
     json = Rails.cache.fetch('limited_surveys', expires_in: @LIMITED_SURVEY_CACHE_EXPIRATION) do
       render_to_string json: @surveys = Survey.where("created_at >= ?", 12.hour.ago.utc), each_serializer: SurveyForMapSerializer
     end
