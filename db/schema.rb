@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_22_214806) do
+
+ActiveRecord::Schema.define(version: 2021_06_30_003630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,6 +345,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
     t.string "postal_code"
+    t.boolean "reviewed"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"

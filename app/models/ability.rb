@@ -37,6 +37,7 @@ class Ability
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
+        can :update, [ Survey ]
         can :update, GroupManager, :id => user.id
       when CityManager
         can :manage, User, :city => user.city
