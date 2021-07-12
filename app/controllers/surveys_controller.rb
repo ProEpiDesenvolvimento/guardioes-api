@@ -6,8 +6,8 @@ class SurveysController < ApplicationController
 
   authorize_resource only: [:update, :destroy]
 
-  @WEEK_SURVEY_CACHE_EXPIRATION = 15.minute
-  @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minute
+  @WEEK_SURVEY_CACHE_EXPIRATION = 15.minutes
+  @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minutes
 
   # GET /surveys  
   # GET user related surveys
