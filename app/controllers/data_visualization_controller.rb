@@ -1,7 +1,7 @@
 require 'jwt'
 
 class DataVisualizationController < ApplicationController
-before_action :set_current_request_user, only: [:metabase_urls]
+  before_action :set_current_request_user, only: [:metabase_urls]
 
   def users_count
     return render json: User.count
@@ -43,6 +43,16 @@ before_action :set_current_request_user, only: [:metabase_urls]
           @dashboard_id = 0
         when "vigilance"
           @dashboard_id = 18
+      when current_group_manager_team
+        case params[:type]
+        when "users"
+          @dashboard_id = 9
+        when "surveys"
+          @dashboard_id = 10
+        when "biosecurity"
+          @dashboard_id = 0
+        when "vigilance"
+          @dashboard_id = 18
       end
         payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_user
@@ -60,7 +70,6 @@ before_action :set_current_request_user, only: [:metabase_urls]
       :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{token}#bordered=true&titled=true"
     })
 
-
     return render json: {
       'urls': iframe_urls
     }
@@ -68,14 +77,8 @@ before_action :set_current_request_user, only: [:metabase_urls]
 
   private
     def set_current_request_user
-      if not current_manager.nil?
-        @current_request_user = current_manager
-      elsif not current_group_manager.nil?
-        @current_request_user = current_group_manager
-      elsif not current_admin.nil?
-        @current_request_user = current_admin
-      elsif not current_city_manager.nil?
-        @current_request_user = current_city_manager
+      if not current_devise_user.nil?
+        @current_request_user = current_devise_user
       else
         return render json: { errors: "Token not found" }, status: :unprocessable_entity 
       end
