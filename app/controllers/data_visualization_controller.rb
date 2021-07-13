@@ -35,26 +35,28 @@ class DataVisualizationController < ApplicationController
         payload = {'params' => {'city' => @current_request_user.city}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_group_manager
         case params[:type]
-        when "users"
-          @dashboard_id = 9
-        when "surveys"
-          @dashboard_id = 10
-        when "biosecurity"
-          @dashboard_id = 0
-        when "vigilance"
-          @dashboard_id = 18
+          when "users"
+            @dashboard_id = 9
+          when "surveys"
+            @dashboard_id = 10
+          when "biosecurity"
+            @dashboard_id = 0
+          when "vigilance"
+            @dashboard_id = 18
+        end
+        payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_group_manager_team
         case params[:type]
-        when "users"
-          @dashboard_id = 9
-        when "surveys"
-          @dashboard_id = 10
-        when "biosecurity"
-          @dashboard_id = 0
-        when "vigilance"
-          @dashboard_id = 18
-      end
-        payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
+          when "users"
+            @dashboard_id = 9
+          when "surveys"
+            @dashboard_id = 10
+          when "biosecurity"
+            @dashboard_id = 0
+          when "vigilance"
+            @dashboard_id = 18
+        end
+        payload = {'params' => {'group' => @current_request_user.group_manager_id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_user
         puts "Common user"
     end
