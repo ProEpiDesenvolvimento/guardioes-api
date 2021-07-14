@@ -56,7 +56,7 @@ class DataVisualizationController < ApplicationController
           when "vigilance"
             @dashboard_id = 18
         end
-        payload = {'params' => {'group' => @current_request_user.group_manager_id}, 'resource' => {'dashboard' => @dashboard_id}}
+        payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_user
         puts "Common user"
     end
