@@ -28,18 +28,4 @@ class Vaccine < ApplicationRecord
 			minimum: 1,
 			maximum: 255
 		}
-
-	validates :max_dose_interval,
-		presence: true,
-		numericality: {
-			greater_than_or_equal_to: :min_dose_interval,
-			allow_nil: true
-		}
-	
-	validates :min_dose_interval,
-		presence: true,
-		numericality: {
-			less_than_or_equal_to: :max_dose_interval,
-			allow_nil: true
-		}
 end

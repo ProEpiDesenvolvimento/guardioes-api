@@ -1,7 +1,8 @@
 class VaccinesController < ApplicationController
     before_action :authenticate_admin!
+    before_action :set_vaccine, only: [:update, :destroy]
   
-    # GET /apps
+    # GET /vaccines
     def index
       @vaccines = Vaccine.all
       render json: @vaccines
@@ -9,9 +10,8 @@ class VaccinesController < ApplicationController
   
     # GET /vaccines/1
     def show
-      @vaccine = Vaccine.where(vaccine_id: @vaccine.id)
-      newVaccine = {vaccine: @vaccine}.merge({admin: @admin})
-      render json: newApps
+      @vaccine = Vaccine.where(id: params['id'])
+      render json: @vaccine
     end
   
     # POST /vaccines
@@ -27,20 +27,32 @@ class VaccinesController < ApplicationController
         render json: @vaccine
       else
         render json: @vaccine.errors, status: :unprocessable_entity
-      end
+      end 
     end
   
     # DELETE /vaccines/1
     def destroy
       @vaccine.destroy
+      render json: @vaccine
     end
   
   
     private
 
-      # Only allow a trusted parameter "white list" through.
       def vaccine_params
-        params.require(:vaccine).permit(:name)
+        params.permit(
+          :name, 
+          :app_id, 
+          :laboratory, 
+          :country_origin,
+          :min_dose_interval,
+          :max_dose_interval,
+          :doses,
+        )
+      end
+
+      def set_vaccine
+        @vaccine = Vaccine.find(params[:id])
       end
   end
   
