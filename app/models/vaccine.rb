@@ -28,4 +28,5 @@ class Vaccine < ApplicationRecord
 			minimum: 1,
 			maximum: 255
 		}
+		scope :filter_vaccine_by_app_id, ->(current_user_app_id) { where(app_id: current_user_app_id) }
 end

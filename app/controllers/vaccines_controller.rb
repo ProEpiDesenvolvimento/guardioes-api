@@ -1,24 +1,29 @@
 class VaccinesController < ApplicationController
-    before_action :authenticate_admin!
     before_action :set_vaccine, only: [:update, :destroy]
+    load_and_authorize_resource
   
     # GET /vaccines
     def index
-      @vaccines = Vaccine.all
+      @user = current_devise_user
+      @vaccines = Vaccine.filter_vaccine_by_app_id(@user.app_id)
       render json: @vaccines
     end
   
     # GET /vaccines/1
     def show
-      @vaccine = Vaccine.where(id: params['id'])
       render json: @vaccine
     end
   
     # POST /vaccines
     def create
 			@vaccine = Vaccine.new(vaccine_params)
-			@vaccine.save
-			render json: @vaccine
+      @vaccine.app_id = current_devise_user.app_id
+
+      if @vaccine.save
+        render json: @vaccine, status: :created, location: @vaccine
+      else
+        render json: @vaccine.errors, status: :unprocessable_entity
+      end
     end
   
     # PATCH/PUT /vaccines/1
@@ -41,8 +46,9 @@ class VaccinesController < ApplicationController
 
       def vaccine_params
         params.permit(
+          :id,
+          :app_id,
           :name, 
-          :app_id, 
           :laboratory, 
           :country_origin,
           :min_dose_interval,
