@@ -1,17 +1,17 @@
 class GroupsController < ApplicationController
   before_action :set_group, except: [:index,:upload_group_file,:create,:root,:build_country_city_state_groups]
+  before_action :set_current_request_user, only: [:index,:create]
   before_action :check_authenticated_admin_or_manager, except: [:get_path,:get_children,:show,:root,:get_twitter]
   before_action :validate_invalid_group_name, only: [:create,:update]
   before_action :authenticate_admin!, only: [:build_country_city_state_groups]
 
   # GET /groups
   def index
-    @group_manager = GroupManager.find(current_group_manager.id)
     @groups = Group.where(
-        group_manager_id: current_group_manager.id, 
-        description: @group_manager.group_name
-      )
-    
+      group_manager_id: @group_manager.id, 
+      description: @group_manager.group_name
+    )
+
     render json: @groups
   end
 
@@ -22,19 +22,18 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
+    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
     @group = Group.new(group_params)
-    
-    if (group_params[:parent_id] != nil)
-      if (current_group_manager)
-        ManagerGroupPermission::permit(current_group_manager, @group)
-        @group.group_manager_id = current_group_manager.id
-      elsif (group_params[:group_manager_id])
-        group_manager = GroupManager.find(group_params[:group_manager_id])
-        ManagerGroupPermission::permit(group_manager, @group)
+  
+    if group_params[:parent_id] != nil
+      if @group_manager
+        ManagerGroupPermission::permit(@group_manager, @group)
+        @group.group_manager_id = @group_manager.id
+      elsif group_params[:group_manager_id]
+        @group_manager = GroupManager.find(group_params[:group_manager_id])
+        ManagerGroupPermission::permit(@group_manager, @group)
         @group.group_manager_id = group_params[:group_manager_id]
       end
-
-      return render json: 'Not enough permissions' if !validate_manager_group_permissions
 
       if @group.save
         @group.update_attribute(:created_by, current_devise_user.email)
@@ -49,7 +48,7 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    return render json: 'Not enough permissions', status: :unprocessable_entity if !validate_manager_group_permissions
+    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
     if @group.update(group_params)
       @group.update_attribute(:updated_by, current_devise_user.email)
       render json: @group
@@ -60,6 +59,7 @@ class GroupsController < ApplicationController
   
   # DELETE /groups/1
   def destroy
+    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
     @group.delete_subtree
   end
 
@@ -86,7 +86,7 @@ class GroupsController < ApplicationController
   # POST /groups/upload_group_file/
   def upload_group_file(build_country_city_state_model = false)
     if !build_country_city_state_model && current_group_manager.nil?
-      return render json: 'You must be a group manager to create new groups'
+      return render json: {error: 'You must be a group manager to create new groups'}
     end
     data = Roo::Spreadsheet.open(params[:file], extension: :xls) # Open spreadsheet data
 
@@ -282,6 +282,22 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
     end
 
+    def set_current_request_user
+      if current_group_manager != nil
+        @group_manager = current_group_manager
+      elsif current_group_manager_team != nil
+        @group_manager = current_group_manager_team.group_manager
+      else
+        return render json: {error: "Not a GroupManager/Team"}, status: :unprocessable_entity 
+      end
+    end
+
+    def check_authenticated_admin_or_manager
+      if current_admin.nil? && current_group_manager.nil? && current_group_manager_team.nil?
+        return render json: {}, status: :ok
+      end
+    end
+
     # Only allow a trusted parameter "white list" through.
     def group_params
       params.require(:group).permit(
@@ -320,23 +336,22 @@ class GroupsController < ApplicationController
       end
       filter_columns
     end
-
-    def check_authenticated_admin_or_manager
-      if current_admin.nil? && current_group_manager.nil?
-        return render json: {}, status: :ok
-      end
-    end
   
     def validate_manager_group_permissions(group = @group)
-      if current_group_manager != nil && !current_group_manager.is_permitted?(group)
-        return false
+      case current_devise_user
+        when current_group_manager
+          return current_group_manager.is_permitted?(group)
+        when current_group_manager_team
+          return current_group_manager_team.is_permitted?(group)
+        when current_admin
+          return true
       end
-      return true
+      return false
     end
-    
+  
     def validate_invalid_group_name
       if group_params[:description] == 'root_node'
-        return render json: 'You cannot name a group \'root_node\'', status: :unprocessable_entity
+        return render json: {error: 'You cannot name a group \'root_node\''}, status: :unprocessable_entity
       end
     end
 end

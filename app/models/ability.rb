@@ -85,8 +85,6 @@ class Ability
         models << Vaccine
       elsif model == "dashboard"
         models << :data_visualization
-      elsif model == "group"
-        models << Group
       elsif model == "user"
         models << User
       elsif model == "citymanager"
