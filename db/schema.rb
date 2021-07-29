@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_23_174134) do
+ActiveRecord::Schema.define(version: 2021_07_29_225603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -428,11 +428,15 @@ ActiveRecord::Schema.define(version: 2021_07_23_174134) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.datetime "first_dose_date"
+    t.datetime "second_dose_date"
+    t.bigint "vaccine_id"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["vaccine_id"], name: "index_users_on_vaccine_id"
   end
 
   create_table "vaccines", force: :cascade do |t|
@@ -481,5 +485,6 @@ ActiveRecord::Schema.define(version: 2021_07_23_174134) do
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
+  add_foreign_key "users", "vaccines"
   add_foreign_key "vaccines", "apps"
 end
