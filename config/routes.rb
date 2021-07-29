@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :messages
   resources :syndromes
   resources :permissions, only: [:create, :update, :show, :destory]
+  resources :vaccines
 
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'

@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2021_06_30_003630) do
+ActiveRecord::Schema.define(version: 2021_07_23_174134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -436,6 +435,19 @@ ActiveRecord::Schema.define(version: 2021_06_30_003630) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "vaccines", force: :cascade do |t|
+    t.string "name"
+    t.string "laboratory"
+    t.integer "doses"
+    t.integer "max_dose_interval"
+    t.integer "min_dose_interval"
+    t.string "country_origin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_vaccines_on_app_id"
+  end
+
   add_foreign_key "admins", "apps"
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
@@ -469,4 +481,5 @@ ActiveRecord::Schema.define(version: 2021_06_30_003630) do
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
+  add_foreign_key "vaccines", "apps"
 end

@@ -18,7 +18,7 @@ class Ability
           can :update, App, :id => user.app_id
           can :update, [ CityManager ], :app_id => user.app_id
           can :update, Admin, :id => user.id
-          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
+          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User, Vaccine ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
@@ -51,7 +51,7 @@ class Ability
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
       when User
-        can :read, [ App, Content, Household, Survey, Symptom ]
+        can :read, [ App, Content, Household, Survey, Symptom, Vaccine ]
         can :read, User, :id => user.id
         can :read, [ Form ]
         can :read, [ FormQuestion, FormAnswer ]
@@ -84,6 +84,8 @@ class Ability
         models << User
       elsif new_array == "citymanager"
         models << CityManager
+      elsif new_array == "vaccine"
+        models << Vaccine
       end
     end
 
