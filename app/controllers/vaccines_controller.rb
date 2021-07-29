@@ -45,7 +45,7 @@ class VaccinesController < ApplicationController
     private
 
       def vaccine_params
-        params.permit(
+        params.require(:vaccines).permit(
           :id,
           :app_id,
           :name, 
