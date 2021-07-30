@@ -1,5 +1,6 @@
 class Vaccine < ApplicationRecord
   belongs_to :app
+  has_many :users
 
 	validates :name,
 		presence: true,

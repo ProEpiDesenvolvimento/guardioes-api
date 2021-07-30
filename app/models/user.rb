@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   belongs_to :app
+  belongs_to :vaccine
   
   acts_as_paranoid
   if !Rails.env.test?

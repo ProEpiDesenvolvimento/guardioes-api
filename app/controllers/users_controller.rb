@@ -220,7 +220,10 @@ private
       :risk_group, 
       :policy_version, 
       :phone, 
-      :is_vigilance
+      :is_vigilance,
+      :first_dose_date,
+      :second_dose_date,
+      :vaccine_id,
     )
   end
 
@@ -240,7 +243,10 @@ private
       :risk_group,
       :policy_version,
       :phone, 
-      :is_vigilance
+      :is_vigilance, 
+      :first_dose_date,
+      :second_dose_date,
+      :vaccine_id,
     )
   end
 
