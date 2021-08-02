@@ -97,6 +97,7 @@ class GroupManagerTeamsController < ApplicationController
         :password,
         :group_manager_id,
         :app_id,
+        :first_access,
         :permission => []
       )
     end
