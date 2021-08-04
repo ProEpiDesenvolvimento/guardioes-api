@@ -1,7 +1,9 @@
 require 'jwt'
 
-class DataVisualizationController < ApplicationController
+class DataVisualizationsController < ApplicationController
   before_action :set_current_request_user, only: [:metabase_urls]
+
+  authorize_resource :class => false
 
   def users_count
     return render json: User.count
