@@ -389,7 +389,7 @@ ActiveRecord::Schema.define(version: 2021_08_11_141836) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
-    t.float "threshold_score"
+    t.float "threshold_score", default: 0.0, null: false
     t.index ["message_id"], name: "index_syndromes_on_message_id"
   end
 
