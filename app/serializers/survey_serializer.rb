@@ -1,5 +1,7 @@
 class SurveySerializer < ActiveModel::Serializer
-  attributes :id, :latitude, :longitude, :bad_since, :traveled_to, :symptom, :created_at, :street, :city, :state, :country, :went_to_hospital, :contact_with_symptom, :syndrome_id, :postal_code
+  attributes :id, :latitude, :longitude, :symptom, :bad_since, :created_at,
+             :postal_code, :street, :city, :state, :country, :traveled_to,
+             :went_to_hospital, :contact_with_symptom, :syndrome_id, :reviewed
 
   has_one :user
   has_one :household

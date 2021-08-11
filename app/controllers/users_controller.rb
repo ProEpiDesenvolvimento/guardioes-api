@@ -110,17 +110,7 @@ class UsersController < ApplicationController
   end
   
   def panel_list
-    if current_user.nil? && current_manager.nil? && current_city_manager.nil? && current_group_manager.nil?
-      @current_user = current_admin
-    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_group_manager.nil?
-      @current_user = current_manager
-    elsif current_admin.nil? && current_user.nil? && current_manager.nil? && current_group_manager.nil?
-      @current_user = current_city_manager
-    elsif current_admin.nil? && current_user.nil? && current_city_manager.nil? && current_manager.nil?
-      @current_user = current_group_manager
-    else
-      @current_user = current_user
-    end
+    @current_user = current_devise_user
 
     if !current_city_manager.nil?
       if params[:email]
@@ -149,31 +139,30 @@ class UsersController < ApplicationController
       if !current_group_manager.nil?
         @groups = Group.where(group_manager_id: @current_user.id).ids
         @user = User.where(group_id: @groups)
+      elsif !current_group_manager_team.nil?
+        @groups = Group.where(group_manager_id: @current_user.group_manager_id).ids
+        @user = User.where(group_id: @groups)
       else
         @user = User.user_by_app_id(@current_user.app_id)
       end 
     end
+
     paginate @user, per_page: 50
   end
 
   def filtered_list
-    if current_user.nil? && current_manager.nil? && current_group_manager.nil?
-      @current_user = current_admin
-    elsif current_admin.nil? && current_user.nil? && current_group_manager.nil?
-      @current_user = current_manager
-    elsif current_admin.nil? && current_user.nil? && current_manager.nil?
-      @current_user = current_group_manager
-    else
-      @current_user = current_user
-    end
+    @current_user = current_devise_user
 
     if !current_group_manager.nil?
       @groups = Group.where(group_manager_id: @current_user.id).ids
       @user = User.where(group_id: @groups).ransack(params[:filters]).result
-    else
+    elsif !current_group_manager_team.nil?
+      @groups = Group.where(group_manager_id: @current_user.group_manager_id).ids
+      @user = User.where(group_id: @groups).ransack(params[:filters]).result
+    else 
       @user =  User.user_by_app_id(@current_user.app_id).ransack(params[:filters]).result
     end
-   
+
     paginate @user, per_page: 50
   end
 
@@ -231,7 +220,10 @@ private
       :risk_group, 
       :policy_version, 
       :phone, 
-      :is_vigilance
+      :is_vigilance,
+      :first_dose_date,
+      :second_dose_date,
+      :vaccine_id,
     )
   end
 
@@ -251,7 +243,10 @@ private
       :risk_group,
       :policy_version,
       :phone, 
-      :is_vigilance
+      :is_vigilance, 
+      :first_dose_date,
+      :second_dose_date,
+      :vaccine_id,
     )
   end
 

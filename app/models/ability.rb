@@ -18,7 +18,7 @@ class Ability
           can :update, App, :id => user.app_id
           can :update, [ CityManager ], :app_id => user.app_id
           can :update, Admin, :id => user.id
-          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User ]
+          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User, Vaccine, :data_visualization ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
@@ -28,16 +28,20 @@ class Ability
         can :update, Manager, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+        can :manage, [ :data_visualization ]
       when CityManager
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
+        can :manage, [ :data_visualization ]
         cannot :destroy, CityManager, :id => user.id
       when GroupManager
+        can :update, [ Survey ]
+        can :update, GroupManager, :id => user.id
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
-        can :update, GroupManager, :id => user.id
+        can :manage, [ :data_visualization ]
       when CityManager
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
@@ -50,7 +54,7 @@ class Ability
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
       when User
-        can :read, [ App, Content, Household, Survey, Symptom ]
+        can :read, [ App, Content, Household, Survey, Symptom, Vaccine ]
         can :read, User, :id => user.id
         can :read, [ Form ]
         can :read, [ FormQuestion, FormAnswer ]
@@ -70,18 +74,20 @@ class Ability
   # Convert array of string to symbol ["content"] to [:content] e.g
   def convert_symbol(array)
     models = %i[]
-    array.each do |new_array|
-      if new_array == "symptom"
+    array.each do |model|
+      if model == "symptom"
         models << Symptom
-      elsif new_array == "syndrome"
+      elsif model == "syndrome"
         models << Syndrome
-      elsif new_array == "content"
+      elsif model == "content"
         models << Content
-      elsif new_array == "group"
-        models << Group
-      elsif new_array == "user"
+      elsif model == "vaccine"
+        models << Vaccine
+      elsif model == "dashboard"
+        models << :data_visualization
+      elsif model == "user"
         models << User
-      elsif new_array == "citymanager"
+      elsif model == "citymanager"
         models << CityManager
       end
     end

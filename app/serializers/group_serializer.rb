@@ -1,7 +1,9 @@
 class GroupSerializer < ActiveModel::Serializer
   attributes :id, :description, :children_label, :parent, :require_id, :id_code_length,
-             :group_manager, :form_id, :code, :address, :cep, :phone, :email,
+             :form_id, :code, :address, :cep, :phone, :email,
              :created_by, :updated_by
+
+  belongs_to :group_manager
 
   def parent
     if object.parent == nil

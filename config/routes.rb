@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :messages
   resources :syndromes
   resources :permissions, only: [:create, :update, :show, :destory]
+  resources :vaccines
 
   get "groups/root", to: 'groups#root'
   post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
@@ -17,11 +18,11 @@ Rails.application.routes.draw do
   get "groups/:id/get_twitter", to: 'groups#get_twitter'
   resources :groups
 
-  get 'data_visualization/users_count', to: 'data_visualization#users_count'
-  get 'data_visualization/surveys_count', to: 'data_visualization#surveys_count'
-  get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualization#asymptomatic_surveys_count'
-  get 'data_visualization/symptomatic_surveys_count', to: 'data_visualization#symptomatic_surveys_count'
-  post 'data_visualization/metabase_urls', to: 'data_visualization#metabase_urls'
+  get 'data_visualization/users_count', to: 'data_visualizations#users_count'
+  get 'data_visualization/surveys_count', to: 'data_visualizations#surveys_count'
+  get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualizations#asymptomatic_surveys_count'
+  get 'data_visualization/symptomatic_surveys_count', to: 'data_visualizations#symptomatic_surveys_count'
+  post 'data_visualization/metabase_urls', to: 'data_visualizations#metabase_urls'
 
   get "dashboard", to: 'dashboard#index'
   
@@ -37,8 +38,8 @@ Rails.application.routes.draw do
   get "users/school_unit/:id", to: "users#group_data"
 
   #get "surveys/all_surveys", to: "surveys#all_surveys"
+  get "surveys/group_cases", to: "surveys#group_cases"
   #get "surveys/week", to: "surveys#weekly_surveys"
-  #get "surveys/week_limited", to: "surveys#limited_surveys"
   get "surveys/week", to: "surveys#limited_surveys"
   get "surveys/render_without_user", to: "surveys#render_without_user"
   #get "surveys/to_csv/:begin/:end/:key", to: "surveys#surveys_to_csv"

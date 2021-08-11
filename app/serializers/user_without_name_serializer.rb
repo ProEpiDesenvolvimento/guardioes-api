@@ -5,4 +5,5 @@ class UserWithoutNameSerializer < ActiveModel::Serializer
       h[:birthdate] = object.birthdate.to_time.iso8601 unless object.birthdate.blank?
       h
   end
+  belongs_to :vaccine
 end 

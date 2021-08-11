@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_22_214806) do
+ActiveRecord::Schema.define(version: 2021_08_02_220538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.boolean "first_access", default: true
     t.index ["app_id"], name: "index_group_manager_teams_on_app_id"
     t.index ["deleted_at"], name: "index_group_manager_teams_on_deleted_at"
     t.index ["email"], name: "index_group_manager_teams_on_email", unique: true
@@ -344,6 +345,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
     t.boolean "went_to_hospital"
     t.bigint "syndrome_id"
     t.string "postal_code"
+    t.boolean "reviewed"
     t.index ["deleted_at"], name: "index_surveys_on_deleted_at"
     t.index ["household_id"], name: "index_surveys_on_household_id"
     t.index ["syndrome_id"], name: "index_surveys_on_syndrome_id"
@@ -427,11 +429,28 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.datetime "first_dose_date"
+    t.datetime "second_dose_date"
+    t.bigint "vaccine_id"
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["vaccine_id"], name: "index_users_on_vaccine_id"
+  end
+
+  create_table "vaccines", force: :cascade do |t|
+    t.string "name"
+    t.string "laboratory"
+    t.integer "doses"
+    t.integer "max_dose_interval"
+    t.integer "min_dose_interval"
+    t.string "country_origin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_vaccines_on_app_id"
   end
 
   add_foreign_key "admins", "apps"
@@ -467,4 +486,6 @@ ActiveRecord::Schema.define(version: 2021_06_22_214806) do
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
   add_foreign_key "users", "groups"
+  add_foreign_key "users", "vaccines"
+  add_foreign_key "vaccines", "apps"
 end
