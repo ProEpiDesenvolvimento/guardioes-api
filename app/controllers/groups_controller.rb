@@ -22,8 +22,8 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
-    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
     @group = Group.new(group_params)
+    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
   
     if group_params[:parent_id] != nil
       if @group_manager
