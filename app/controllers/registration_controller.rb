@@ -22,7 +22,7 @@ class RegistrationController < Devise::RegistrationsController
       if resource.save && current_devise_user
         resource.update(:created_by => current_devise_user.email)
       end
-      render_resource(resource) if !create_group_for_group_manager(resource['id'])
+      render_resource(resource) if resource['id'].nil? || !create_group_for_group_manager(resource['id'])
     end
   end
 
@@ -217,6 +217,7 @@ class RegistrationController < Devise::RegistrationsController
     else
       render json: @group.errors, status: :unprocessable_entity
     end
+    return true
   end
 
   def group_params
