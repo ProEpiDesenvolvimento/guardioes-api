@@ -22,7 +22,7 @@ class RegistrationController < Devise::RegistrationsController
       if resource.save && current_devise_user
         resource.update(:created_by => current_devise_user.email)
       end
-      render_resource(resource) if resource['id'].nil? || !create_group_for_group_manager(resource['id'])
+      render_resource(resource) if !create_group_for_group_manager(resource['id'])
     end
   end
 
@@ -197,7 +197,7 @@ class RegistrationController < Devise::RegistrationsController
   end
 
   def create_group_for_group_manager(user_id)
-    if params['group_manager'].nil? || params['group'].nil?
+    if params['group_manager'].nil? || params['group'].nil? || user_id.nil?
       return false
     end
     params['group']['group_manager_id'] = user_id
