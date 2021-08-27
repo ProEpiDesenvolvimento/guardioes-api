@@ -22,7 +22,7 @@ class RegistrationController < Devise::RegistrationsController
       if resource.save && current_devise_user
         resource.update(:created_by => current_devise_user.email)
       end
-      render_resource(resource) if !create_group_for_group_manager(resource['id'])
+      render_resource(resource)
     end
   end
 
@@ -194,45 +194,5 @@ class RegistrationController < Devise::RegistrationsController
         ]
       )
     end
-  end
-
-  def create_group_for_group_manager(user_id)
-    if params['group_manager'].nil? || params['group'].nil? || user_id.nil?
-      return false
-    end
-    params['group']['group_manager_id'] = user_id
-    @group = Group.new(group_params)
-
-    if group_params[:parent_id] != nil
-      @group_manager = GroupManager.find(group_params[:group_manager_id])
-      ManagerGroupPermission::permit(@group_manager, @group)
-      @group.group_manager_id = group_params[:group_manager_id]
-
-      if @group.save
-        @group.update_attribute(:created_by, current_devise_user.email)
-        render json: @group, status: :created, location: @group
-      else
-        render json: @group.errors, status: :unprocessable_entity
-      end
-    else
-      render json: @group.errors, status: :unprocessable_entity
-    end
-    return true
-  end
-
-  def group_params
-    params.require(:group).permit(
-      :description, 
-      :children_label,
-      :parent_id,
-      :code,
-      :address,
-      :cep,
-      :phone,
-      :email,
-      :group_manager_id,
-      :location_name_godata,
-      :location_id_godata
-    )
   end
 end

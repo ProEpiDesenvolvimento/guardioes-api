@@ -285,6 +285,8 @@ class GroupsController < ApplicationController
     def set_current_request_user
       if current_group_manager != nil
         @group_manager = current_group_manager
+      elsif current_admin != nil
+        @group_manager = nil
       elsif current_group_manager_team != nil
         @group_manager = current_group_manager_team.group_manager
       else
