@@ -7,12 +7,16 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    @groups = Group.where(
-      group_manager_id: @group_manager.id, 
-      description: @group_manager.group_name
-    )
+    if @group_manager
+      @groups = Group.where(
+        group_manager_id: @group_manager.id,
+        description: @group_manager.group_name
+      )
 
-    render json: @groups
+      render json: @groups
+    else
+      render json: {}
+    end
   end
 
   # GET /groups/1
@@ -290,7 +294,7 @@ class GroupsController < ApplicationController
       elsif current_group_manager_team != nil
         @group_manager = current_group_manager_team.group_manager
       else
-        return render json: {error: "Not a GroupManager/Team"}, status: :unprocessable_entity 
+        return render json: {error: "Not a GroupManager/Team or Admin"}, status: :unprocessable_entity 
       end
     end
 
