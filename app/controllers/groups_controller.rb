@@ -7,12 +7,16 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-    @groups = Group.where(
-      group_manager_id: @group_manager.id, 
-      description: @group_manager.group_name
-    )
+    if @group_manager
+      @groups = Group.where(
+        group_manager_id: @group_manager.id,
+        description: @group_manager.group_name
+      )
 
-    render json: @groups
+      render json: @groups
+    else
+      render json: {}
+    end
   end
 
   # GET /groups/1
@@ -22,8 +26,8 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
-    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
     @group = Group.new(group_params)
+    return render json: {error: 'Not enough permissions'}, status: :unprocessable_entity if !validate_manager_group_permissions
   
     if group_params[:parent_id] != nil
       if @group_manager
@@ -285,10 +289,12 @@ class GroupsController < ApplicationController
     def set_current_request_user
       if current_group_manager != nil
         @group_manager = current_group_manager
+      elsif current_admin != nil
+        @group_manager = nil
       elsif current_group_manager_team != nil
         @group_manager = current_group_manager_team.group_manager
       else
-        return render json: {error: "Not a GroupManager/Team"}, status: :unprocessable_entity 
+        return render json: {error: "Not a GroupManager/Team or Admin"}, status: :unprocessable_entity 
       end
     end
 

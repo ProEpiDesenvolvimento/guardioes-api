@@ -397,10 +397,12 @@ class Survey < ApplicationRecord
         syndrome: syndrome,
         likelyhood: get_syndrome_score(syndrome)
       }
+      if new_syndrome[:likelyhood] < syndrome.threshold_score
+        next
+      end
       syndrome_list.append(new_syndrome)
     end
     syndrome_list = syndrome_list.sort_by { |syndrome| syndrome[:likelyhood] }.reverse
-    syndrome_list = syndrome_list.select { |syndrome| syndrome[:likelyhood] > 0 }
     return syndrome_list[0..2]
   end
 

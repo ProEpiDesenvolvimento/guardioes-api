@@ -107,6 +107,7 @@ class SyndromesController < ApplicationController
         :details,
         :days_period,
         :app_id,
+        :threshold_score,
         :symptom => [[ :description, :code, :percentage, :details, :priority, :app_id ]],
         message_attributes: [ :title, :warning_message, :go_to_hospital_message ]
       )
