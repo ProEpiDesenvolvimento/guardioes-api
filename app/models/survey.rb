@@ -74,7 +74,7 @@ class Survey < ApplicationRecord
                   date = DateTime.now.utc.beginning_of_day - obj[:syndrome].days_period.days
 
                   if !token.nil?
-                    user_cases = get_user_cases_go_data(token, date, vs)
+                    user_cases = get_user_cases_go_data(token, date, vs, group_manager)
 
                     if !is_user_already_on_case_go_data(user_cases, date)
                       VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
@@ -155,7 +155,7 @@ class Survey < ApplicationRecord
       password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
     rescue
     end
-    uri = URI("#{ENV['GODATA_URL']}/api/oauth/token")
+    uri = URI("#{group_manager.url_godata}/api/oauth/token")
     res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
     if (res.code != 200)
       return nil
@@ -163,10 +163,10 @@ class Survey < ApplicationRecord
     return JSON.parse(res.body.gsub('=>', ':'))['access_token']
   end
 
-  def get_user_cases_go_data(token, date, vigilance_syndrome)
+  def get_user_cases_go_data(token, date, vigilance_syndrome, group_manager)
     # Get user related cases on GO.Data and do a filter
     query = {"where": {"and": [{"visualId": {"regexp": "/^GDS_#{self.user.id.to_s}/i"}}]}}
-    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases?filter=#{query.to_json}")
+    uri = URI("#{group_manager.url_godata}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases?filter=#{query.to_json}")
     res = HTTParty.get(uri, headers: { Authorization: 'Bearer ' + token })
 
     cases = JSON.parse(res.body)
@@ -341,11 +341,11 @@ class Survey < ApplicationRecord
     end
 
     # Active Outbreak before report case
-    uri = URI("#{ENV['GODATA_URL']}/api/users/#{group_manager.userid_godata}")
+    uri = URI("#{group_manager.url_godata}/api/users/#{group_manager.userid_godata}")
     res = HTTParty.patch(uri, body: {activeOutbreakId: vigilance_syndrome[:surto_id]}, headers: { Authorization: 'Bearer ' + token })
 
     # Report case
-    uri = URI("#{ENV['GODATA_URL']}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
+    uri = URI("#{group_manager.url_godata}/api/outbreaks/#{vigilance_syndrome[:surto_id]}/cases")
     res = HTTParty.post(uri, body: caseData, headers: { Authorization: 'Bearer ' + token })
   end
 
