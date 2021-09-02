@@ -370,14 +370,14 @@ class Survey < ApplicationRecord
   # the location is not wanted anymore, but it will be here if someone
   # needs one day
   def get_anonymous_latitude_longitude
-    # This offsets a survey positioning randomly by, at most, 50 meters, so as to "anonymize" data
+    # This offsets a survey positioning randomly by, at most, 106 meters, and at least, 70 meters, so as to "anonymize" data
     if self.latitude == nil || self.longitude == nil
       return { latitude: nil, longitude: nil }
     end
     
     ret = {}
-    dx = 0.05 * rand() # latitude  offset in kilometers (up to 50 meters)
-    dy = 0.05 * rand() # longitude offset in kilometers (up to 50 meters)
+    dx = 0.1 * rand(0.5..0.75) # latitude  offset in kilometers (up to 75 meters)
+    dy = 0.1 * rand(0.5..0.75) # longitude offset in kilometers (up to 75 meters)
     r_earth = 6378     # Earth radius in kilometers
     pi = Math::PI
 
