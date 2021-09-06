@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_11_141836) do
+ActiveRecord::Schema.define(version: 2021_08_17_132917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -423,7 +423,7 @@ ActiveRecord::Schema.define(version: 2021_08_11_141836) do
     t.bigint "group_id"
     t.boolean "risk_group"
     t.string "aux_code"
-    t.integer "policy_version", default: 1, null: false
+    t.integer "policy_version", default: 2, null: false
     t.integer "streak", default: 0
     t.string "phone"
     t.boolean "is_vigilance", default: false
