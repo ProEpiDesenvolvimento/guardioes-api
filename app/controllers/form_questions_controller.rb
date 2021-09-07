@@ -28,7 +28,11 @@ class FormQuestionsController < ApplicationController
 
   # PATCH/PUT /form_questions/1
   def update
-    if @form_question.update(form_question_params)
+    @options = form_question_params[:options]
+    if @form_question.update(form_question_params.except(:options))
+      if !form_question_params.except(:options).nil?
+        update_and_create_options_for_question
+      end
       render json: @form_question
     else
       render json: @form_question.errors, status: :unprocessable_entity
@@ -41,6 +45,26 @@ class FormQuestionsController < ApplicationController
   end
 
   private
+    def update_and_create_options_for_question
+      @options.each do |option|
+        if option[:is_new]
+          created_option = FormOption.create(
+            value: option[:value],
+            text: option[:text],
+            order: option[:order],
+            form_question: @form_question,
+          )
+        else
+          updated_option = FormOption.update(
+            option[:id],
+            value: option[:value],
+            text: option[:text],
+            order: option[:order],
+          )
+        end
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_form_question
       @form_question = FormQuestion.find(params[:id])
@@ -48,6 +72,12 @@ class FormQuestionsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def form_question_params
-      params.require(:form_question).permit(:kind, :text, :order, :form_id)
+      params.require(:form_question).permit(
+        :kind,
+        :text,
+        :order,
+        :form_id,
+        :options => [[ :id, :value, :text, :order, :is_new ]]
+      )
     end
 end
