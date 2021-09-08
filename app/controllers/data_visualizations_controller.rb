@@ -45,6 +45,8 @@ class DataVisualizationsController < ApplicationController
             @dashboard_id = 0
           when "vigilance"
             @dashboard_id = 18
+          when "vaccination"
+            @dashboard_id = 24
         end
         payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_group_manager_team
@@ -57,6 +59,8 @@ class DataVisualizationsController < ApplicationController
             @dashboard_id = 0
           when "vigilance"
             @dashboard_id = 18
+          when "vaccination"
+            @dashboard_id = 24
         end
         payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
       when current_user
