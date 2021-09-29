@@ -7,6 +7,7 @@ Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.
 ## Tecnologias
 
 Usamos nessa API:
+
 - [Ruby on Rails](https://rubyonrails.org/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)
@@ -15,21 +16,38 @@ Usamos nessa API:
 
 ### O que fazer antes
 
-Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conter uma chave para tudo funcionar corretamente. Você pode conseguir essa chave com algum desenvolvedor do projeto.
+1. Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conter uma chave para tudo funcionar corretamente. Você pode conseguir essa chave com algum desenvolvedor do projeto.
+
+2. Crie um arquivo '.env' na pasta raiz do projeto, esse arquivo deve conter as seguintes variáveis de ambiente e seus valores:
+
+```
+MAILER_URL =
+TWITTER_API_CONSUMER_KEY =
+TWITTER_API_CONSUMER_SECRET =
+TWITTER_API_ACCESS_TOKEN =
+TWITTER_API_ACCESS_TOKEN_SECRET =
+VIGILANCE_EMAIL =
+GODATA_KEY =
+CSV_DATA_KEY =
+METABASE_SITE_URL =
+METABASE_SECRET_KEY =
+```
+
+O passo 2 pode ser pulado se sua intenção for apenas de testar a API.
 
 ### Levantando
 
 #### Sem logs do rails
 
 ```shell
-$docker-compose build 
-$docker-compose up -d
+docker-compose build
+docker-compose up -d
 ```
 
 #### Com logs do rails
 
 ```shell
-$docker-compose up
+docker-compose up
 ```
 
 ### O que fazer depois
@@ -54,24 +72,25 @@ sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
 
 Caso você tome o seguinte erro:
 
-~~~Shell
+```Shell
 Rails - FATAL: database “myapp_development” does not exist
-~~~
+```
 
 É preciso criar o banco de dados, então rode:
 
-~~~shell
+```shell
 docker-compose run web rake db:create
-~~~
+```
 
 E então tente de novo migra o banco de dados, caso dê erro, reinicie o processo.
 
 ### Key
 
 Caso você tome o seguinte erro:
-~~~shell
+
+```shell
 "/config/initializers/devise.rb: undefined method '[]' for nil:NilClass"
-~~~
+```
 
 Significa que você está tentando levantar o ambiente sem a key citada acima.
 
@@ -79,9 +98,9 @@ Significa que você está tentando levantar o ambiente sem a key citada acima.
 
 O postgres é uma grande fonte de erros.
 
-~~~shell
+```shell
 "Database '...' does not exist"
-~~~
+```
 
 Basta criar a base de dados
 
