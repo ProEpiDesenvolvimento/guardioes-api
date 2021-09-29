@@ -42,10 +42,6 @@ class Ability
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
         can :manage, [ :data_visualization ]
-      when CityManager
-        can :manage, User, :city => user.city
-        can :manage, CityManager, :id => user.id
-        cannot :destroy, CityManager, :id => user.id
       when GroupManagerTeam
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
