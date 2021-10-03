@@ -2,7 +2,7 @@
 
 Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
 
-Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
+Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/).
 
 ## Tecnologias
 
@@ -21,19 +21,20 @@ Usamos nessa API:
 2. Crie um arquivo '.env' na pasta raiz do projeto, esse arquivo deve conter as seguintes variáveis de ambiente e seus valores:
 
 ```
-MAILER_URL =
 TWITTER_API_CONSUMER_KEY =
 TWITTER_API_CONSUMER_SECRET =
 TWITTER_API_ACCESS_TOKEN =
 TWITTER_API_ACCESS_TOKEN_SECRET =
-VIGILANCE_EMAIL =
+MAILER_ADRESS =
+MAILER_EMAIL =
+MAILER_EMAIL_PASSWORD =
 GODATA_KEY =
 CSV_DATA_KEY =
 METABASE_SITE_URL =
 METABASE_SECRET_KEY =
 ```
 
-O passo 2 pode ser pulado se sua intenção for apenas de testar a API.
+O passo 2 pode ser pulado se sua intenção for **apenas** de rodar a API.
 
 ### Levantando
 
