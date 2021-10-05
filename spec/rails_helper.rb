@@ -54,7 +54,6 @@ RSpec.configure do |config|
     DatabaseCleaner.allow_remote_database_url = true
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
-    Searchkick.disable_callbacks
   end
 
   config.around(:each) do |example|

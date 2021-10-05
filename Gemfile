@@ -27,7 +27,6 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem "roo", "~> 2.8.0"
 gem 'roo-xls'
-gem 'searchkick'
 gem 'cancancan'
 gem 'kaminari' 
 gem 'pager_api'

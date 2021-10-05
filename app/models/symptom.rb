@@ -1,8 +1,5 @@
 class Symptom < ApplicationRecord
   belongs_to :app
-  if !Rails.env.test?
-    searchkick
-  end
 
   has_one :message, dependent: :destroy
   accepts_nested_attributes_for :message
