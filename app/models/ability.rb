@@ -46,6 +46,7 @@ class Ability
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
+        can :update, [ Survey ]
         can :update, GroupManagerTeam, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
