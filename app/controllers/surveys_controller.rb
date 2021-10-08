@@ -19,7 +19,11 @@ class SurveysController < ApplicationController
   # GET /surveys/group_cases
   # GET group_manager related surveys with vigilance_syndromes
   def group_cases
-    @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    if current_group_manager
+      @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    else
+      @groups = Group.where(group_manager_id: current_group_manager_team.group_manager_id).ids
+    end
     @users = User.where(group_id: @groups).ids
     surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
     cases = surveys.clone.to_a
