@@ -3,6 +3,4 @@ class SurveySerializer < ActiveModel::Serializer
              :postal_code, :street, :city, :state, :country, :traveled_to,
              :went_to_hospital, :contact_with_symptom, :syndrome_id, :reviewed
 
-  has_one :user
-  has_one :household
 end
