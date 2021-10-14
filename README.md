@@ -1,5 +1,7 @@
 # Guardiões da Saúde API
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
 
 Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/).
@@ -112,14 +114,6 @@ psql -U postgres
 ...
 create database [nome da base de dados];
 ```
-
-### Elastic
-
-#### "Failed to open TCP connection to localhost:9200"
-
-Isso significa que a API tentou mandar uma mensagem para a base de dados Elastic e não encontrou no endereço localhost:9200. O Elastic é outra base que opera em separado do postgres.
-
-Para solucionar, basta levantar uma instância do [guadioes web](https://github.com/proepidesenvolvimento/guardioes-web/) rodando na porta 9200 ou alterar o endereço do elastic no arquivo elasticsearch.rb.
 
 ### Testes
 

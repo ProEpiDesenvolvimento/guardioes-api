@@ -1,8 +1,5 @@
 class Household < ApplicationRecord
   acts_as_paranoid
-  if !Rails.env.test?
-    searchkick
-  end
   
   validates_presence_of :description, 
                         :birthdate, 
