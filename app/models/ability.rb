@@ -35,7 +35,7 @@ class Ability
         can :manage, [ :data_visualization ]
         cannot :destroy, CityManager, :id => user.id
       when GroupManager
-        can :update, [ Survey ]
+        can :manage, Survey 
         can :update, GroupManager, :id => user.id
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
@@ -46,7 +46,6 @@ class Ability
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
-        can :manage, [ Survey ]
         can :update, GroupManagerTeam, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
@@ -86,6 +85,8 @@ class Ability
         models << User
       elsif model == "citymanager"
         models << CityManager
+      elsif model == "vigilance"
+        models << Survey
       end
     end
 
