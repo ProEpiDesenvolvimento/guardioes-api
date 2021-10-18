@@ -1,10 +1,9 @@
 class SurveysController < ApplicationController
   before_action :authenticate_user!, except: %i[group_cases render_without_user all_surveys update limited_surveys surveys_to_csv]
-  before_action :authenticate_group_manager!, only: [:group_cases, :update]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
-  authorize_resource only: [:update, :destroy]
+  authorize_resource only: [:destroy, :group_cases, :update]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minutes
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minutes
@@ -20,7 +19,11 @@ class SurveysController < ApplicationController
   # GET /surveys/group_cases
   # GET group_manager related surveys with vigilance_syndromes
   def group_cases
-    @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    if current_group_manager
+      @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    else
+      @groups = Group.where(group_manager_id: current_group_manager_team.group_manager_id).ids
+    end
     @users = User.where(group_id: @groups).ids
     surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
     cases = surveys.clone.to_a
