@@ -24,28 +24,11 @@ class SurveysController < ApplicationController
     else
       @groups = Group.where(group_manager_id: current_group_manager_team.group_manager_id).ids
     end
-    @users = User.where(group_id: @groups).ids
-    surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
-    cases = surveys.clone.to_a
 
-    surveys.each_with_index do |survey1, index1|
-      surveys.each_with_index do |survey2, index2|
-        if index1 > index2
-          if survey1.user.id == survey2.user.id && survey1.syndrome_id == survey2.syndrome_id
-            syndrome = Syndrome.find_by_id(survey1.syndrome_id)
-            date1 = survey1.created_at
-            date2 = survey2.created_at
+    @users = User.where(group_id: @groups).where(is_vigilance: true).ids
+    @surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
 
-            surveys_period = (date2.to_date - date1.to_date).to_i
-            if syndrome.days_period && surveys_period < syndrome.days_period
-              cases.delete_at(index1)
-            end
-          end
-        end
-      end
-    end
-
-    render json: cases, root: 'surveys', each_serializer: SurveySerializer
+    paginate @surveys, per_page: 150
   end
 
   def surveys_to_csv
