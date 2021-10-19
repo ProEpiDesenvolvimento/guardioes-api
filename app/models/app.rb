@@ -7,10 +7,6 @@ class App < ApplicationRecord
   has_many :managers
   has_many :vaccines
 
-  if !Rails.env.test?
-    searchkick
-  end
-
   validates :app_name,
     presence: true,
     length: {

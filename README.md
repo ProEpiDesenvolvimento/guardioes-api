@@ -1,12 +1,15 @@
 # Guardiões da Saúde API
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Esse repositório é referente à API usada no aplicativo [Guardiões Da Saúde](https://github.com/proepidesenvolvimento/guardioes-app). Logo ela é responsável por todas as requests que são feitas no aplicativo assim como o armazenamento dos dados no banco de dados.
 
-Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/)
+Veja mais em nossa página [clicando aqui](https://proepidesenvolvimento.github.io/guardioes-api/).
 
 ## Tecnologias
 
 Usamos nessa API:
+
 - [Ruby on Rails](https://rubyonrails.org/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)
@@ -15,21 +18,39 @@ Usamos nessa API:
 
 ### O que fazer antes
 
-Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conter uma chave para tudo funcionar corretamente. Você pode conseguir essa chave com algum desenvolvedor do projeto.
+1. Crie um arquivo chamado 'master.key' na pasta '/config', esse arquivo deve conter uma chave para tudo funcionar corretamente. Você pode conseguir essa chave com algum desenvolvedor do projeto.
+
+2. Crie um arquivo '.env' na pasta raiz do projeto, esse arquivo deve conter as seguintes variáveis de ambiente e seus valores:
+
+```
+TWITTER_API_CONSUMER_KEY =
+TWITTER_API_CONSUMER_SECRET =
+TWITTER_API_ACCESS_TOKEN =
+TWITTER_API_ACCESS_TOKEN_SECRET =
+MAILER_ADRESS =
+MAILER_EMAIL =
+MAILER_EMAIL_PASSWORD =
+GODATA_KEY =
+CSV_DATA_KEY =
+METABASE_SITE_URL =
+METABASE_SECRET_KEY =
+```
+
+O passo 2 pode ser pulado se sua intenção for **apenas** de rodar a API.
 
 ### Levantando
 
 #### Sem logs do rails
 
 ```shell
-$docker-compose build 
-$docker-compose up -d
+docker-compose build
+docker-compose up -d
 ```
 
 #### Com logs do rails
 
 ```shell
-$docker-compose up
+docker-compose up
 ```
 
 ### O que fazer depois
@@ -54,24 +75,25 @@ sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
 
 Caso você tome o seguinte erro:
 
-~~~Shell
+```Shell
 Rails - FATAL: database “myapp_development” does not exist
-~~~
+```
 
 É preciso criar o banco de dados, então rode:
 
-~~~shell
+```shell
 docker-compose run web rake db:create
-~~~
+```
 
 E então tente de novo migra o banco de dados, caso dê erro, reinicie o processo.
 
 ### Key
 
 Caso você tome o seguinte erro:
-~~~shell
+
+```shell
 "/config/initializers/devise.rb: undefined method '[]' for nil:NilClass"
-~~~
+```
 
 Significa que você está tentando levantar o ambiente sem a key citada acima.
 
@@ -79,9 +101,9 @@ Significa que você está tentando levantar o ambiente sem a key citada acima.
 
 O postgres é uma grande fonte de erros.
 
-~~~shell
+```shell
 "Database '...' does not exist"
-~~~
+```
 
 Basta criar a base de dados
 
@@ -92,14 +114,6 @@ psql -U postgres
 ...
 create database [nome da base de dados];
 ```
-
-### Elastic
-
-#### "Failed to open TCP connection to localhost:9200"
-
-Isso significa que a API tentou mandar uma mensagem para a base de dados Elastic e não encontrou no endereço localhost:9200. O Elastic é outra base que opera em separado do postgres.
-
-Para solucionar, basta levantar uma instância do [guadioes web](https://github.com/proepidesenvolvimento/guardioes-web/) rodando na porta 9200 ou alterar o endereço do elastic no arquivo elasticsearch.rb.
 
 ### Testes
 

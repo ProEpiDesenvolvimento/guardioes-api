@@ -78,6 +78,17 @@ class FormsController < ApplicationController
       end
     end
 
+    def update_questions_for_form
+      @questions.each do |question|
+        updated_question = FormQuestion.update(
+          question[:id],
+          kind: question[:kind],
+          text: question[:text],
+          order: question[:order],
+        )
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_form
       @form = Form.find(params[:id])
@@ -92,6 +103,7 @@ class FormsController < ApplicationController
       params.require(:form).permit(
         :group_manager_id,
         :questions => [[
+          :id,
           :kind,
           :text,
           :order,

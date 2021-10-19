@@ -2,26 +2,6 @@ class Survey < ApplicationRecord
   acts_as_paranoid
   require 'net/http'
   require 'httparty'
-  if !Rails.env.test?
-    searchkick
-  end
-
-    
-  # Index name for a survey is now:
-  # classname_environment[if survey user has group, _groupmanagergroupname]
-  # It has been overriden searchkick's class that sends data to elaticsearch, 
-  # such that the index name is now defined by the model that is being 
-  # evaluated using the function 'index_pattern_name'  
-  def index_pattern_name
-    env = ENV['RAILS_ENV']
-    if self.user.group.nil?
-      return 'surveys_' + env
-    end
-    group_name = self.user.group.group_manager.group_name
-    group_name.downcase!
-    group_name.gsub! ' ', '-'
-    return 'surveys_' + env + '_' + group_name
-  end
 
   belongs_to :user
   belongs_to :household, optional:true
@@ -109,7 +89,7 @@ class Survey < ApplicationRecord
 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 
-  # Data that gets sent as fields for elastic indexes
+  # Data that gets sent as fields
   def search_data
     # Set current user/household in variable user
     user = nil
@@ -120,32 +100,32 @@ class Survey < ApplicationRecord
     end
 
     # Get object data as hash off of json
-    elastic_data = self.as_json(except: [:updated_at]) 
+    data = self.as_json(except: [:updated_at]) 
     
     # Add user group. If group is not present and school unit is, add school unit description
     if !user.group.nil?
-      elastic_data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
+      data[:group] = user.group.get_path(string_only=true, labeled=false).join('/') 
     else
-      elastic_data[:group] = nil 
+      data[:group] = nil 
     end
     
     # Add symptoms by column of booleans
     Symptom.all.each do |symptom|
-      elastic_data[symptom.description] = self.symptom.include? symptom.description
+      data[symptom.description] = self.symptom.include? symptom.description
     end
     
     # Add user's city, state, country, 
     # birthdate, if she is part of the risk group for COVID,
     # race, gender
-    elastic_data["gender"] = user.gender 
-    elastic_data["race"] = user.race 
-    elastic_data["user_city"] = user.class == User ? user.city : nil
-    elastic_data["user_state"] = user.class == User ? user.state : nil
-    elastic_data["user_country"] = user.country
-    elastic_data["birthdate"] = user.birthdate
-    elastic_data["risk_group"] = user.risk_group || false
+    data["gender"] = user.gender 
+    data["race"] = user.race 
+    data["user_city"] = user.class == User ? user.city : nil
+    data["user_state"] = user.class == User ? user.state : nil
+    data["user_country"] = user.country
+    data["birthdate"] = user.birthdate
+    data["risk_group"] = user.risk_group || false
     
-    return elastic_data 
+    return data 
   end
 
   def auth_go_data(group_manager)

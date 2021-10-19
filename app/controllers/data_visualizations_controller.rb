@@ -42,11 +42,21 @@ class DataVisualizationsController < ApplicationController
           when "surveys"
             @dashboard_id = 10
           when "biosecurity"
-            @dashboard_id = 0
+            @dashboard_id = 23
           when "vigilance"
             @dashboard_id = 18
+          when "vaccination"
+            @dashboard_id = 24
         end
-        payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
+        payload = {
+          'params' => {
+            'group' => @current_request_user.id,
+            'form' => @current_request_user.form_id
+          }, 
+          'resource' => {
+            'dashboard' => @dashboard_id
+          }
+        }
       when current_group_manager_team
         case params[:type]
           when "users"
@@ -54,11 +64,21 @@ class DataVisualizationsController < ApplicationController
           when "surveys"
             @dashboard_id = 10
           when "biosecurity"
-            @dashboard_id = 0
+            @dashboard_id = 23
           when "vigilance"
             @dashboard_id = 18
+          when "vaccination"
+            @dashboard_id = 24
         end
-        payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
+        payload = {
+          'params' => {
+            'group' => @current_request_user.group_manager.id,
+            'form' => @current_request_user.group_manager.form_id
+          },
+          'resource' => {
+            'dashboard' => @dashboard_id
+          }
+        }
       when current_user
         puts "Common user"
     end

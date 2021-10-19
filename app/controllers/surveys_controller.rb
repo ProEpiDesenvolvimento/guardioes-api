@@ -1,10 +1,9 @@
 class SurveysController < ApplicationController
   before_action :authenticate_user!, except: %i[group_cases render_without_user all_surveys update limited_surveys surveys_to_csv]
-  before_action :authenticate_group_manager!, only: [:group_cases, :update]
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
-  authorize_resource only: [:update, :destroy]
+  authorize_resource only: [:destroy, :group_cases, :update]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minutes
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minutes
@@ -20,29 +19,16 @@ class SurveysController < ApplicationController
   # GET /surveys/group_cases
   # GET group_manager related surveys with vigilance_syndromes
   def group_cases
-    @groups = Group.where(group_manager_id: current_group_manager.id).ids
-    @users = User.where(group_id: @groups).ids
-    surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
-    cases = surveys.clone.to_a
-
-    surveys.each_with_index do |survey1, index1|
-      surveys.each_with_index do |survey2, index2|
-        if index1 > index2
-          if survey1.user.id == survey2.user.id && survey1.syndrome_id == survey2.syndrome_id
-            syndrome = Syndrome.find_by_id(survey1.syndrome_id)
-            date1 = survey1.created_at
-            date2 = survey2.created_at
-
-            surveys_period = (date2.to_date - date1.to_date).to_i
-            if syndrome.days_period && surveys_period < syndrome.days_period
-              cases.delete_at(index1)
-            end
-          end
-        end
-      end
+    if current_group_manager
+      @groups = Group.where(group_manager_id: current_group_manager.id).ids
+    else
+      @groups = Group.where(group_manager_id: current_group_manager_team.group_manager_id).ids
     end
 
-    render json: cases, root: 'surveys', each_serializer: SurveySerializer
+    @users = User.where(group_id: @groups).where(is_vigilance: true).ids
+    @surveys = Survey.where(user_id: @users).where.not(syndrome_id: nil).order('surveys.created_at DESC')
+
+    paginate @surveys, per_page: 150
   end
 
   def surveys_to_csv

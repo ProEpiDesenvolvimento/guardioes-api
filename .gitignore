@@ -36,6 +36,8 @@
 /client/build
 
 # misc
+.env
+.env.*
 /client/.DS_Store
 /client/.env.local
 /client/.env.development.local
