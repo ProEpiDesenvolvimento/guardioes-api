@@ -8,7 +8,7 @@ class Ability
     if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
-    Rails.logger.debug("USER: #{user}")
+
     case user
       when Admin
         if user.is_god?
@@ -24,10 +24,10 @@ class Ability
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
-        can :update, [ CityManager ], :app_id => user.app_id
-        can :update, Manager, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+        can :update, [ CityManager ], :app_id => user.app_id
+        can :update, Manager, :id => user.id
         can :manage, [ :data_visualization ]
       when CityManager
         can :manage, User, :city => user.city
@@ -35,8 +35,8 @@ class Ability
         can :manage, [ :data_visualization ]
         cannot :destroy, CityManager, :id => user.id
       when GroupManager
-        can :manage, Survey 
         can :update, GroupManager, :id => user.id
+        can :manage, Survey 
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
@@ -46,14 +46,14 @@ class Ability
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
         can :update, convert_symbol(@permission.models_update)
-        can :update, GroupManagerTeam, :id => user.id
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
+        can :update, GroupManagerTeam, :id => user.id
       when User
-        can :read, [ App, Content, Household, Survey, Symptom, Vaccine ]
+        can :read, [ App, Content, Household, Survey, Vaccine ]
         can :read, User, :id => user.id
-        can :read, [ Form ]
-        can :read, [ FormQuestion, FormAnswer ]
+        can :read, [ Form, FormQuestion ]
+        can :read, FormAnswer, :id => user.id
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
         can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
