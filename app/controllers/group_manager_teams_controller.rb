@@ -1,5 +1,4 @@
 class GroupManagerTeamsController < ApplicationController
-  # before_action :authenticate_admin!, only: [:index]
   # before_action :set_app, only: [:index]
   before_action :set_group_manager_team, only: [:show, :update, :destroy]
 

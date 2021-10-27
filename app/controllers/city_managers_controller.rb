@@ -1,5 +1,4 @@
 class CityManagersController < ApplicationController
-  # before_action :authenticate_admin!, only: [:index]
   # before_action :set_app, only: [:index]
   before_action :set_city_manager, only: [:show, :update, :destroy]
 
