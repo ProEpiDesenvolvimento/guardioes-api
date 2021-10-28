@@ -1,7 +1,7 @@
 class FormQuestionsController < ApplicationController
   before_action :set_form_question, only: [:show, :update, :destroy]
 
-  load_and_authorize_resource :except => [:create] 
+  authorize_resource
 
   # GET /form_questions
   def index

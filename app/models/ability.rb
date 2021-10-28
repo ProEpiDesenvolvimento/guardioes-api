@@ -15,10 +15,10 @@ class Ability
           can :manage, :all
         else
           can :read, App
-          can :update, App, :id => user.app_id
-          can :update, [ CityManager ], :app_id => user.app_id
           can :update, Admin, :id => user.id
-          can :manage, [ Manager, GroupManager, Symptom, Syndrome, Content, User, Vaccine, :data_visualization ]
+          can :update, App, :id => user.app_id
+          can :manage, [ Manager, CityManager, GroupManager ], :app_id => user.app_id
+          can :manage, [ Symptom, Syndrome, Message, Content, User, Vaccine, PreRegister, Permission, :data_visualization ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
@@ -26,9 +26,10 @@ class Ability
         can :update, convert_symbol(@permission.models_update)
         can :destroy, convert_symbol(@permission.models_destroy)
         can :manage, convert_symbol(@permission.models_manage)
-        can :update, [ CityManager ], :app_id => user.app_id
         can :update, Manager, :id => user.id
-        can :manage, [ :data_visualization ]
+        can :update, [ CityManager ], :app_id => user.app_id
+        can :manage, [ Message, PreRegister, Permission, :data_visualization ]
+        cannot :manage, Permission, city_manager_id: nil
       when CityManager
         can :manage, User, :city => user.city
         can :manage, CityManager, :id => user.id
@@ -41,7 +42,8 @@ class Ability
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
         can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
-        can :manage, [ :data_visualization ]
+        can :manage, [ Permission, :data_visualization ]
+        cannot :manage, Permission, group_manager_team_id: nil
       when GroupManagerTeam
         can :read, convert_symbol(@permission.models_read)
         can :create, convert_symbol(@permission.models_create)
@@ -53,7 +55,7 @@ class Ability
         can :read, [ App, Content, Household, Survey, Vaccine ]
         can :read, User, :id => user.id
         can :read, [ Form, FormQuestion ]
-        can :read, FormAnswer, :id => user.id
+        can :read, [ FormAnswer ], :id => user.id
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
         can :update, [ Household, Survey, FormAnswer ], :user_id => user.id

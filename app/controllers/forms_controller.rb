@@ -2,7 +2,7 @@ class FormsController < ApplicationController
   before_action :set_form, only: [:show, :update, :destroy]
   before_action :set_questions, only: [ :create ]
 
-  load_and_authorize_resource :except => [:create] 
+  authorize_resource
 
   # GET /forms
   def index

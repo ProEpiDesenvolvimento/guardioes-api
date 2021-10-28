@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :pre_registers
   resources :messages
   resources :syndromes
-  resources :permissions, only: [:create, :update, :show, :destory]
+  resources :permissions, only: [:create, :update, :show, :destroy]
   resources :vaccines
 
   get "groups/root", to: 'groups#root'
@@ -23,8 +23,6 @@ Rails.application.routes.draw do
   get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualizations#asymptomatic_surveys_count'
   get 'data_visualization/symptomatic_surveys_count', to: 'data_visualizations#symptomatic_surveys_count'
   post 'data_visualization/metabase_urls', to: 'data_visualizations#metabase_urls'
-
-  get "dashboard", to: 'dashboard#index'
   
   resources :symptoms
   resources :contents
@@ -53,7 +51,6 @@ Rails.application.routes.draw do
   end
   post "render_user_by_filter",to: "users#query_by_param"
   patch "admin_update/:id", to: "users#admin_update"
-  resources :rumors
 
   scope "/user" do 
     post "reset_password", to: "users#reset_password"
