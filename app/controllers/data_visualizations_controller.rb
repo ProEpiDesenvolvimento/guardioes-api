@@ -39,46 +39,38 @@ class DataVisualizationsController < ApplicationController
         case params[:type]
           when "users"
             @dashboard_id = 9
+            payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "surveys"
             @dashboard_id = 10
+            payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "biosecurity"
             @dashboard_id = 23
+            payload = {'params' => {'form' => @current_request_user.form_id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "vigilance"
             @dashboard_id = 18
+            payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "vaccination"
             @dashboard_id = 24
+            payload = {'params' => {'group' => @current_request_user.id}, 'resource' => {'dashboard' => @dashboard_id}}
         end
-        payload = {
-          'params' => {
-            'group' => @current_request_user.id,
-            'form' => @current_request_user.form_id
-          }, 
-          'resource' => {
-            'dashboard' => @dashboard_id
-          }
-        }
       when current_group_manager_team
         case params[:type]
           when "users"
             @dashboard_id = 9
+            payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "surveys"
             @dashboard_id = 10
+            payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "biosecurity"
             @dashboard_id = 23
+            payload = {'params' => {'form' => @current_request_user.group_manager.form_id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "vigilance"
             @dashboard_id = 18
+            payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
           when "vaccination"
             @dashboard_id = 24
+            payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
         end
-        payload = {
-          'params' => {
-            'group' => @current_request_user.group_manager.id,
-            'form' => @current_request_user.group_manager.form_id
-          },
-          'resource' => {
-            'dashboard' => @dashboard_id
-          }
-        }
       when current_user
         puts "Common user"
     end
