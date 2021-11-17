@@ -30,6 +30,7 @@
 /client/.pnp.js
 
 # testing
+/coverage
 /client/coverage
 
 # production
@@ -38,11 +39,11 @@
 # misc
 .env
 .env.*
-/client/.DS_Store
 /client/.env.local
 /client/.env.development.local
 /client/.env.test.local
 /client/.env.production.local
+/client/.DS_Store
 
 /client/npm-debug.log*
 /client/yarn-debug.log*
