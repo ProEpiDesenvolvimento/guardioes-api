@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def create_app
-  App.new(:app_name=>"brasil", :owner_country=>"brasil").save()
+  App.new(:app_name => "brasil", :owner_country => "brasil").save()
 end
 
 def create_group(description, children_label, parent, save=false)
@@ -38,11 +38,12 @@ def create_school_group_tree
   create_group('Roga', nil, parent=seedf, save=true)
 end
 
-def create_group_manager(twitter=nil, require_id=false, id_code_length=nil, save=false)
+def create_group_manager(twitter=nil, require_id=nil, id_code_length=nil, save=false)
   group_manager = GroupManager.new(
-    email:'groupmanager@admin.com',
-    password:'12345678',
+    email: 'groupmanager@admin.com',
+    password: '12345678',
     name: 'jose',
+    vigilance_syndromes: [],
     twitter: twitter,
     require_id: require_id,
     id_code_length: id_code_length
@@ -163,7 +164,7 @@ RSpec.describe Group, type: :model do
     context '=> get_twitter' do 
       it 'when none is present (root twitter)' do
         fga = create_fga_group_tree
-        expect(fga.get_twitter).to eq(nil)
+        expect(fga.get_twitter).to eq('appguardioes')
       end
       it 'when parent is present' do
         fga = create_fga_group_tree
@@ -229,13 +230,13 @@ RSpec.describe Group, type: :model do
     context '=> require_id' do
       it 'when it requires' do
         fga = create_fga_group_tree
-        gm = create_group_manager(require_id=true,save=true)
+        gm = create_group_manager(twitter=nil, require_id='codigo', save=true)
         connect_group_to_group_manager(fga, gm)
-        expect(fga.require_id).to eq(true)
+        expect(fga.require_id).to eq('codigo')
       end
-      it 'when not specified (should be false)' do
+      it 'when not specified (should be nil)' do
         fga = create_fga_group_tree
-        expect(fga.require_id).to eq(false)
+        expect(fga.require_id).to eq(nil)
       end
     end
 
