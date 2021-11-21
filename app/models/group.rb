@@ -109,7 +109,7 @@ class Group < ApplicationRecord
         return group_manager.require_id
       end
     end
-    return false
+    return nil
   end
 
   def id_code_length
