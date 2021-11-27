@@ -71,16 +71,15 @@ class DataVisualizationsController < ApplicationController
             @dashboard_id = 24
             payload = {'params' => {'group' => @current_request_user.group_manager.id}, 'resource' => {'dashboard' => @dashboard_id}}
         end
-      when current_user
-        puts "Common user"
     end
 
     puts payload.inspect
 
-    iframe_urls = []
     exp_time = Time.now.to_i + metabase_config[:exp_time]
     payload['exp'] = exp_time
     token = JWT.encode payload, metabase_config[:secret_key]
+
+    iframe_urls = []
     iframe_urls.append({
       :dashboard => payload['resource']['dashboard'],
       :iframe_url => "#{metabase_config[:site_url]}/embed/dashboard/#{token}#bordered=true&titled=true"
