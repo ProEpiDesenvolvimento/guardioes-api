@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    # not admin, user, city manager and group manager
+    # When user is Manager or GroupManagerTeam, get them permissions list
     if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end

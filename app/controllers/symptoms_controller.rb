@@ -1,6 +1,6 @@
 class SymptomsController < ApplicationController
   before_action :set_symptom, only: [:show, :update, :destroy]
-  load_and_authorize_resource except: [:index, :show]
+  authorize_resource except: [:index, :show]
 
   # GET /symptoms
   def index

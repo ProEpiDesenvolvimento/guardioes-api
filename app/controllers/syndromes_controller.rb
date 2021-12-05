@@ -1,7 +1,7 @@
 class SyndromesController < ApplicationController
   before_action :set_syndrome, only: [:show, :update, :destroy]
   before_action :set_symptoms, only: [:create]
-  load_and_authorize_resource except: [:index, :show]
+  authorize_resource except: [:index, :show]
 
   # GET /syndromes
   def index
