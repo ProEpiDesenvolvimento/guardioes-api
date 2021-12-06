@@ -10,24 +10,24 @@ Rails.application.routes.draw do
   resources :permissions, only: [:create, :update, :show, :destroy]
   resources :vaccines
 
-  get "groups/root", to: 'groups#root'
-  post '/groups/build_country_city_state_groups', to: 'groups#build_country_city_state_groups'
-  post "groups/upload_group_file", to: 'groups#upload_group_file'
-  get "groups/:id/get_path", to: 'groups#get_path'
-  get "groups/:id/get_children", to: 'groups#get_children'
-  get "groups/:id/get_twitter", to: 'groups#get_twitter'
+  get "groups/root", to: "groups#root"
+  post "/groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
+  post "groups/upload_group_file", to: "groups#upload_group_file"
+  get "groups/:id/get_path", to: "groups#get_path"
+  get "groups/:id/get_children", to: "groups#get_children"
+  get "groups/:id/get_twitter", to: "groups#get_twitter"
   resources :groups
 
-  get 'data_visualization/users_count', to: 'data_visualizations#users_count'
-  get 'data_visualization/surveys_count', to: 'data_visualizations#surveys_count'
-  get 'data_visualization/asymptomatic_surveys_count', to: 'data_visualizations#asymptomatic_surveys_count'
-  get 'data_visualization/symptomatic_surveys_count', to: 'data_visualizations#symptomatic_surveys_count'
-  post 'data_visualization/metabase_urls', to: 'data_visualizations#metabase_urls'
+  get "data_visualization/users_count", to: "data_visualizations#users_count"
+  get "data_visualization/surveys_count", to: "data_visualizations#surveys_count"
+  get "data_visualization/asymptomatic_surveys_count", to: "data_visualizations#asymptomatic_surveys_count"
+  get "data_visualization/symptomatic_surveys_count", to: "data_visualizations#symptomatic_surveys_count"
+  post "data_visualization/metabase_urls", to: "data_visualizations#metabase_urls"
   
   resources :symptoms
   resources :contents
 
-  get "apps/:id/get_twitter", to: 'apps#get_twitter'
+  get "apps/:id/get_twitter", to: "apps#get_twitter"
   resources :apps
 
   resources :rumors
@@ -66,15 +66,15 @@ Rails.application.routes.draw do
   resources :admins, only: [:index, :update, :destroy]
   
   devise_for :admins,
-    path: 'admin/',
+    path: "admin/",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
       registration: "signup"
     },
     controllers: {
-      sessions: 'session',
-      registrations: 'registration'
+      sessions: "session",
+      registrations: "registration"
     }
 
   resources :city_managers
@@ -84,37 +84,37 @@ Rails.application.routes.draw do
     post "reset_password", to: "city_managers#reset_password"
   end
   devise_for :city_managers,
-    path: 'city_manager/',
+    path: "city_manager/",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
       registration: "signup"
     },
     controllers: {
-      sessions: 'session',
-      registrations: 'registration'
+      sessions: "session",
+      registrations: "registration"
     }
 
     resources :group_managers
-    #get 'group_managers/:group_manager_id/:group_id', to: 'group_managers#is_manager_permitted'
+    #get "group_managers/:group_manager_id/:group_id", to: "group_managers#is_manager_permitted"
     scope "/group_manager" do 
       post "email_reset_password", to: "group_managers#email_reset_password"
       post "show_reset_token", to: "group_managers#show_reset_token"
       post "reset_password", to: "group_managers#reset_password"
     end
     # IN THE FUTURE THE FOLLOWING FUTURES WILL BE IMPLEMENTED
-    # get 'group_managers/:manager_id/:group_id/permit', to: 'group_managers#add_manager_permission'
-    # get 'group_managers/:manager_id/:group_id/unpermit', to: 'group_managers#remove_manager_permission'
+    # get "group_managers/:manager_id/:group_id/permit", to: "group_managers#add_manager_permission"
+    # get "group_managers/:manager_id/:group_id/unpermit", to: "group_managers#remove_manager_permission"
     devise_for :group_managers,
-    path: 'group_manager/',
+    path: "group_manager/",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
       registration: "signup"
     },
     controllers: {
-      sessions: 'session',
-      registrations: 'registration'
+      sessions: "session",
+      registrations: "registration"
     }
 
     resources :group_manager_teams

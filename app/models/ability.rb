@@ -52,10 +52,10 @@ class Ability
         can :manage, convert_symbol(@permission.models_manage)
         can :update, GroupManagerTeam, :id => user.id
       when User
-        can :read, [ App, Content, Household, Survey, Vaccine ]
         can :read, User, :id => user.id
         can :read, [ Form, FormQuestion ]
-        can :read, [ FormAnswer ], :id => user.id
+        can :read, [ Household, Survey, FormAnswer ], :user_id => user.id
+        can :read, [ App, Content, Vaccine ]
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
         can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
