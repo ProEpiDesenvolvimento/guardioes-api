@@ -1,5 +1,6 @@
 class PermissionsController < ApplicationController
-  before_action :set_user_permission, only: [:show] 
+  before_action :set_user_permission, only: [:show]
+  load_and_authorize_resource
 
   # GET /permissions/1
   def show
@@ -17,7 +18,7 @@ class PermissionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /permissions/
+  # PATCH/PUT /permissions/1
   def update
     if @permissions.update(permission_params)
       render json: @permissions
@@ -32,8 +33,7 @@ class PermissionsController < ApplicationController
     
   private
   def set_user_permission
-    @user = User.find(params[:id])
-    @permissions = Permission.find(@user.permission_id)
+    @permissions = Permission.find(params[:id])
   end
 
   def permission_params
