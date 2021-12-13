@@ -168,6 +168,8 @@ Rails.application.routes.draw do
         registrations: "registration",
         # passwords: "passwords"
       }
+    
+      resources :doses
 
     root to: "admin#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
