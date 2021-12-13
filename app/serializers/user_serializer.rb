@@ -10,7 +10,6 @@ class UserSerializer < ActiveModel::Serializer
 
   has_many :households 
   belongs_to :vaccine
-  # has_many :surveys
 
   def group
     if object.group.nil?

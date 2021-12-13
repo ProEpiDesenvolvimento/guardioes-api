@@ -3,7 +3,7 @@ class SurveysController < ApplicationController
   before_action :set_survey, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
-  authorize_resource only: [:destroy, :group_cases, :update]
+  authorize_resource only: [:show, :update, :destroy, :group_cases]
 
   @WEEK_SURVEY_CACHE_EXPIRATION = 15.minutes
   @LIMITED_SURVEY_CACHE_EXPIRATION = 15.minutes

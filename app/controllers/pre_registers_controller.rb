@@ -1,5 +1,6 @@
 class PreRegistersController < ApplicationController
   before_action :set_pre_register, only: [:show, :update, :destroy]
+  load_and_authorize_resource except: [:create]
 
   # GET /pre_registers
   def index
