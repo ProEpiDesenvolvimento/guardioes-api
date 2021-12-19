@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_19_193918) do
+ActiveRecord::Schema.define(version: 2021_12_19_205548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 2021_12_19_193918) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -441,7 +440,9 @@ ActiveRecord::Schema.define(version: 2021_12_19_193918) do
     t.datetime "first_dose_date"
     t.datetime "second_dose_date"
     t.bigint "vaccine_id"
+    t.bigint "category_id"
     t.index ["app_id"], name: "index_users_on_app_id"
+    t.index ["category_id"], name: "index_users_on_category_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
@@ -494,6 +495,7 @@ ActiveRecord::Schema.define(version: 2021_12_19_193918) do
   add_foreign_key "syndrome_symptom_percentages", "syndromes"
   add_foreign_key "syndromes", "messages"
   add_foreign_key "users", "apps"
+  add_foreign_key "users", "categories"
   add_foreign_key "users", "groups"
   add_foreign_key "users", "vaccines"
   add_foreign_key "vaccines", "apps"
