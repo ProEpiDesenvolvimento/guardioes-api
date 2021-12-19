@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   belongs_to :app
   belongs_to :vaccine, optional: true
+  belongs_to :category, optional: true
   
   acts_as_paranoid
 
