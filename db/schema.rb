@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_19_205548) do
+ActiveRecord::Schema.define(version: 2021_12_29_134459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,6 +237,8 @@ ActiveRecord::Schema.define(version: 2021_12_19_205548) do
     t.boolean "risk_group"
     t.integer "group_id"
     t.integer "streak", default: 0
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_households_on_category_id"
     t.index ["deleted_at"], name: "index_households_on_deleted_at"
     t.index ["user_id"], name: "index_households_on_user_id"
   end
@@ -474,6 +476,7 @@ ActiveRecord::Schema.define(version: 2021_12_19_205548) do
   add_foreign_key "form_questions", "forms"
   add_foreign_key "forms", "group_managers"
   add_foreign_key "group_managers", "apps"
+  add_foreign_key "households", "categories"
   add_foreign_key "households", "users"
   add_foreign_key "manager_group_permissions", "group_managers"
   add_foreign_key "manager_group_permissions", "groups"
