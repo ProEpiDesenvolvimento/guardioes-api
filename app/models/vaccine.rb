@@ -1,7 +1,7 @@
 class Vaccine < ApplicationRecord
   belongs_to :app
   has_many :users
-  has_many :doses,
+  has_many :dose,
   	dependent: :destroy
 
 	validates :name,
