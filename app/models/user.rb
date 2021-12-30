@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   belongs_to :app
   belongs_to :vaccine, optional: true
-  
+  has_many :doses,
+    dependent: :destroy
+
   acts_as_paranoid
 
   has_many :households,
