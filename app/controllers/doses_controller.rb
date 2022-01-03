@@ -1,6 +1,7 @@
 class DosesController < ApplicationController
   before_action :check_params, only: [:create, :update]
-  before_action :check_pertence, only: [:update, :destroy]
+
+  authorize_resource only: [:update, :destroy]
 
   def index
     @doses = Dose.where(user_id: current_user.id)
@@ -49,9 +50,4 @@ class DosesController < ApplicationController
     return render json: {error: "Vacina inexistente"}, status: 400 unless Vaccine.exists?(params[:vaccine_id])
   end
 
-  def check_pertence
-    return render json: {error: "Dose inexistente"}, status: 400 unless Dose.exists?(params[:id])
-    @dose = Dose.find(params[:id])
-    return render json: {error: "A dose não está associada a este usuário"}, status: 401 unless @dose.user_id === current_user.id
-  end
 end
