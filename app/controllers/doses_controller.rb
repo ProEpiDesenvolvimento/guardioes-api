@@ -1,6 +1,5 @@
 class DosesController < ApplicationController
   before_action :check_params, only: [:create, :update]
-
   authorize_resource only: [:update, :destroy]
 
   def index
