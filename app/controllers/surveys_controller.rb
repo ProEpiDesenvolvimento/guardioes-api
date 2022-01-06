@@ -81,13 +81,15 @@ class SurveysController < ApplicationController
 
     date = DateTime.now.in_time_zone(Time.zone).beginning_of_day
     past_surveys = Survey.filter_by_user(current_user.id).where("created_at >= ?", date).where(household: @survey.household)
+
     if past_surveys.length == 2
-      return render json: {errors: "The user already contributed two times today"}, status: :unprocessable_entity
+      return render json: {errors: "The user already contributed two times today"}, status: :already_reported
     elsif past_surveys[0] && past_surveys[0].symptom[0] && @survey.symptom[0]
-      return render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+      return render json: {errors: "The user already contributed with this survey today"}, status: :already_reported
     elsif past_surveys[0] && !past_surveys[0].symptom[0] && !@survey.symptom[0]
-      return render json: {errors: "The user already contributed with this survey today"}, status: :unprocessable_entity
+      return render json: {errors: "The user already contributed with this survey today"}, status: :already_reported
     end
+
     if @survey.save
       @user.update_streak(@survey)
       if @survey.symptom.length > 0
