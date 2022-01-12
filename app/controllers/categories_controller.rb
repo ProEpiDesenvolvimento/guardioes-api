@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :update, :destroy]
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:index]
 
   # GET /categories
   def index
