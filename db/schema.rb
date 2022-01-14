@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_29_134459) do
+ActiveRecord::Schema.define(version: 2022_01_14_175458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_134459) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_categories_on_app_id"
   end
 
   create_table "city_managers", force: :cascade do |t|
@@ -466,6 +468,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_134459) do
   end
 
   add_foreign_key "admins", "apps"
+  add_foreign_key "categories", "apps"
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
   add_foreign_key "form_answers", "form_options"
