@@ -1,11 +1,10 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :update, :destroy]
   load_and_authorize_resource :except => [:index]
-  before_action :set_app, only: [:index]
 
   # GET /categories
   def index
-    @categories = Category.where(app_id: @app.id)
+    @categories = Category.all
 
     render json: @categories
   end
@@ -42,10 +41,6 @@ class CategoriesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_app
-      @app = App.all
-    end
-
     def set_category
       @category = Category.find(params[:id])
     end
