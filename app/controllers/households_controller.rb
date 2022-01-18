@@ -65,7 +65,8 @@ class HouseholdsController < ApplicationController
         :picture, 
         :identification_code, 
         :risk_group,
-        :group_id
+        :group_id,
+        :category_id
       )
     end
 end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :categories
   resources :form_answers
   resources :form_options
   resources :form_questions
