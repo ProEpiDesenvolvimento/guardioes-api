@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'guardians API', type: :request do
+RSpec.describe 'Apps', type: :request do
   # initialize test data
   let!(:apps) { create_list(:app, 10) }
   let(:app_id) { apps.first.id }

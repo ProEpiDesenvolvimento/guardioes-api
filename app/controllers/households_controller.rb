@@ -3,7 +3,7 @@ class HouseholdsController < ApplicationController
   before_action :set_household, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
 
-  authorize_resource only: [:update, :destroy]
+  authorize_resource only: [:show, :update, :destroy]
 
   # GET /households
   def index
@@ -22,7 +22,6 @@ class HouseholdsController < ApplicationController
     @household.user_id = @user.id
 
     if @household.save
-      @user.reindex
       render json: @household, status: :created, location: user_household_path(:id => @user)
     else
       render json: @household.errors, status: :unprocessable_entity
@@ -66,7 +65,8 @@ class HouseholdsController < ApplicationController
         :picture, 
         :identification_code, 
         :risk_group,
-        :group_id
+        :group_id,
+        :category_id
       )
     end
 end

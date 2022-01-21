@@ -18,7 +18,8 @@ def mgp_create_group_manager(save=false)
   group_manager = GroupManager.new(
     email:'groupmanager' + GroupManager.count.to_s + '@admin.com',
     password:'12345678',
-    name: 'jose'
+    name: 'jose',
+    vigilance_syndromes: []
   )
   if save
     group_manager.save()

@@ -224,6 +224,7 @@ private
       :first_dose_date,
       :second_dose_date,
       :vaccine_id,
+      :category_id
     )
   end
 
@@ -247,6 +248,7 @@ private
       :first_dose_date,
       :second_dose_date,
       :vaccine_id,
+      :category_id
     )
   end
 
