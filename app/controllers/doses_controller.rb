@@ -1,6 +1,5 @@
 class DosesController < ApplicationController
-  before_action :check_params, only: [:create, :update, :destroy]
-  before_action :set_dose, only: [:update, :destroy]
+  before_action :check_params, only: [:create, :update]
   authorize_resource only: [:update, :destroy]
 
   def index
@@ -12,15 +11,17 @@ class DosesController < ApplicationController
   def create
     @dose = Dose.new(dose_params)
     @dose.user = User.find(current_user.id)
+    @dose.vaccine = Vaccine.find(params[:vaccine_id])
 
     if @dose.save
       render json: @dose
     else
-      render json: @dose.errors
+      render json: @dose.errors, status: :bad_request
     end
   end
 
   def update
+    @dose.vaccine = Vaccine.find(params[:vaccine_id])
     if @dose.update(dose_params)
       render json: @dose
     else
@@ -32,15 +33,11 @@ class DosesController < ApplicationController
     if @dose.destroy
       render json: {message: "A dose foi apagada com sucesso."}
     else
-      render json: @dose.errors
+      render json: @dose.errors, status: :unprocessable_entity
     end
   end
 
   private 
-
-  def set_dose
-    @dose = Dose.find(params[:id])
-  end
 
   def dose_params
     params.permit(:date, :dose)
