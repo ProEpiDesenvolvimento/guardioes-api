@@ -133,7 +133,7 @@ class RegistrationController < Devise::RegistrationsController
         :identification_code,
         :group_id,
         :risk_group,
-        :policy_version
+        :policy_version,
         :category_id
       )
     elsif params[:admin]
