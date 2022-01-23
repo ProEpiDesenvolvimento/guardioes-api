@@ -58,9 +58,9 @@ class Ability
         can :read, [ App, Content, Vaccine, Category ]
         can :create, [ Household, Survey, FormAnswer ]
         can :update, User, :id => user.id
-        can :update, [ Household, Survey, FormAnswer ], :user_id => user.id
+        can :update, [ Household, Survey, FormAnswer, Dose ], :user_id => user.id
         can :destroy, User, :id => user.id
-        can :destroy, [ Household, Survey, FormAnswer ], :user_id => user.id
+        can :destroy, [ Household, Survey, FormAnswer, Dose ], :user_id => user.id
     end
   end
 

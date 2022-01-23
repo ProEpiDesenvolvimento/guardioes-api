@@ -1,5 +1,6 @@
 class DosesController < ApplicationController
   before_action :check_params, only: [:create, :update]
+  before_action :set_dose, only: [:update, :destroy]
   authorize_resource only: [:update, :destroy]
 
   def index
@@ -43,8 +44,13 @@ class DosesController < ApplicationController
     params.permit(:date, :dose)
   end
 
+  def set_dose
+    @dose = Dose.find(params[:id])
+  end
+
   def check_params
     return render json: {error: "Vacina inexistente"}, status: 400 unless Vaccine.exists?(params[:vaccine_id])
   end
+
 
 end
