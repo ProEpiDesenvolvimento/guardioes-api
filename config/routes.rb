@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :syndromes
   resources :permissions, only: [:create, :update, :show, :destroy]
   resources :vaccines
+  resources :doses
 
   get "groups/root", to: "groups#root"
   post "/groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
@@ -166,6 +167,7 @@ Rails.application.routes.draw do
         registrations: "registration",
         # passwords: "passwords"
       }
+    
 
     root to: "admin#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

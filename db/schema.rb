@@ -107,6 +107,17 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
     t.index ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
   end
 
+  create_table "doses", force: :cascade do |t|
+    t.date "date", null: false
+    t.integer "dose", null: false
+    t.bigint "vaccine_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_doses_on_user_id"
+    t.index ["vaccine_id"], name: "index_doses_on_vaccine_id"
+  end
+
   create_table "form_answers", force: :cascade do |t|
     t.bigint "form_id"
     t.bigint "form_question_id"
@@ -471,6 +482,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
   add_foreign_key "categories", "apps"
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "doses", "users"
+  add_foreign_key "doses", "vaccines"
   add_foreign_key "form_answers", "form_options"
   add_foreign_key "form_answers", "form_questions"
   add_foreign_key "form_answers", "forms"
