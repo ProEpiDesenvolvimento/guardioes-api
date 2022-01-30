@@ -6,6 +6,7 @@ class App < ApplicationRecord
   has_many :group_managers
   has_many :managers
   has_many :vaccines
+  has_many :categories
 
   validates :app_name,
     presence: true,

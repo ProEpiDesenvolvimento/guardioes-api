@@ -1,7 +1,7 @@
 class HouseholdSerializer < ActiveModel::Serializer
   attributes :id, :description, :birthdate, :country, :gender, :race, :kinship,
              :identification_code, :group, :group_id,
-             :risk_group, :created_at, :streak
+             :risk_group, :created_at, :streak, :category
 
   def group
     return nil if object.group.nil?

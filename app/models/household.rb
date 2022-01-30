@@ -18,6 +18,7 @@ class Household < ApplicationRecord
     }
   
   belongs_to :user
+  belongs_to :category, optional: true
   has_many :surveys, dependent: :destroy
 
   belongs_to :group, optional: true
