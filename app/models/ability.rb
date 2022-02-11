@@ -18,7 +18,7 @@ class Ability
           can :update, Admin, :id => user.id
           can :update, App, :id => user.app_id
           can :manage, [ Manager, CityManager, GroupManager ], :app_id => user.app_id
-          can :manage, [ Symptom, Syndrome, Message, Content, User, Vaccine, Category, PreRegister, Permission, :data_visualization ]
+          can :manage, [ Symptom, Syndrome, Message, Content, User, Vaccine, Category, PreRegister, Permission, Rumor, :data_visualization ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)

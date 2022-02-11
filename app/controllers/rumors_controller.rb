@@ -1,8 +1,10 @@
 class RumorsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :set_rumor, only: [:update, :destroy]
+  authorize_resource only: [:update, :destroy]
   
   def create
     @rumor = Rumor.new(rumors_params)
+    @rumor.app_id = current_devise_user.app_id
 
     if @rumor.save
       render json: {error: false, message: 'Sucesso', data: @rumor}, status: :created
@@ -11,11 +13,36 @@ class RumorsController < ApplicationController
     end
   end
 
+  def index
+    @rumors = Rumor.where(app_id: current_devise_user.app_id)
+    render json: @rumors
+  end
+
+  def update
+    if @rumor.update(rumors_params)
+      render json: @rumor
+    else
+      render json: @rumor.errors
+    end
+  end
+
+  def destroy
+    if @rumor.destroy
+      render json: {message: "Rumor removido"}
+    else
+      render json: @rumor.errors
+    end
+  end
+
+  def set_rumor
+    @rumor = Rumor.find(params[:id])
+  end
+
   private
   def rumors_params
     params.require(:rumor).permit(
       :title, 
-      :event_description, 
+      :description, 
       :confirmed_cases, 
       :confirmed_deaths
     )
