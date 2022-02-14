@@ -1,13 +1,13 @@
 class RumorsController < ApplicationController
   before_action :set_rumor, only: [:update, :destroy]
-  authorize_resource only: [:update, :destroy]
+  authorize_resource only: [:index, :update, :destroy]
   
   def create
     @rumor = Rumor.new(rumors_params)
     @rumor.app_id = current_devise_user.app_id
 
     if @rumor.save
-      render json: {error: false, message: 'Sucesso', data: @rumor}, status: :created
+      render json: @rumor
     else
       render json: {error: true, message: "Erro", data: @rumor.errors}, status: :unprocessable_unity
     end
@@ -28,7 +28,7 @@ class RumorsController < ApplicationController
 
   def destroy
     if @rumor.destroy
-      render json: {message: "Rumor removido"}
+      render json: @rumor
     else
       render json: @rumor.errors
     end
