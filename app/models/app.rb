@@ -7,6 +7,7 @@ class App < ApplicationRecord
   has_many :managers
   has_many :vaccines
   has_many :categories
+  has_many :rumors
 
   validates :app_name,
     presence: true,
