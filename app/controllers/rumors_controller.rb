@@ -1,6 +1,6 @@
 class RumorsController < ApplicationController
-  before_action :set_rumor, only: [:update, :destroy]
-  authorize_resource only: [:index, :update, :destroy]
+  before_action :set_rumor, only: [:show, :update, :destroy]
+  authorize_resource only: [:show, :index, :update, :destroy]
   
   def create
     @rumor = Rumor.new(rumors_params)
@@ -13,9 +13,15 @@ class RumorsController < ApplicationController
     end
   end
 
+  def show
+    render json: @rumor
+  end
+
   def index
     @rumors = Rumor.where(app_id: current_devise_user.app_id)
     render json: @rumors
+    #render json: {rumors: @rumors, serializer: RumorSerializer}
+    
   end
 
   def update
