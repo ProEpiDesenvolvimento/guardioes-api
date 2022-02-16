@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_175458) do
+ActiveRecord::Schema.define(version: 2022_02_11_004034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -346,6 +346,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
     t.integer "confirmed_deaths"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_rumors_on_app_id"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -504,6 +506,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
+  add_foreign_key "rumors", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "syndromes"
   add_foreign_key "surveys", "users"
