@@ -20,7 +20,6 @@ class RumorsController < ApplicationController
   def index
     @rumors = Rumor.where(app_id: current_devise_user.app_id)
     render json: @rumors
-    #render json: {rumors: @rumors, serializer: RumorSerializer}
     
   end
 
