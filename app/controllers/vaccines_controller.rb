@@ -48,11 +48,12 @@ class VaccinesController < ApplicationController
           :id,
           :app_id,
           :name, 
-          :laboratory, 
+          :laboratory,
+          :doses,
+          :disease,
           :country_origin,
           :min_dose_interval,
           :max_dose_interval,
-          :doses,
         )
       end
 
