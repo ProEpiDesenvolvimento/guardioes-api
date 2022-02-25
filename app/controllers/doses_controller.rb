@@ -17,7 +17,7 @@ class DosesController < ApplicationController
     if @dose.save
       render json: @dose
     else
-      render json: @dose.errors, status: :bad_request
+      render json: @dose.errors, status: :unprocessable_entity
     end
   end
 
@@ -31,17 +31,13 @@ class DosesController < ApplicationController
   end
 
   def destroy
-    if @dose.destroy
-      render json: {message: "A dose foi apagada com sucesso."}
-    else
-      render json: @dose.errors, status: :unprocessable_entity
-    end
+    @dose.destroy
   end
 
   private 
 
   def dose_params
-    params.permit(:date, :dose)
+    params.permit(:date, :dose, :vaccine_id)
   end
 
   def set_dose
