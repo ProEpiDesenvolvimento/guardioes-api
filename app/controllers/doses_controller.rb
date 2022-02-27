@@ -34,19 +34,17 @@ class DosesController < ApplicationController
     @dose.destroy
   end
 
-  private 
+  private
+    def dose_params
+      params.permit(:date, :dose, :vaccine_id)
+    end
 
-  def dose_params
-    params.permit(:date, :dose, :vaccine_id)
-  end
+    def set_dose
+      @dose = Dose.find(params[:id])
+    end
 
-  def set_dose
-    @dose = Dose.find(params[:id])
-  end
-
-  def check_params
-    return render json: {error: "Vacina inexistente"}, status: 400 unless Vaccine.exists?(params[:vaccine_id])
-  end
-
+    def check_params
+      return render json: {error: "Vacina inexistente"}, status: 400 unless Vaccine.exists?(params[:vaccine_id])
+    end
 
 end
