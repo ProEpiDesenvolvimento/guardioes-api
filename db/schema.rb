@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_24_142812) do
+ActiveRecord::Schema.define(version: 2022_02_28_005457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 2022_02_24_142812) do
   end
 
   create_table "doses", force: :cascade do |t|
-    t.date "date", null: false
+    t.datetime "date", null: false
     t.integer "dose", null: false
     t.bigint "vaccine_id", null: false
     t.bigint "user_id", null: false
@@ -236,7 +236,7 @@ ActiveRecord::Schema.define(version: 2022_02_24_142812) do
 
   create_table "households", force: :cascade do |t|
     t.string "description"
-    t.date "birthdate"
+    t.datetime "birthdate"
     t.string "country"
     t.string "gender"
     t.string "race"
@@ -355,7 +355,7 @@ ActiveRecord::Schema.define(version: 2022_02_24_142812) do
     t.bigint "household_id"
     t.float "latitude"
     t.float "longitude"
-    t.date "bad_since"
+    t.datetime "bad_since"
     t.text "symptom"
     t.string "street"
     t.string "city"
