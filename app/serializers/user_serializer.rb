@@ -1,16 +1,17 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :user_name, :email, :birthdate, :gender, :race, :is_professional, :risk_group,
              :country, :state, :city, :group, :group_id, :identification_code, :streak,
-             :policy_version, :is_vigilance, :phone, :created_at, :created_by, :updated_by, 
-             :deleted_by, :vaccine_id, :first_dose_date, :second_dose_date, :category
+             :policy_version, :is_vigilance, :phone, :category, :created_at, :updated_by,
+             :deleted_by, :vaccine_id, :first_dose_date, :second_dose_date # remove on next release
 
   belongs_to :app do
     link(:app) {app_url(object.app.id)}
   end
 
   has_many :households 
-  belongs_to :vaccine
+  belongs_to :vaccine # remove on next release
   belongs_to :category
+  has_many :doses
 
   def group
     if object.group.nil?
