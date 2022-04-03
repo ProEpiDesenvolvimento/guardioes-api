@@ -4,14 +4,14 @@ class UserSerializer < ActiveModel::Serializer
              :policy_version, :is_vigilance, :phone, :category, :created_at, :updated_by,
              :deleted_by, :vaccine_id, :first_dose_date, :second_dose_date # remove on next release
 
-  belongs_to :app do
-    link(:app) {app_url(object.app.id)}
-  end
-
   has_many :households 
   belongs_to :vaccine # remove on next release
   belongs_to :category
   has_many :doses
+
+  belongs_to :app do
+    link(:app) {app_url(object.app.id)}
+  end
 
   def group
     if object.group.nil?

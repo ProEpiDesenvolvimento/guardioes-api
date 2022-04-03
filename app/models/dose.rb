@@ -16,19 +16,12 @@ class Dose < ApplicationRecord
   
       if u.first_dose_date.present?
         @dose_1 = Dose.new(date: u.first_dose_date, dose: 1, vaccine_id: vaccine_id, user_id: u.id)
-        if @dose_1.save
-          u.update_attribute(:first_dose_date, nil)
-          u.update_attribute(:vaccine_id, nil)
-        end
       end
 
       if u.second_dose_date.present?
         @dose_2 = Dose.new(date: u.second_dose_date, dose: 2, vaccine_id: vaccine_id, user_id: u.id)
-        if @dose_2.save
-          u.update_attribute(:second_dose_date, nil)
-          u.update_attribute(:vaccine_id, nil)
-        end
       end
+      # need set first_dose_date and second_dose_date to nil on next release
     end
   end
 		
