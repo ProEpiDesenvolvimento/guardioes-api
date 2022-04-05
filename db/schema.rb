@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_175458) do
+
+ActiveRecord::Schema.define(version: 2022_02_28_005457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,7 +109,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
   end
 
   create_table "doses", force: :cascade do |t|
-    t.date "date", null: false
+    t.datetime "date", null: false
     t.integer "dose", null: false
     t.bigint "vaccine_id", null: false
     t.bigint "user_id", null: false
@@ -236,7 +237,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
 
   create_table "households", force: :cascade do |t|
     t.string "description"
-    t.date "birthdate"
+    t.datetime "birthdate"
     t.string "country"
     t.string "gender"
     t.string "race"
@@ -346,6 +347,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
     t.integer "confirmed_deaths"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_rumors_on_app_id"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -353,7 +356,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
     t.bigint "household_id"
     t.float "latitude"
     t.float "longitude"
-    t.date "bad_since"
+    t.datetime "bad_since"
     t.text "symptom"
     t.string "street"
     t.string "city"
@@ -475,6 +478,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.string "disease"
     t.index ["app_id"], name: "index_vaccines_on_app_id"
   end
 
@@ -504,6 +508,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_175458) do
   add_foreign_key "permissions", "group_managers"
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
+  add_foreign_key "rumors", "apps"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "syndromes"
   add_foreign_key "surveys", "users"
