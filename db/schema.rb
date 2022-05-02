@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2022_02_28_005457) do
+ActiveRecord::Schema.define(version: 2022_04_28_155059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -348,6 +347,8 @@ ActiveRecord::Schema.define(version: 2022_02_28_005457) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "app_id"
+    t.float "latitude"
+    t.float "longitude"
     t.index ["app_id"], name: "index_rumors_on_app_id"
   end
 

@@ -297,7 +297,7 @@ class Survey < ApplicationRecord
           'value' => self.went_to_hospital != nil ? '1' : '2'
         }
       ],
-      'se_saiu_de_casa_nos_ultimos_14_dias' => [
+      'se_esteve_na_instituicao_nos_ultimos_14_dias' => [
         {
           'value' => self.traveled_to != nil ? '1' : '2'
         }

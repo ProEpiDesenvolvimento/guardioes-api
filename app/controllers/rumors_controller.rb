@@ -7,7 +7,7 @@ class RumorsController < ApplicationController
     @rumor.app_id = current_devise_user.app_id
 
     if @rumor.save
-      render json: @rumor
+      render json: @rumor, status: :created
     else
       render json: {error: true, message: "Erro", data: @rumor.errors}, status: :unprocessable_unity
     end
@@ -20,7 +20,6 @@ class RumorsController < ApplicationController
   def index
     @rumors = Rumor.where(app_id: current_devise_user.app_id)
     render json: @rumors
-    
   end
 
   def update
@@ -49,7 +48,9 @@ class RumorsController < ApplicationController
       :title, 
       :description, 
       :confirmed_cases, 
-      :confirmed_deaths
+      :confirmed_deaths,
+      :latitude,
+      :longitude
     )
   end
 end
