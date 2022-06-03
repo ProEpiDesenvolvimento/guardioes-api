@@ -15,11 +15,19 @@ class Dose < ApplicationRecord
       vaccine_id = u.vaccine_id
   
       if u.first_dose_date.present?
-        @dose_1 = Dose.new(date: u.first_dose_date, dose: 1, vaccine_id: vaccine_id, user_id: u.id)
+        @current_dose_1 = Dose.where(user_id: u.id, dose: 1).first
+
+        if !@current_dose_1.present?
+          @dose_1 = Dose.create(date: u.first_dose_date, dose: 1, vaccine_id: vaccine_id, user_id: u.id)
+        end
       end
 
       if u.second_dose_date.present?
-        @dose_2 = Dose.new(date: u.second_dose_date, dose: 2, vaccine_id: vaccine_id, user_id: u.id)
+        @current_dose_2 = Dose.where(user_id: u.id, dose: 2).first
+
+        if !@current_dose_2.present?
+          @dose_2 = Dose.create(date: u.second_dose_date, dose: 2, vaccine_id: vaccine_id, user_id: u.id)
+        end
       end
       # need set first_dose_date and second_dose_date to nil on next release
     end

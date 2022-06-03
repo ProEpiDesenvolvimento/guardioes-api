@@ -39,6 +39,7 @@
 # misc
 .env
 .env.*
+!.env.example
 .DS_Store
 /client/.env.local
 /client/.env.development.local
