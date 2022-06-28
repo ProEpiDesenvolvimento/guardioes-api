@@ -5,8 +5,20 @@ class ContentsController < ApplicationController
   # GET /contents
   def index
     @user = current_devise_user
-    @contents = Content.user_country(@user.app_id)
 
+    case @user
+      when current_group_manager
+        @contents = Content.where(group_manager_id: @user.id)
+      when current_user
+        if @user.group && @user.group.group_manager
+          @contents = Content.where(group_manager_id: @user.group.group_manager.id)
+        else
+          @contents = Content.where(app_id: @user.app_id).where(group_manager_id: nil)
+        end
+      else
+        @contents = Content.where(app_id: @user.app_id).where(group_manager_id: nil)
+    end
+  
     render json: @contents
   end
 
@@ -52,7 +64,7 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :body, :icon, :content_type, :app_id, :source_link)
+      params.require(:content).permit(:title, :body, :icon, :content_type, :source_link, :group_manager_id, :app_id)
     end
 
     

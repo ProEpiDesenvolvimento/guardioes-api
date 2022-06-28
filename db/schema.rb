@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_28_155059) do
+ActiveRecord::Schema.define(version: 2022_06_29_023629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,7 +94,9 @@ ActiveRecord::Schema.define(version: 2022_04_28_155059) do
     t.string "created_by"
     t.string "updated_by"
     t.string "deleted_by"
+    t.bigint "group_manager_id"
     t.index ["app_id"], name: "index_contents_on_app_id"
+    t.index ["group_manager_id"], name: "index_contents_on_group_manager_id"
   end
 
   create_table "crono_jobs", force: :cascade do |t|
@@ -487,6 +489,7 @@ ActiveRecord::Schema.define(version: 2022_04_28_155059) do
   add_foreign_key "categories", "apps"
   add_foreign_key "city_managers", "apps"
   add_foreign_key "contents", "apps"
+  add_foreign_key "contents", "group_managers"
   add_foreign_key "doses", "users"
   add_foreign_key "doses", "vaccines"
   add_foreign_key "form_answers", "form_options"

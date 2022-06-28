@@ -41,7 +41,7 @@ class Ability
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
-        can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
+        can :manage, [ Content, GroupManagerTeam ], :group_manager_id => user.id
         can :manage, [ Permission, :data_visualization ]
         cannot :manage, Permission, group_manager_team_id: nil
       when GroupManagerTeam
