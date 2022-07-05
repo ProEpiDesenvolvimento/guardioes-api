@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_29_023629) do
+ActiveRecord::Schema.define(version: 2022_07_05_021742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -351,7 +351,9 @@ ActiveRecord::Schema.define(version: 2022_06_29_023629) do
     t.bigint "app_id"
     t.float "latitude"
     t.float "longitude"
+    t.bigint "user_id"
     t.index ["app_id"], name: "index_rumors_on_app_id"
+    t.index ["user_id"], name: "index_rumors_on_user_id"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -513,6 +515,7 @@ ActiveRecord::Schema.define(version: 2022_06_29_023629) do
   add_foreign_key "permissions", "managers"
   add_foreign_key "pre_registers", "apps"
   add_foreign_key "rumors", "apps"
+  add_foreign_key "rumors", "users"
   add_foreign_key "surveys", "households"
   add_foreign_key "surveys", "syndromes"
   add_foreign_key "surveys", "users"

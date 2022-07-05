@@ -4,14 +4,17 @@ class User < ApplicationRecord
   belongs_to :category, optional: true
 
   acts_as_paranoid
-  
-  has_many :doses, 
-    dependent: :destroy
 
   has_many :households,
     dependent: :destroy
 
   has_many :surveys,
+    dependent: :destroy
+
+  has_many :rumors,
+    dependent: :destroy
+
+  has_many :doses,
     dependent: :destroy
 
   has_many :form_answers,
