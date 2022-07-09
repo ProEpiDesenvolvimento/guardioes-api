@@ -16,7 +16,7 @@ class ContentsController < ApplicationController
           @contents = Content.where(app_id: @user.app_id).where(group_manager_id: nil)
         end
       else
-        @contents = Content.where(app_id: @user.app_id).where(group_manager_id: nil)
+        @contents = Content.where(app_id: @user.app_id)
     end
   
     render json: @contents
