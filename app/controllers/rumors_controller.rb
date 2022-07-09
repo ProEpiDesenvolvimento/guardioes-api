@@ -4,6 +4,7 @@ class RumorsController < ApplicationController
   
   def create
     @rumor = Rumor.new(rumors_params)
+    @rumor.user_id = current_devise_user.id
     @rumor.app_id = current_devise_user.app_id
 
     if @rumor.save

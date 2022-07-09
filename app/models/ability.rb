@@ -17,8 +17,8 @@ class Ability
           can :read, App
           can :update, Admin, :id => user.id
           can :update, App, :id => user.app_id
-          can :manage, [ Manager, CityManager, GroupManager, Rumor ], :app_id => user.app_id
-          can :manage, [ Symptom, Syndrome, Message, Content, User, Vaccine, Category, PreRegister, Permission, :data_visualization ]
+          can :manage, [ Manager, CityManager, GroupManager, Content, Rumor ], :app_id => user.app_id
+          can :manage, [ Symptom, Syndrome, Message, User, Vaccine, Category, PreRegister, Permission, :data_visualization ]
         end
       when Manager
         can :read, convert_symbol(@permission.models_read)
@@ -41,7 +41,7 @@ class Ability
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
-        can :manage, [ GroupManagerTeam ], :group_manager_id => user.id
+        can :manage, [ Content, GroupManagerTeam ], :group_manager_id => user.id
         can :manage, [ Permission, :data_visualization ]
         cannot :manage, Permission, group_manager_team_id: nil
       when GroupManagerTeam
