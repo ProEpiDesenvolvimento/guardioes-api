@@ -116,13 +116,36 @@ RSpec.describe CityManagersController, type: :controller do
       end
     end
   end
-
+  
   describe "DELETE #destroy" do
     it "destroys the requested city_manager" do
       city_manager = CityManager.create! valid_attributes
       expect {
         delete :destroy, params: {id: city_manager.to_param}, session: valid_session
       }.to change(CityManager, :count).by(-1)
+    end
+  end
+    
+  describe "RESET PASSWORD" do
+    it "reset the requested password of city_manager valid" do
+      city_manager = CityManager.create! valid_attributes
+      expect{
+        reset_password :reset, params: {password: city_manager.to_param, password_confirmation: city_manager.to_param}, session: valid_session
+    }.to eq ('Senha redefinida com sucesso')
+    end
+
+    it "reset the requested password of city_manager without password confirmation" do
+      city_manager = CityManager.create! valid_attributes
+      expect{
+        reset_password :reset, params: {password: city_manager.to_param}, session: valid_session
+    }.to eq ('Token invalido')
+    end
+
+    it "reset the requested password of city_manager without password" do
+      city_manager = CityManager.create! valid_attributes
+      expect{
+        reset_password :reset, params: {password_confirmation: city_manager.to_param}, session: valid_session
+    }.to eq ('Token invalido')
     end
   end
 
