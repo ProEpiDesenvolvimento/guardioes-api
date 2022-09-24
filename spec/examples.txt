@@ -1,104 +1,59 @@
 example_id                                                    | status  | run_time        |
 ------------------------------------------------------------- | ------- | --------------- |
-./spec/controllers/city_managers_controller_spec.rb[1:1:1]    | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:2:1]    | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:3:1:1]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:3:1:2]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:3:2:1]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:4:1:1]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:4:1:2]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:4:2:1]  | unknown |                 |
-./spec/controllers/city_managers_controller_spec.rb[1:5:1]    | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:1:1]     | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:2:1]     | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:3:1:1]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:3:1:2]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:3:2:1]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:4:1:1]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:4:1:2]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:4:2:1]   | unknown |                 |
-./spec/controllers/form_answers_controller_spec.rb[1:5:1]     | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:1:1]     | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:2:1]     | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:3:1:1]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:3:1:2]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:3:2:1]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:4:1:1]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:4:1:2]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:4:2:1]   | unknown |                 |
-./spec/controllers/form_options_controller_spec.rb[1:5:1]     | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:1:1]   | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:2:1]   | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:3:1:1] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:3:1:2] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:3:2:1] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:4:1:1] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:4:1:2] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:4:2:1] | unknown |                 |
-./spec/controllers/form_questions_controller_spec.rb[1:5:1]   | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:1:1]            | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:2:1]            | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:3:1:1]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:3:1:2]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:3:2:1]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:4:1:1]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:4:1:2]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:4:2:1]          | unknown |                 |
-./spec/controllers/forms_controller_spec.rb[1:5:1]            | unknown |                 |
-./spec/controllers/categories_controller_spec.rb[1:1:1]       | pending | 0.00177 seconds |
-./spec/controllers/categories_controller_spec.rb[1:2:1]       | pending | 0.00142 seconds |
-./spec/controllers/categories_controller_spec.rb[1:3:1:1]     | pending | 0.00387 seconds |
-./spec/controllers/categories_controller_spec.rb[1:3:1:2]     | pending | 0.00162 seconds |
-./spec/controllers/categories_controller_spec.rb[1:3:2:1]     | pending | 0.00144 seconds |
-./spec/controllers/categories_controller_spec.rb[1:4:1:1]     | pending | 0.00175 seconds |
-./spec/controllers/categories_controller_spec.rb[1:4:1:2]     | pending | 0.00193 seconds |
-./spec/controllers/categories_controller_spec.rb[1:4:2:1]     | pending | 0.00189 seconds |
-./spec/controllers/categories_controller_spec.rb[1:5:1]       | pending | 0.00164 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:1:1]    | pending | 0.00218 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:2:1]    | pending | 0.00147 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:3:1:1]  | pending | 0.0032 seconds  |
-./spec/controllers/city_managers_controller_spec.rb[1:3:1:2]  | pending | 0.00157 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:3:2:1]  | pending | 0.00175 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:4:1:1]  | pending | 0.0016 seconds  |
-./spec/controllers/city_managers_controller_spec.rb[1:4:1:2]  | pending | 0.0017 seconds  |
-./spec/controllers/city_managers_controller_spec.rb[1:4:2:1]  | pending | 0.00174 seconds |
-./spec/controllers/city_managers_controller_spec.rb[1:5:1]    | pending | 0.00195 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:1:1]     | pending | 0.00162 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:2:1]     | pending | 0.00149 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:3:1:1]   | pending | 0.00426 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:3:1:2]   | pending | 0.00154 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:3:2:1]   | pending | 0.0017 seconds  |
-./spec/controllers/form_answers_controller_spec.rb[1:4:1:1]   | pending | 0.00156 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:4:1:2]   | pending | 0.0018 seconds  |
-./spec/controllers/form_answers_controller_spec.rb[1:4:2:1]   | pending | 0.00135 seconds |
-./spec/controllers/form_answers_controller_spec.rb[1:5:1]     | pending | 0.00174 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:1:1]     | pending | 0.00166 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:2:1]     | pending | 0.00141 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:3:1:1]   | pending | 0.00257 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:3:1:2]   | pending | 0.00155 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:3:2:1]   | pending | 0.00146 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:4:1:1]   | pending | 0.00235 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:4:1:2]   | pending | 0.00178 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:4:2:1]   | pending | 0.00159 seconds |
-./spec/controllers/form_options_controller_spec.rb[1:5:1]     | pending | 0.00176 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:1:1]   | pending | 0.00203 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:2:1]   | pending | 0.00215 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:3:1:1] | pending | 0.00859 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:3:1:2] | pending | 0.00336 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:3:2:1] | pending | 0.00228 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:4:1:1] | pending | 0.00781 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:4:1:2] | pending | 0.00758 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:4:2:1] | pending | 0.01581 seconds |
-./spec/controllers/form_questions_controller_spec.rb[1:5:1]   | pending | 0.00454 seconds |
-./spec/controllers/forms_controller_spec.rb[1:1:1]            | pending | 0.00155 seconds |
-./spec/controllers/forms_controller_spec.rb[1:2:1]            | pending | 0.00173 seconds |
-./spec/controllers/forms_controller_spec.rb[1:3:1:1]          | pending | 0.00363 seconds |
-./spec/controllers/forms_controller_spec.rb[1:3:1:2]          | pending | 0.00179 seconds |
-./spec/controllers/forms_controller_spec.rb[1:3:2:1]          | pending | 0.00153 seconds |
-./spec/controllers/forms_controller_spec.rb[1:4:1:1]          | pending | 0.00148 seconds |
-./spec/controllers/forms_controller_spec.rb[1:4:1:2]          | pending | 0.00152 seconds |
-./spec/controllers/forms_controller_spec.rb[1:4:2:1]          | pending | 0.00159 seconds |
-./spec/controllers/forms_controller_spec.rb[1:5:1]            | pending | 0.0016 seconds  |
+./spec/controllers/categories_controller_spec.rb[1:1:1]       | pending | 0.00309 seconds |
+./spec/controllers/categories_controller_spec.rb[1:2:1]       | pending | 0.00284 seconds |
+./spec/controllers/categories_controller_spec.rb[1:3:1:1]     | pending | 0.00609 seconds |
+./spec/controllers/categories_controller_spec.rb[1:3:1:2]     | pending | 0.00293 seconds |
+./spec/controllers/categories_controller_spec.rb[1:3:2:1]     | pending | 0.00296 seconds |
+./spec/controllers/categories_controller_spec.rb[1:4:1:1]     | pending | 0.00207 seconds |
+./spec/controllers/categories_controller_spec.rb[1:4:1:2]     | pending | 0.00288 seconds |
+./spec/controllers/categories_controller_spec.rb[1:4:2:1]     | pending | 0.00219 seconds |
+./spec/controllers/categories_controller_spec.rb[1:5:1]       | pending | 0.00286 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:1:1]    | pending | 0.00429 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:2:1]    | pending | 0.00294 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:3:1:1]  | pending | 0.00815 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:3:1:2]  | pending | 0.00331 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:3:2:1]  | pending | 0.0028 seconds  |
+./spec/controllers/city_managers_controller_spec.rb[1:4:1:1]  | pending | 0.00284 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:4:1:2]  | pending | 0.00311 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:4:2:1]  | pending | 0.00354 seconds |
+./spec/controllers/city_managers_controller_spec.rb[1:5:1]    | pending | 0.00437 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:1:1]     | pending | 0.00459 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:2:1]     | pending | 0.00209 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:3:1:1]   | pending | 0.03927 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:3:1:2]   | pending | 0.01726 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:3:2:1]   | pending | 0.00586 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:4:1:1]   | pending | 0.01032 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:4:1:2]   | pending | 0.00792 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:4:2:1]   | pending | 0.00499 seconds |
+./spec/controllers/form_answers_controller_spec.rb[1:5:1]     | pending | 0.00356 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:1:1]     | pending | 0.00222 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:2:1]     | pending | 0.00388 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:3:1:1]   | pending | 0.01361 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:3:1:2]   | pending | 0.00344 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:3:2:1]   | pending | 0.006 seconds   |
+./spec/controllers/form_options_controller_spec.rb[1:4:1:1]   | pending | 0.00442 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:4:1:2]   | pending | 0.00528 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:4:2:1]   | pending | 0.00304 seconds |
+./spec/controllers/form_options_controller_spec.rb[1:5:1]     | pending | 0.00246 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:1:1]   | pending | 0.00265 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:2:1]   | pending | 0.00266 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:3:1:1] | pending | 0.00826 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:3:1:2] | pending | 0.00263 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:3:2:1] | pending | 0.00284 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:4:1:1] | pending | 0.00279 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:4:1:2] | pending | 0.00302 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:4:2:1] | pending | 0.00294 seconds |
+./spec/controllers/form_questions_controller_spec.rb[1:5:1]   | pending | 0.00267 seconds |
+./spec/controllers/forms_controller_spec.rb[1:1:1]            | pending | 0.00324 seconds |
+./spec/controllers/forms_controller_spec.rb[1:2:1]            | pending | 0.00283 seconds |
+./spec/controllers/forms_controller_spec.rb[1:3:1:1]          | pending | 0.00564 seconds |
+./spec/controllers/forms_controller_spec.rb[1:3:1:2]          | pending | 0.00295 seconds |
+./spec/controllers/forms_controller_spec.rb[1:3:2:1]          | pending | 0.00258 seconds |
+./spec/controllers/forms_controller_spec.rb[1:4:1:1]          | pending | 0.00273 seconds |
+./spec/controllers/forms_controller_spec.rb[1:4:1:2]          | pending | 0.00315 seconds |
+./spec/controllers/forms_controller_spec.rb[1:4:2:1]          | pending | 0.00282 seconds |
+./spec/controllers/forms_controller_spec.rb[1:5:1]            | pending | 0.0034 seconds  |
 ./spec/controllers/groups_controller_spec.rb[1:1:1]           | pending | 0.00266 seconds |
 ./spec/controllers/groups_controller_spec.rb[1:2:1]           | pending | 0.00347 seconds |
 ./spec/controllers/groups_controller_spec.rb[1:3:1:1]         | pending | 0.01858 seconds |
@@ -108,187 +63,88 @@ example_id                                                    | status  | run_ti
 ./spec/controllers/groups_controller_spec.rb[1:4:1:2]         | pending | 0.00331 seconds |
 ./spec/controllers/groups_controller_spec.rb[1:4:2:1]         | pending | 0.00259 seconds |
 ./spec/controllers/groups_controller_spec.rb[1:5:1]           | pending | 0.00301 seconds |
-./spec/controllers/messages_controller_spec.rb[1:1]           | passed  | 0.06964 seconds |
-./spec/controllers/messages_controller_spec.rb[1:2:1]         | pending | 0.0215 seconds  |
-./spec/controllers/messages_controller_spec.rb[1:3:1]         | pending | 0.01785 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:1:1]       | pending | 0.02162 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:1:2]       | pending | 0.02075 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:2:1]       | pending | 0.01479 seconds |
-./spec/controllers/messages_controller_spec.rb[1:5:1:1]       | pending | 0.01894 seconds |
-./spec/controllers/messages_controller_spec.rb[1:5:1:2]       | pending | 0.01737 seconds |
-./spec/controllers/messages_controller_spec.rb[1:5:2:1]       | pending | 0.02144 seconds |
-./spec/controllers/messages_controller_spec.rb[1:6:1]         | pending | 0.02601 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:1]      | passed  | 0.01929 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:2:1]    | pending | 0.01754 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:3:1]    | pending | 0.01472 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:1:1]  | pending | 0.02879 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:1:2]  | pending | 0.01626 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:2:1]  | pending | 0.01441 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:1:1]  | pending | 0.01334 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:1:2]  | pending | 0.01967 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:2:1]  | pending | 0.02105 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:6:1]    | pending | 0.01416 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:1]          | passed  | 0.02233 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:2:1]        | pending | 0.02141 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:3:1]        | pending | 0.02231 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:1:1]      | pending | 0.03691 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:1:2]      | pending | 0.02119 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:2:1]      | pending | 0.02239 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:1:1]      | pending | 0.01867 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:1:2]      | pending | 0.02018 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:2:1]      | pending | 0.02196 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:6:1]        | pending | 0.018 seconds   |
-./spec/controllers/twitter_apis_controller_spec.rb[1:1:1]     | pending | 0.00289 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:2:1]     | pending | 0.01315 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:1]   | pending | 0.00987 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:2]   | pending | 0.00822 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:2:1]   | pending | 0.00527 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:1]   | pending | 0.00413 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:2]   | pending | 0.00252 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:2:1]   | pending | 0.00692 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:5:1]     | pending | 0.00487 seconds |
+./spec/controllers/messages_controller_spec.rb[1:1]           | passed  | 0.01487 seconds |
+./spec/controllers/messages_controller_spec.rb[1:2:1]         | pending | 0.0134 seconds  |
+./spec/controllers/messages_controller_spec.rb[1:3:1]         | pending | 0.01453 seconds |
+./spec/controllers/messages_controller_spec.rb[1:4:1:1]       | pending | 0.01704 seconds |
+./spec/controllers/messages_controller_spec.rb[1:4:1:2]       | pending | 0.01738 seconds |
+./spec/controllers/messages_controller_spec.rb[1:4:2:1]       | pending | 0.01749 seconds |
+./spec/controllers/messages_controller_spec.rb[1:5:1:1]       | pending | 0.01333 seconds |
+./spec/controllers/messages_controller_spec.rb[1:5:1:2]       | pending | 0.01214 seconds |
+./spec/controllers/messages_controller_spec.rb[1:5:2:1]       | pending | 0.01043 seconds |
+./spec/controllers/messages_controller_spec.rb[1:6:1]         | pending | 0.01653 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:1]      | passed  | 0.01399 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:2:1]    | pending | 0.01429 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:3:1]    | pending | 0.01433 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:4:1:1]  | pending | 0.01533 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:4:1:2]  | pending | 0.01432 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:4:2:1]  | pending | 0.01827 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:5:1:1]  | pending | 0.01191 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:5:1:2]  | pending | 0.01346 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:5:2:1]  | pending | 0.01151 seconds |
+./spec/controllers/pre_registers_controller_spec.rb[1:6:1]    | pending | 0.01441 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:1]          | passed  | 0.01787 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:2:1]        | pending | 0.01289 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:3:1]        | pending | 0.01445 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:4:1:1]      | pending | 0.01949 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:4:1:2]      | pending | 0.01238 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:4:2:1]      | pending | 0.0129 seconds  |
+./spec/controllers/syndromes_controller_spec.rb[1:5:1:1]      | pending | 0.01408 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:5:1:2]      | pending | 0.01304 seconds |
+./spec/controllers/syndromes_controller_spec.rb[1:5:2:1]      | pending | 0.0128 seconds  |
+./spec/controllers/syndromes_controller_spec.rb[1:6:1]        | pending | 0.01294 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:1:1]     | pending | 0.00241 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:2:1]     | pending | 0.00306 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:1]   | pending | 0.00517 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:2]   | pending | 0.00204 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:3:2:1]   | pending | 0.00291 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:1]   | pending | 0.00195 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:2]   | pending | 0.00233 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:4:2:1]   | pending | 0.00208 seconds |
+./spec/controllers/twitter_apis_controller_spec.rb[1:5:1]     | pending | 0.00257 seconds |
 ./spec/jobs/create_content_job_spec.rb[1:1]                   | pending | 0.00001 seconds |
-./spec/models/app_spec.rb[1:1]                                | passed  | 0.01302 seconds |
-./spec/models/app_spec.rb[1:2]                                | passed  | 0.00875 seconds |
-./spec/models/city_manager_spec.rb[1:1]                       | unknown |                 |
-./spec/models/dose_spec.rb[1:1:1]                             | passed  | 0.00494 seconds |
-./spec/models/dose_spec.rb[1:1:2]                             | passed  | 0.01123 seconds |
-./spec/models/dose_spec.rb[1:1:3]                             | passed  | 0.0055 seconds  |
-./spec/models/dose_spec.rb[1:2:1]                             | passed  | 0.00823 seconds |
-./spec/models/dose_spec.rb[1:2:2]                             | passed  | 0.00339 seconds |
-./spec/models/dose_spec.rb[1:2:3]                             | passed  | 0.00433 seconds |
-./spec/models/form_answer_spec.rb[1:1]                        | unknown |                 |
-./spec/models/form_option_spec.rb[1:1]                        | unknown |                 |
-./spec/models/form_question_spec.rb[1:1]                      | unknown |                 |
-./spec/models/form_spec.rb[1:1]                               | unknown |                 |
-./spec/models/group_manager_team_spec.rb[1:1]                 | unknown |                 |
-./spec/models/group_spec.rb[1:1:1:1]                          | passed  | 0.01168 seconds |
-./spec/models/group_spec.rb[1:1:1:2]                          | passed  | 0.00989 seconds |
-./spec/models/group_spec.rb[1:1:2:1]                          | passed  | 0.07789 seconds |
-./spec/models/group_spec.rb[1:1:2:2]                          | passed  | 0.08081 seconds |
-./spec/models/group_spec.rb[1:1:2:3]                          | passed  | 0.07972 seconds |
-./spec/models/group_spec.rb[1:1:2:4]                          | passed  | 0.09459 seconds |
-./spec/models/group_spec.rb[1:1:3:1]                          | passed  | 0.04311 seconds |
-./spec/models/group_spec.rb[1:1:3:2]                          | passed  | 0.05948 seconds |
-./spec/models/group_spec.rb[1:1:3:3]                          | passed  | 0.11624 seconds |
-./spec/models/group_spec.rb[1:1:3:4]                          | passed  | 0.05798 seconds |
-./spec/models/group_spec.rb[1:1:3:5]                          | passed  | 0.04933 seconds |
-./spec/models/group_spec.rb[1:1:4:1]                          | passed  | 0.07534 seconds |
-./spec/models/group_spec.rb[1:1:5:1]                          | passed  | 0.06076 seconds |
-./spec/models/group_spec.rb[1:1:5:2]                          | passed  | 0.06248 seconds |
-./spec/models/group_spec.rb[1:1:5:3]                          | passed  | 0.08887 seconds |
-./spec/models/group_spec.rb[1:1:5:4]                          | passed  | 0.07857 seconds |
-./spec/models/group_spec.rb[1:1:6:1]                          | passed  | 0.0424 seconds  |
-./spec/models/group_spec.rb[1:1:6:2]                          | passed  | 0.03108 seconds |
-./spec/models/group_spec.rb[1:1:7:1]                          | passed  | 0.06774 seconds |
-./spec/models/group_spec.rb[1:1:7:2]                          | passed  | 0.03316 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:1]     | passed  | 0.01717 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:2]     | passed  | 0.02609 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:3]     | passed  | 0.01571 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:4]     | passed  | 0.03426 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:5]     | passed  | 0.01129 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:1]     | passed  | 0.00492 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:2]     | passed  | 0.00241 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:3]     | passed  | 0.00319 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:4]     | passed  | 0.00268 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:5]     | passed  | 0.00302 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:6]     | passed  | 0.00477 seconds |
-./spec/models/manager_spec.rb[1:1]                            | pending | 0.00001 seconds |
-./spec/models/message_spec.rb[1:1]                            | pending | 0.00003 seconds |
-./spec/models/permission_spec.rb[1:1]                         | pending | 0.00001 seconds |
-./spec/models/pre_register_spec.rb[1:1]                       | pending | 0.00001 seconds |
-./spec/models/rumor_spec.rb[1:1]                              | pending | 0.00001 seconds |
-./spec/models/twitter_api_spec.rb[1:1:1:1]                    | passed  | 0.01847 seconds |
-./spec/models/twitter_api_spec.rb[1:1:1:2]                    | passed  | 0.01442 seconds |
-./spec/models/twitter_api_spec.rb[1:1:2:1]                    | passed  | 0.01603 seconds |
-./spec/controllers/messages_controller_spec.rb[1:1]           | passed  | 0.01057 seconds |
-./spec/controllers/messages_controller_spec.rb[1:2:1]         | pending | 0.00877 seconds |
-./spec/controllers/messages_controller_spec.rb[1:3:1]         | pending | 0.00987 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:1:1]       | pending | 0.01128 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:1:2]       | pending | 0.00942 seconds |
-./spec/controllers/messages_controller_spec.rb[1:4:2:1]       | pending | 0.00941 seconds |
-./spec/controllers/messages_controller_spec.rb[1:5:1:1]       | pending | 0.00897 seconds |
-./spec/controllers/messages_controller_spec.rb[1:5:1:2]       | pending | 0.0091 seconds  |
-./spec/controllers/messages_controller_spec.rb[1:5:2:1]       | pending | 0.00922 seconds |
-./spec/controllers/messages_controller_spec.rb[1:6:1]         | pending | 0.00908 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:1]      | passed  | 0.0438 seconds  |
-./spec/controllers/pre_registers_controller_spec.rb[1:2:1]    | pending | 0.00937 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:3:1]    | pending | 0.0093 seconds  |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:1:1]  | pending | 0.01229 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:1:2]  | pending | 0.00957 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:4:2:1]  | pending | 0.0102 seconds  |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:1:1]  | pending | 0.00899 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:1:2]  | pending | 0.00875 seconds |
-./spec/controllers/pre_registers_controller_spec.rb[1:5:2:1]  | pending | 0.0099 seconds  |
-./spec/controllers/pre_registers_controller_spec.rb[1:6:1]    | pending | 0.01954 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:1]          | passed  | 0.0091 seconds  |
-./spec/controllers/syndromes_controller_spec.rb[1:2:1]        | pending | 0.00865 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:3:1]        | pending | 0.00878 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:1:1]      | pending | 0.01219 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:1:2]      | pending | 0.00876 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:4:2:1]      | pending | 0.00915 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:1:1]      | pending | 0.00873 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:1:2]      | pending | 0.00878 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:5:2:1]      | pending | 0.00856 seconds |
-./spec/controllers/syndromes_controller_spec.rb[1:6:1]        | pending | 0.01164 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:1:1]     | pending | 0.00155 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:2:1]     | pending | 0.00188 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:1]   | pending | 0.00215 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:1:2]   | pending | 0.0023 seconds  |
-./spec/controllers/twitter_apis_controller_spec.rb[1:3:2:1]   | pending | 0.00197 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:1]   | pending | 0.00181 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:1:2]   | pending | 0.00173 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:4:2:1]   | pending | 0.00165 seconds |
-./spec/controllers/twitter_apis_controller_spec.rb[1:5:1]     | pending | 0.00206 seconds |
-./spec/jobs/create_content_job_spec.rb[1:1]                   | pending | 0.00001 seconds |
-./spec/models/app_spec.rb[1:1]                                | passed  | 0.00451 seconds |
-./spec/models/app_spec.rb[1:2]                                | passed  | 0.00514 seconds |
-./spec/models/category_spec.rb[1:1]                           | pending | 0 seconds       |
+./spec/models/app_spec.rb[1:1]                                | passed  | 0.00889 seconds |
+./spec/models/app_spec.rb[1:2]                                | passed  | 0.00901 seconds |
+./spec/models/category_spec.rb[1:1]                           | pending | 0.00001 seconds |
 ./spec/models/city_manager_spec.rb[1:1]                       | pending | 0.00001 seconds |
-./spec/models/form_answer_spec.rb[1:1]                        | pending | 0 seconds       |
+./spec/models/dose_spec.rb[1:1:1:1]                           | passed  | 0.02107 seconds |
+./spec/models/dose_spec.rb[1:2:1:1]                           | passed  | 0.01614 seconds |
+./spec/models/dose_spec.rb[1:2:2:1]                           | passed  | 0.01191 seconds |
+./spec/models/dose_spec.rb[1:3:1:1]                           | passed  | 0.02368 seconds |
+./spec/models/dose_spec.rb[1:3:2:1]                           | passed  | 0.0945 seconds  |
+./spec/models/dose_spec.rb[1:3:3:1]                           | passed  | 0.02271 seconds |
+./spec/models/dose_spec.rb[1:3:4:1]                           | passed  | 0.02221 seconds |
+./spec/models/form_answer_spec.rb[1:1]                        | pending | 0.00001 seconds |
 ./spec/models/form_option_spec.rb[1:1]                        | pending | 0.00001 seconds |
 ./spec/models/form_question_spec.rb[1:1]                      | pending | 0.00001 seconds |
 ./spec/models/form_spec.rb[1:1]                               | pending | 0.00001 seconds |
-./spec/models/group_manager_team_spec.rb[1:1]                 | pending | 0 seconds       |
-./spec/models/group_spec.rb[1:1:1:1]                          | passed  | 0.00557 seconds |
-./spec/models/group_spec.rb[1:1:1:2]                          | passed  | 0.00498 seconds |
-./spec/models/group_spec.rb[1:1:2:1]                          | passed  | 0.03876 seconds |
-./spec/models/group_spec.rb[1:1:2:2]                          | passed  | 0.03224 seconds |
-./spec/models/group_spec.rb[1:1:2:3]                          | passed  | 0.04117 seconds |
-./spec/models/group_spec.rb[1:1:2:4]                          | passed  | 0.03993 seconds |
-./spec/models/group_spec.rb[1:1:3:1]                          | passed  | 0.01924 seconds |
-./spec/models/group_spec.rb[1:1:3:2]                          | passed  | 0.02455 seconds |
-./spec/models/group_spec.rb[1:1:3:3]                          | passed  | 0.02862 seconds |
-./spec/models/group_spec.rb[1:1:3:4]                          | passed  | 0.05446 seconds |
-./spec/models/group_spec.rb[1:1:3:5]                          | passed  | 0.02454 seconds |
-./spec/models/group_spec.rb[1:1:4:1]                          | passed  | 0.05401 seconds |
-./spec/models/group_spec.rb[1:1:5:1]                          | passed  | 0.01994 seconds |
-./spec/models/group_spec.rb[1:1:5:2]                          | passed  | 0.02148 seconds |
-./spec/models/group_spec.rb[1:1:5:3]                          | passed  | 0.03127 seconds |
-./spec/models/group_spec.rb[1:1:5:4]                          | passed  | 0.04075 seconds |
-./spec/models/group_spec.rb[1:1:6:1]                          | passed  | 0.02464 seconds |
-./spec/models/group_spec.rb[1:1:6:2]                          | passed  | 0.01665 seconds |
-./spec/models/group_spec.rb[1:1:7:1]                          | passed  | 0.02341 seconds |
-./spec/models/group_spec.rb[1:1:7:2]                          | passed  | 0.01578 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:1]     | passed  | 0.00964 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:2]     | passed  | 0.04211 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:3]     | passed  | 0.0054 seconds  |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:4]     | passed  | 0.00955 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:1:1:5]     | passed  | 0.0042 seconds  |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:1]     | passed  | 0.00692 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:2]     | passed  | 0.00649 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:3]     | passed  | 0.00699 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:4]     | passed  | 0.00795 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:5]     | passed  | 0.01032 seconds |
-./spec/models/manager_group_permission_spec.rb[1:1:2:1:6]     | passed  | 0.00746 seconds |
-./spec/models/manager_spec.rb[1:1]                            | pending | 0 seconds       |
+./spec/models/group_manager_team_spec.rb[1:1]                 | pending | 0.00001 seconds |
+./spec/models/group_spec.rb[1:1]                              | passed  | 0.04969 seconds |
+./spec/models/group_spec.rb[1:2]                              | passed  | 0.03346 seconds |
+./spec/models/group_spec.rb[1:3]                              | failed  | 0.0034 seconds  |
+./spec/models/manager_group_permission_spec.rb[1:1:1:1:1]     | passed  | 0.01411 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:1:1:2]     | passed  | 0.01623 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:1:1:3]     | passed  | 0.03825 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:1:1:4]     | passed  | 0.01383 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:1:1:5]     | passed  | 0.00522 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:1]     | passed  | 0.00259 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:2]     | passed  | 0.00255 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:3]     | passed  | 0.01134 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:4]     | passed  | 0.00245 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:5]     | passed  | 0.00245 seconds |
+./spec/models/manager_group_permission_spec.rb[1:1:2:1:6]     | passed  | 0.00266 seconds |
+./spec/models/manager_spec.rb[1:1]                            | pending | 0.00001 seconds |
 ./spec/models/message_spec.rb[1:1]                            | pending | 0.00001 seconds |
 ./spec/models/permission_spec.rb[1:1]                         | pending | 0.00001 seconds |
-./spec/models/pre_register_spec.rb[1:1]                       | pending | 0 seconds       |
-./spec/models/rumor_spec.rb[1:1]                              | pending | 0.00001 seconds |
-./spec/models/twitter_api_spec.rb[1:1:1:1]                    | passed  | 0.00571 seconds |
-./spec/models/twitter_api_spec.rb[1:1:1:2]                    | passed  | 0.00531 seconds |
-./spec/models/twitter_api_spec.rb[1:1:2:1]                    | passed  | 0.00538 seconds |
+./spec/models/pre_register_spec.rb[1:1]                       | pending | 0.00001 seconds |
+./spec/models/rumor_spec.rb[1:1]                              | pending | 0.00003 seconds |
+./spec/models/twitter_api_spec.rb[1:1:1:1]                    | passed  | 0.00821 seconds |
+./spec/models/twitter_api_spec.rb[1:1:1:2]                    | passed  | 0.00881 seconds |
+./spec/models/twitter_api_spec.rb[1:1:2:1]                    | passed  | 0.01892 seconds |
+./spec/models/user_mailer_spec.rb[1:1]                        | passed  | 0.00851 seconds |
+./spec/models/user_mailer_spec.rb[1:2]                        | passed  | 0.18797 seconds |
+./spec/models/user_mailer_spec.rb[1:3]                        | passed  | 0.00726 seconds |
+./spec/models/user_mailer_spec.rb[1:4]                        | passed  | 0.00399 seconds |
 ./spec/models/user_spec.rb[1:1:1:1]                           | failed  | 0.0208 seconds  |
 ./spec/models/user_spec.rb[1:1:1:2]                           | failed  | 0.1018 seconds  |
 ./spec/models/user_spec.rb[1:1:1:3]                           | failed  | 0.0153 seconds  |
@@ -297,149 +153,84 @@ example_id                                                    | status  | run_ti
 ./spec/models/user_spec.rb[1:1:2:3]                           | failed  | 0.02437 seconds |
 ./spec/models/user_spec.rb[1:1:2:4]                           | passed  | 0.02691 seconds |
 ./spec/models/user_spec.rb[1:1:2:5]                           | passed  | 0.01987 seconds |
-./spec/models/vaccine_spec.rb[1:1]                            | unknown |                 |
-./spec/request/app_spec.rb[1:1:1]                             | failed  | 0.01396 seconds |
-./spec/request/app_spec.rb[1:1:2]                             | failed  | 0.01347 seconds |
-./spec/requests/city_managers_spec.rb[1:1:1]                  | unknown |                 |
-./spec/requests/form_answers_spec.rb[1:1:1]                   | unknown |                 |
-./spec/requests/form_options_spec.rb[1:1:1]                   | unknown |                 |
-./spec/requests/form_questions_spec.rb[1:1:1]                 | unknown |                 |
-./spec/requests/forms_spec.rb[1:1:1]                          | unknown |                 |
-./spec/requests/messages_spec.rb[1:1:1]                       | passed  | 0.01659 seconds |
-./spec/requests/pre_registers_spec.rb[1:1:1]                  | passed  | 0.01319 seconds |
-./spec/requests/twitter_apis_spec.rb[1:1:1]                   | passed  | 0.05118 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:1]           | unknown |                 |
-./spec/routing/city_managers_routing_spec.rb[1:1:2]           | unknown |                 |
-./spec/routing/city_managers_routing_spec.rb[1:1:3]           | unknown |                 |
-./spec/routing/city_managers_routing_spec.rb[1:1:4]           | unknown |                 |
-./spec/routing/city_managers_routing_spec.rb[1:1:5]           | unknown |                 |
-./spec/routing/city_managers_routing_spec.rb[1:1:6]           | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:1]            | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:2]            | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:3]            | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:4]            | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:5]            | unknown |                 |
-./spec/routing/form_answers_routing_spec.rb[1:1:6]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:1]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:2]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:3]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:4]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:5]            | unknown |                 |
-./spec/routing/form_options_routing_spec.rb[1:1:6]            | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:1]          | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:2]          | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:3]          | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:4]          | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:5]          | unknown |                 |
-./spec/routing/form_questions_routing_spec.rb[1:1:6]          | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:1]                   | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:2]                   | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:3]                   | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:4]                   | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:5]                   | unknown |                 |
-./spec/routing/forms_routing_spec.rb[1:1:6]                   | unknown |                 |
-./spec/routing/messages_routing_spec.rb[1:1:1]                | passed  | 0.00548 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:2]                | passed  | 0.0049 seconds  |
-./spec/routing/messages_routing_spec.rb[1:1:3]                | passed  | 0.00428 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:4]                | passed  | 0.00534 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:5]                | passed  | 0.00336 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:6]                | passed  | 0.003 seconds   |
-./spec/routing/pre_registers_routing_spec.rb[1:1:1]           | passed  | 0.00315 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:2]           | passed  | 0.00456 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:3]           | passed  | 0.00678 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:4]           | passed  | 0.00418 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:5]           | passed  | 0.00743 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:6]           | passed  | 0.0064 seconds  |
-./spec/routing/syndromes_routing_spec.rb[1:1:1]               | passed  | 0.00486 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:2]               | passed  | 0.004 seconds   |
-./spec/routing/syndromes_routing_spec.rb[1:1:3]               | passed  | 0.00271 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:4]               | passed  | 0.00356 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:5]               | passed  | 0.00617 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:6]               | passed  | 0.00632 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:1]            | passed  | 0.00473 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:2]            | passed  | 0.00943 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:3]            | passed  | 0.0042 seconds  |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:4]            | passed  | 0.0101 seconds  |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:5]            | passed  | 0.00311 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:6]            | passed  | 0.0046 seconds  |
-./spec/models/vaccine_spec.rb[1:1]                            | pending | 0 seconds       |
-./spec/requests/app_spec.rb[1:1:1]                            | passed  | 0.02719 seconds |
-./spec/requests/app_spec.rb[1:1:2]                            | passed  | 0.038 seconds   |
+./spec/models/vaccine_spec.rb[1:1]                            | pending | 0.00001 seconds |
+./spec/requests/app_spec.rb[1:1:1]                            | passed  | 0.05041 seconds |
+./spec/requests/app_spec.rb[1:1:2]                            | passed  | 0.0368 seconds  |
 ./spec/requests/categories_spec.rb[1:1:1]                     | failed  | 0.00798 seconds |
-./spec/requests/city_managers_spec.rb[1:1:1]                  | passed  | 0.08489 seconds |
-./spec/requests/data_visualizations_spec.rb[1:1:1]            | passed  | 0.02438 seconds |
-./spec/requests/data_visualizations_spec.rb[1:1:2]            | passed  | 0.03143 seconds |
-./spec/requests/data_visualizations_spec.rb[1:2:1]            | passed  | 0.02067 seconds |
-./spec/requests/data_visualizations_spec.rb[1:2:2]            | passed  | 0.02824 seconds |
-./spec/requests/data_visualizations_spec.rb[1:3:1]            | passed  | 0.02223 seconds |
-./spec/requests/data_visualizations_spec.rb[1:3:2]            | passed  | 0.03656 seconds |
-./spec/requests/data_visualizations_spec.rb[1:4:1]            | passed  | 0.02362 seconds |
-./spec/requests/data_visualizations_spec.rb[1:4:2]            | passed  | 0.03001 seconds |
-./spec/requests/data_visualizations_spec.rb[1:5:1]            | passed  | 0.02343 seconds |
-./spec/requests/form_answers_spec.rb[1:1:1]                   | passed  | 0.00562 seconds |
-./spec/requests/form_options_spec.rb[1:1:1]                   | passed  | 0.01032 seconds |
-./spec/requests/form_questions_spec.rb[1:1:1]                 | passed  | 0.00571 seconds |
-./spec/requests/forms_spec.rb[1:1:1]                          | passed  | 0.00533 seconds |
-./spec/requests/messages_spec.rb[1:1:1]                       | passed  | 0.0072 seconds  |
-./spec/requests/pre_registers_spec.rb[1:1:1]                  | failed  | 0.01408 seconds |
-./spec/requests/twitter_apis_spec.rb[1:1:1]                   | passed  | 0.00587 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:1]              | passed  | 0.00165 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:2]              | passed  | 0.00215 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:3]              | passed  | 0.00174 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:4]              | passed  | 0.00185 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:5]              | passed  | 0.00199 seconds |
-./spec/routing/categories_routing_spec.rb[1:1:6]              | passed  | 0.00214 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:1]           | passed  | 0.00143 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:2]           | passed  | 0.00185 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:3]           | passed  | 0.00169 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:4]           | passed  | 0.00183 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:5]           | passed  | 0.00147 seconds |
-./spec/routing/city_managers_routing_spec.rb[1:1:6]           | passed  | 0.00216 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:1]            | passed  | 0.00179 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:2]            | passed  | 0.00162 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:3]            | passed  | 0.00183 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:4]            | passed  | 0.00182 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:5]            | passed  | 0.00182 seconds |
-./spec/routing/form_answers_routing_spec.rb[1:1:6]            | passed  | 0.00171 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:1]            | passed  | 0.00187 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:2]            | passed  | 0.00182 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:3]            | passed  | 0.00178 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:4]            | passed  | 0.00178 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:5]            | passed  | 0.00171 seconds |
-./spec/routing/form_options_routing_spec.rb[1:1:6]            | passed  | 0.00203 seconds |
-./spec/routing/form_questions_routing_spec.rb[1:1:1]          | passed  | 0.00167 seconds |
-./spec/routing/form_questions_routing_spec.rb[1:1:2]          | passed  | 0.0019 seconds  |
-./spec/routing/form_questions_routing_spec.rb[1:1:3]          | passed  | 0.00146 seconds |
-./spec/routing/form_questions_routing_spec.rb[1:1:4]          | passed  | 0.00154 seconds |
-./spec/routing/form_questions_routing_spec.rb[1:1:5]          | passed  | 0.00177 seconds |
-./spec/routing/form_questions_routing_spec.rb[1:1:6]          | passed  | 0.00173 seconds |
-./spec/routing/forms_routing_spec.rb[1:1:1]                   | passed  | 0.00177 seconds |
-./spec/routing/forms_routing_spec.rb[1:1:2]                   | passed  | 0.0017 seconds  |
-./spec/routing/forms_routing_spec.rb[1:1:3]                   | passed  | 0.00217 seconds |
-./spec/routing/forms_routing_spec.rb[1:1:4]                   | passed  | 0.00168 seconds |
-./spec/routing/forms_routing_spec.rb[1:1:5]                   | passed  | 0.00172 seconds |
-./spec/routing/forms_routing_spec.rb[1:1:6]                   | passed  | 0.00179 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:1]                | passed  | 0.00172 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:2]                | passed  | 0.002 seconds   |
-./spec/routing/messages_routing_spec.rb[1:1:3]                | passed  | 0.00144 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:4]                | passed  | 0.00156 seconds |
-./spec/routing/messages_routing_spec.rb[1:1:5]                | passed  | 0.0017 seconds  |
-./spec/routing/messages_routing_spec.rb[1:1:6]                | passed  | 0.00149 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:1]           | passed  | 0.00201 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:2]           | passed  | 0.00156 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:3]           | passed  | 0.00167 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:4]           | passed  | 0.00165 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:5]           | passed  | 0.00214 seconds |
-./spec/routing/pre_registers_routing_spec.rb[1:1:6]           | passed  | 0.00168 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:1]               | passed  | 0.00151 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:2]               | passed  | 0.00225 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:3]               | passed  | 0.00149 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:4]               | passed  | 0.00185 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:5]               | passed  | 0.00178 seconds |
-./spec/routing/syndromes_routing_spec.rb[1:1:6]               | passed  | 0.0017 seconds  |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:1]            | passed  | 0.0017 seconds  |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:2]            | passed  | 0.00163 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:3]            | passed  | 0.00171 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:4]            | passed  | 0.00188 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:5]            | passed  | 0.00186 seconds |
-./spec/routing/twitter_apis_routing_spec.rb[1:1:6]            | passed  | 0.00182 seconds |
+./spec/requests/city_managers_spec.rb[1:1:1]                  | passed  | 0.01116 seconds |
+./spec/requests/data_visualizations_spec.rb[1:1:1]            | passed  | 0.03497 seconds |
+./spec/requests/data_visualizations_spec.rb[1:1:2]            | passed  | 0.04636 seconds |
+./spec/requests/data_visualizations_spec.rb[1:2:1]            | passed  | 0.05303 seconds |
+./spec/requests/data_visualizations_spec.rb[1:2:2]            | passed  | 0.11875 seconds |
+./spec/requests/data_visualizations_spec.rb[1:3:1]            | passed  | 0.03167 seconds |
+./spec/requests/data_visualizations_spec.rb[1:3:2]            | passed  | 0.03897 seconds |
+./spec/requests/data_visualizations_spec.rb[1:4:1]            | passed  | 0.03205 seconds |
+./spec/requests/data_visualizations_spec.rb[1:4:2]            | passed  | 0.03763 seconds |
+./spec/requests/data_visualizations_spec.rb[1:5:1]            | passed  | 0.12168 seconds |
+./spec/requests/form_answers_spec.rb[1:1:1]                   | passed  | 0.00945 seconds |
+./spec/requests/form_options_spec.rb[1:1:1]                   | passed  | 0.01343 seconds |
+./spec/requests/form_questions_spec.rb[1:1:1]                 | passed  | 0.00997 seconds |
+./spec/requests/forms_spec.rb[1:1:1]                          | passed  | 0.0086 seconds  |
+./spec/requests/messages_spec.rb[1:1:1]                       | passed  | 0.01331 seconds |
+./spec/requests/pre_registers_spec.rb[1:1:1]                  | passed  | 0.01229 seconds |
+./spec/requests/twitter_apis_spec.rb[1:1:1]                   | passed  | 0.01012 seconds |
+./spec/routing/categories_routing_spec.rb[1:1:1]              | passed  | 0.00274 seconds |
+./spec/routing/categories_routing_spec.rb[1:1:2]              | passed  | 0.00323 seconds |
+./spec/routing/categories_routing_spec.rb[1:1:3]              | passed  | 0.00299 seconds |
+./spec/routing/categories_routing_spec.rb[1:1:4]              | passed  | 0.0031 seconds  |
+./spec/routing/categories_routing_spec.rb[1:1:5]              | passed  | 0.00352 seconds |
+./spec/routing/categories_routing_spec.rb[1:1:6]              | passed  | 0.00248 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:1]           | passed  | 0.00269 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:2]           | passed  | 0.00344 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:3]           | passed  | 0.00283 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:4]           | passed  | 0.00311 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:5]           | passed  | 0.00294 seconds |
+./spec/routing/city_managers_routing_spec.rb[1:1:6]           | passed  | 0.0028 seconds  |
+./spec/routing/form_answers_routing_spec.rb[1:1:1]            | passed  | 0.00246 seconds |
+./spec/routing/form_answers_routing_spec.rb[1:1:2]            | passed  | 0.00325 seconds |
+./spec/routing/form_answers_routing_spec.rb[1:1:3]            | passed  | 0.00304 seconds |
+./spec/routing/form_answers_routing_spec.rb[1:1:4]            | passed  | 0.00335 seconds |
+./spec/routing/form_answers_routing_spec.rb[1:1:5]            | passed  | 0.00379 seconds |
+./spec/routing/form_answers_routing_spec.rb[1:1:6]            | passed  | 0.00307 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:1]            | passed  | 0.00305 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:2]            | passed  | 0.03748 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:3]            | passed  | 0.00235 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:4]            | passed  | 0.00226 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:5]            | passed  | 0.00253 seconds |
+./spec/routing/form_options_routing_spec.rb[1:1:6]            | passed  | 0.00229 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:1]          | passed  | 0.00334 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:2]          | passed  | 0.00294 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:3]          | passed  | 0.00312 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:4]          | passed  | 0.00308 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:5]          | passed  | 0.00304 seconds |
+./spec/routing/form_questions_routing_spec.rb[1:1:6]          | passed  | 0.00261 seconds |
+./spec/routing/forms_routing_spec.rb[1:1:1]                   | passed  | 0.00295 seconds |
+./spec/routing/forms_routing_spec.rb[1:1:2]                   | passed  | 0.00245 seconds |
+./spec/routing/forms_routing_spec.rb[1:1:3]                   | passed  | 0.00323 seconds |
+./spec/routing/forms_routing_spec.rb[1:1:4]                   | passed  | 0.00357 seconds |
+./spec/routing/forms_routing_spec.rb[1:1:5]                   | passed  | 0.0027 seconds  |
+./spec/routing/forms_routing_spec.rb[1:1:6]                   | passed  | 0.00327 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:1]                | passed  | 0.00237 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:2]                | passed  | 0.00233 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:3]                | passed  | 0.00289 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:4]                | passed  | 0.00592 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:5]                | passed  | 0.00232 seconds |
+./spec/routing/messages_routing_spec.rb[1:1:6]                | passed  | 0.00232 seconds |
+./spec/routing/pre_registers_routing_spec.rb[1:1:1]           | passed  | 0.00317 seconds |
+./spec/routing/pre_registers_routing_spec.rb[1:1:2]           | passed  | 0.00323 seconds |
+./spec/routing/pre_registers_routing_spec.rb[1:1:3]           | passed  | 0.00313 seconds |
+./spec/routing/pre_registers_routing_spec.rb[1:1:4]           | passed  | 0.00275 seconds |
+./spec/routing/pre_registers_routing_spec.rb[1:1:5]           | passed  | 0.0032 seconds  |
+./spec/routing/pre_registers_routing_spec.rb[1:1:6]           | passed  | 0.00261 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:1]               | passed  | 0.00224 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:2]               | passed  | 0.00455 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:3]               | passed  | 0.00298 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:4]               | passed  | 0.00273 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:5]               | passed  | 0.00242 seconds |
+./spec/routing/syndromes_routing_spec.rb[1:1:6]               | passed  | 0.00311 seconds |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:1]            | passed  | 0.00298 seconds |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:2]            | passed  | 0.00327 seconds |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:3]            | passed  | 0.00318 seconds |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:4]            | passed  | 0.00318 seconds |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:5]            | passed  | 0.003 seconds   |
+./spec/routing/twitter_apis_routing_spec.rb[1:1:6]            | passed  | 0.00337 seconds |
