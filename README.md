@@ -120,12 +120,16 @@ create database [nome da base de dados];
 Primeiramente realize o setup do banco de dados de testes
 
 ```shell
+docker-compose exec web bash
+```
+
+```shell
 bundle exec rake db:drop RAILS_ENV=test
 bundle exec rake db:create RAILS_ENV=test
 bundle exec rake db:schema:load RAILS_ENV=test
 ```
 
-Basta escrever
+Depois basta escrever
 
 ```shell
 rspec
