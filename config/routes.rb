@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :vbe_answers
+  resources :vbe_forms
   resources :categories
   resources :form_answers
   resources :form_options

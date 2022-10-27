@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_05_021742) do
+ActiveRecord::Schema.define(version: 2022_11_16_154558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -487,6 +487,22 @@ ActiveRecord::Schema.define(version: 2022_07_05_021742) do
     t.index ["app_id"], name: "index_vaccines_on_app_id"
   end
 
+  create_table "vbe_answers", force: :cascade do |t|
+    t.string "data"
+    t.bigint "vbe_form_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vbe_form_id"], name: "index_vbe_answers_on_vbe_form_id"
+  end
+
+  create_table "vbe_forms", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.string "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "admins", "apps"
   add_foreign_key "categories", "apps"
   add_foreign_key "city_managers", "apps"
@@ -530,4 +546,5 @@ ActiveRecord::Schema.define(version: 2022_07_05_021742) do
   add_foreign_key "users", "groups"
   add_foreign_key "users", "vaccines"
   add_foreign_key "vaccines", "apps"
+  add_foreign_key "vbe_answers", "vbe_forms"
 end
