@@ -167,7 +167,7 @@ class UsersController < ApplicationController
   end
 
   def ranking
-    @users_ranked = User.order(streak: :desc).limit(15)
+    @users_ranked = User.order(streak: :desc, updated_at: :desc).limit(15)
 
     render json: @users_ranked, each_serializer: UserForRankingSerializer
   end
