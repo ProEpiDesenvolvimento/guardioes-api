@@ -85,6 +85,21 @@ class User < ApplicationRecord
     obj.update_attribute(:streak, obj.streak)
   end
 
+  def update_ranking
+    obj = self
+    last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").offset(1).first
+
+    if last_survey
+      if last_survey.created_at < Time.zone.now.prev_day.beginning_of_day
+        obj.streak = 0
+      end
+    else
+      obj.streak = 0
+    end
+
+    obj.update_attribute(:streak, obj.streak)
+  end
+
   def get_feedback_message(survey)
     if survey.household_id
       obj = survey.household
