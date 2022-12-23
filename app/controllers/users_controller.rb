@@ -169,7 +169,7 @@ class UsersController < ApplicationController
   def ranking
     @users_ranked = User.order(streak: :desc, updated_at: :desc).limit(15)
 
-    render json: @users_ranked, each_serializer: UserForRankingSerializer
+    render json: @users_ranked, each_serializer: UserRankingSerializer
   end
 
 private
