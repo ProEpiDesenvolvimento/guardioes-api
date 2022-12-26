@@ -1,6 +1,6 @@
 class RumorsController < ApplicationController
   before_action :set_rumor, only: [:show, :update, :destroy]
-  authorize_resource only: [:show, :index, :update, :destroy]
+  authorize_resource only: [:create, :show, :index, :update, :destroy]
   
   def create
     @rumor = Rumor.new(rumors_params)
