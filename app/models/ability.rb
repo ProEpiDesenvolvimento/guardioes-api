@@ -4,7 +4,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    # When user is Manager or GroupManagerTeam, get them permissions list
+    # When user is Manager or GroupManagerTeam, get their permissions list
     if user && !user.has_attribute?('is_god') && !user.has_attribute?('city') && !user.has_attribute?('vigilance_email')
       set_permission(user.permission.id)
     end
@@ -52,15 +52,10 @@ class Ability
         can :manage, convert_symbol(@permission.models_manage)
         can :update, GroupManagerTeam, :id => user.id
       when User
-        can :read, User, :id => user.id
         can :read, [ Form, FormQuestion ]
-        can :read, [ Household, Survey, FormAnswer ], :user_id => user.id
         can :read, [ App, Content, Vaccine, Category ]
-        can :create, [ Household, Survey, FormAnswer ]
-        can :update, User, :id => user.id
-        can :update, [ Household, Survey, FormAnswer, Dose ], :user_id => user.id
-        can :destroy, User, :id => user.id
-        can :destroy, [ Household, Survey, FormAnswer, Dose ], :user_id => user.id
+        can :manage, [ Household, Survey, Rumor, FormAnswer, Dose ], :user_id => user.id
+        can :manage, User, :id => user.id
     end
   end
 

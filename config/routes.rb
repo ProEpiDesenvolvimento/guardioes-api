@@ -55,9 +55,9 @@ Rails.application.routes.draw do
   patch "admin_update/:id", to: "users#admin_update"
 
   scope "/user" do 
-    post "reset_password", to: "users#reset_password"
     get "/panel", to: "users#panel_list"
     post "/filtered_list", to: "users#filtered_list"
+    get "/ranking", to: "users#ranking"
   end
 
   scope "/admin" do 
