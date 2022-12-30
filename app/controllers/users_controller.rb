@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   # before_action :authenticate_admin!, only: [:query_by_param, :admin_update]
-  before_action :authenticate_user!, except: [:filtered_list, :index, :panel_list, :show, :update, :destroy, :create, :query_by_param, :email_reset_password, :reset_password, :show_reset_token, :admin_update]
   before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
@@ -164,6 +163,12 @@ class UsersController < ApplicationController
     end
 
     paginate @user, per_page: 50
+  end
+
+  def ranking
+    @users_ranked = User.order(streak: :desc, updated_at: :desc).limit(15)
+
+    render json: @users_ranked, each_serializer: UserRankingSerializer
   end
 
 private
