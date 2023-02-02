@@ -5,6 +5,11 @@ class AdminsController < ApplicationController
     @admins = Admin.all
     render json: @admins
   end
+
+  # GET /admin/1
+  def show
+    render json: @admin = Admin.find(params[:id])
+  end
   
   def update
     errors = {}
