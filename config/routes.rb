@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   resources :doses
 
   get "groups/root", to: "groups#root"
-  post "/groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
+  post "groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
   post "groups/upload_group_file", to: "groups#upload_group_file"
   get "groups/:id/get_path", to: "groups#get_path"
   get "groups/:id/get_children", to: "groups#get_children"
@@ -67,10 +67,10 @@ Rails.application.routes.draw do
     post "show_reset_token", to: "admins#show_reset_token"
     post "reset_password", to: "admins#reset_password"
   end
-  resources :admins, only: [:index, :update, :destroy]
+  resources :admins, only: [:index, :show, :update, :destroy]
   
   devise_for :admins,
-    path: "admin/",
+    path: "/admin",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     post "reset_password", to: "city_managers#reset_password"
   end
   devise_for :city_managers,
-    path: "city_manager/",
+    path: "/city_manager",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -110,7 +110,7 @@ Rails.application.routes.draw do
     # get "group_managers/:manager_id/:group_id/permit", to: "group_managers#add_manager_permission"
     # get "group_managers/:manager_id/:group_id/unpermit", to: "group_managers#remove_manager_permission"
     devise_for :group_managers,
-    path: "group_manager/",
+    path: "/group_manager",
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -128,7 +128,7 @@ Rails.application.routes.draw do
       post "reset_password", to: "group_manager_teams#reset_password"
     end
     devise_for :group_manager_teams,
-      path: "group_manager_team/",
+      path: "/group_manager_team",
       path_names: {
         sign_in: "login",
         sign_out: "logout",
@@ -146,7 +146,7 @@ Rails.application.routes.draw do
       post "reset_password", to: "managers#reset_password"
     end
     devise_for :managers,
-      path: "manager/",
+      path: "/manager",
       path_names: {
         sign_in: "login",
         sign_out: "logout",

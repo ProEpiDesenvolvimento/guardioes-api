@@ -90,7 +90,7 @@ class User < ApplicationRecord
     last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").offset(1).first
 
     if last_survey
-      if last_survey.created_at < Time.zone.now.prev_day.beginning_of_day
+      if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
         obj.streak = 0
       end
     else
