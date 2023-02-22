@@ -66,7 +66,7 @@ Teste se tudo está funcionando entrando em [http://localhost:3001](http://local
 Após a migração da base de dados, para o correto funcionamento de todos os features da API, você deve iniciar os cronjobs, para fazer isso:
 
 ```
-sudo docker-compose run -d web bundle exec crono RAILS_ENV=development
+docker-compose run -d web bundle exec crono RAILS_ENV=development
 ```
 
 ## Erros
