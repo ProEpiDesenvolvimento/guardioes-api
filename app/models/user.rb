@@ -87,7 +87,7 @@ class User < ApplicationRecord
 
   def update_ranking
     obj = self
-    last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").offset(1).first
+    last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
 
     if last_survey
       if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
