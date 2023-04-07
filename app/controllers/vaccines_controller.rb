@@ -6,7 +6,7 @@ class VaccinesController < ApplicationController
     def index
       @user = current_devise_user
       @vaccines = Vaccine.filter_vaccine_by_app_id(@user.app_id)
-      render json: @vaccines
+      render json: @vaccines.order(name: :asc)
     end
   
     # GET /vaccines/1
