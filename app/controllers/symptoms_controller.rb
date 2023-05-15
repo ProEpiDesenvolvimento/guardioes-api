@@ -7,7 +7,7 @@ class SymptomsController < ApplicationController
     @user = current_devise_user
     @symptoms = Symptom.filter_symptom_by_app_id(@user.app_id)
 
-    render json: @symptoms
+    render json: @symptoms.order(description: :asc)
   end
 
   # GET /symptoms/1

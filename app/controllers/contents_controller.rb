@@ -19,7 +19,7 @@ class ContentsController < ApplicationController
         @contents = Content.where(app_id: @user.app_id)
     end
   
-    render json: @contents
+    render json: @contents.order(updated_at: :desc)
   end
 
   # GET /contents/1

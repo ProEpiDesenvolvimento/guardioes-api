@@ -6,7 +6,7 @@ class DosesController < ApplicationController
   def index
     @doses = Dose.where(user_id: current_user.id)
 
-    render json: @doses
+    render json: @doses.order(dose: :asc)
   end
 
   def create
