@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_05_021742) do
+ActiveRecord::Schema.define(version: 2023_06_01_213304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,16 @@ ActiveRecord::Schema.define(version: 2022_07_05_021742) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_doses_on_user_id"
     t.index ["vaccine_id"], name: "index_doses_on_vaccine_id"
+  end
+
+  create_table "event_forms", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.text "data"
+    t.bigint "group_manager_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_manager_id"], name: "index_event_forms_on_group_manager_id"
   end
 
   create_table "form_answers", force: :cascade do |t|
@@ -344,14 +354,14 @@ ActiveRecord::Schema.define(version: 2022_07_05_021742) do
   create_table "rumors", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.integer "confirmed_cases"
-    t.integer "confirmed_deaths"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "app_id"
     t.float "latitude"
     t.float "longitude"
     t.bigint "user_id"
+    t.bigint "app_id"
+    t.integer "confirmed_deaths"
+    t.integer "confirmed_cases"
     t.index ["app_id"], name: "index_rumors_on_app_id"
     t.index ["user_id"], name: "index_rumors_on_user_id"
   end
@@ -494,6 +504,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_021742) do
   add_foreign_key "contents", "group_managers"
   add_foreign_key "doses", "users"
   add_foreign_key "doses", "vaccines"
+  add_foreign_key "event_forms", "group_managers"
   add_foreign_key "form_answers", "form_options"
   add_foreign_key "form_answers", "form_questions"
   add_foreign_key "form_answers", "forms"
