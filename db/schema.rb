@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_01_213304) do
+ActiveRecord::Schema.define(version: 2023_06_26_025516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,10 +120,18 @@ ActiveRecord::Schema.define(version: 2023_06_01_213304) do
     t.index ["vaccine_id"], name: "index_doses_on_vaccine_id"
   end
 
+  create_table "event_answers", force: :cascade do |t|
+    t.jsonb "data"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_event_answers_on_user_id"
+  end
+
   create_table "event_forms", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.text "data"
+    t.jsonb "data"
     t.bigint "group_manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -504,6 +512,7 @@ ActiveRecord::Schema.define(version: 2023_06_01_213304) do
   add_foreign_key "contents", "group_managers"
   add_foreign_key "doses", "users"
   add_foreign_key "doses", "vaccines"
+  add_foreign_key "event_answers", "users"
   add_foreign_key "event_forms", "group_managers"
   add_foreign_key "form_answers", "form_options"
   add_foreign_key "form_answers", "form_questions"

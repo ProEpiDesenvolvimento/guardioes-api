@@ -54,7 +54,7 @@ class Ability
       when User
         can :read, [ Form, FormQuestion ]
         can :read, [ App, Content, Vaccine, Category ]
-        can :manage, [ Household, Survey, Rumor, FormAnswer, Dose ], :user_id => user.id
+        can :manage, [ Household, Survey, Rumor, FormAnswer, Dose, EventAnswer ], :user_id => user.id
         can :manage, User, :id => user.id
     end
   end
