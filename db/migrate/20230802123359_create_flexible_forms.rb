@@ -1,9 +1,9 @@
-class CreateEventForms < ActiveRecord::Migration[5.2]
+class CreateFlexibleForms < ActiveRecord::Migration[5.2]
   def change
-    create_table :event_forms do |t|
+    create_table :flexible_forms do |t|
       t.string :title
       t.text :description
-      t.jsonb :data
+      t.string :form_type
       t.references :group_manager, foreign_key: true
 
       t.timestamps
