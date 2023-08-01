@@ -41,7 +41,7 @@ class Ability
         can :manage, [ User, Group ]
         can :manage, [ Form ], :id => user.form_id
         can :manage, [ FormQuestion, FormAnswer ], :form_id => user.form_id
-        can :manage, [ Content, GroupManagerTeam, EventForm ], :group_manager_id => user.id
+        can :manage, [ Content, GroupManagerTeam ], :group_manager_id => user.id
         can :manage, [ Permission, :data_visualization ]
         cannot :manage, Permission, group_manager_team_id: nil
       when GroupManagerTeam
@@ -54,7 +54,7 @@ class Ability
       when User
         can :read, [ Form, FormQuestion ]
         can :read, [ App, Content, Vaccine, Category ]
-        can :manage, [ Household, Survey, Rumor, FormAnswer, Dose, EventAnswer ], :user_id => user.id
+        can :manage, [ Household, Survey, Rumor, FormAnswer, Dose ], :user_id => user.id
         can :manage, User, :id => user.id
     end
   end

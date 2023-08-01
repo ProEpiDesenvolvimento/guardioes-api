@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :event_answers
-  resources :event_forms
+  resources :flexible_answers
+  resources :flexible_form_versions
+  resources :flexible_forms
   resources :categories
   resources :form_answers
   resources :form_options

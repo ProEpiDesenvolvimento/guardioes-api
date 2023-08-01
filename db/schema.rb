@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_26_025516) do
+ActiveRecord::Schema.define(version: 2023_08_02_123557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,22 +120,35 @@ ActiveRecord::Schema.define(version: 2023_06_26_025516) do
     t.index ["vaccine_id"], name: "index_doses_on_vaccine_id"
   end
 
-  create_table "event_answers", force: :cascade do |t|
+  create_table "flexible_answers", force: :cascade do |t|
+    t.bigint "flexible_form_version_id"
     t.jsonb "data"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_event_answers_on_user_id"
+    t.index ["flexible_form_version_id"], name: "index_flexible_answers_on_flexible_form_version_id"
+    t.index ["user_id"], name: "index_flexible_answers_on_user_id"
   end
 
-  create_table "event_forms", force: :cascade do |t|
+  create_table "flexible_form_versions", force: :cascade do |t|
+    t.integer "version"
+    t.text "notes"
+    t.bigint "flexible_form_id"
+    t.jsonb "data"
+    t.datetime "version_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["flexible_form_id"], name: "index_flexible_form_versions_on_flexible_form_id"
+  end
+
+  create_table "flexible_forms", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.jsonb "data"
+    t.string "form_type"
     t.bigint "group_manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["group_manager_id"], name: "index_event_forms_on_group_manager_id"
+    t.index ["group_manager_id"], name: "index_flexible_forms_on_group_manager_id"
   end
 
   create_table "form_answers", force: :cascade do |t|
@@ -512,8 +525,10 @@ ActiveRecord::Schema.define(version: 2023_06_26_025516) do
   add_foreign_key "contents", "group_managers"
   add_foreign_key "doses", "users"
   add_foreign_key "doses", "vaccines"
-  add_foreign_key "event_answers", "users"
-  add_foreign_key "event_forms", "group_managers"
+  add_foreign_key "flexible_answers", "flexible_form_versions"
+  add_foreign_key "flexible_answers", "users"
+  add_foreign_key "flexible_form_versions", "flexible_forms"
+  add_foreign_key "flexible_forms", "group_managers"
   add_foreign_key "form_answers", "form_options"
   add_foreign_key "form_answers", "form_questions"
   add_foreign_key "form_answers", "forms"
