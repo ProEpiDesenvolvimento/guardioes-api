@@ -52,14 +52,18 @@ class UsersController < ApplicationController
 
   def email_reset_password
     @user = User.find_by_email(params[:email])
-    aux_code = rand(36**4).to_s(36)
-    reset_password_token = rand(36**10).to_s(36)
-    @user.update_attribute(:aux_code, aux_code)
-    @user.update_attribute(:reset_password_token, reset_password_token)
+
     if @user.present?
+      aux_code = rand(36**4).to_s(36)
+      reset_password_token = rand(36**10).to_s(36)
+
+      @user.update_attribute(:aux_code, aux_code)
+      @user.update_attribute(:reset_password_token, reset_password_token)
       UserMailer.reset_password_email(@user).deliver
+      render json: {message: "Email enviado com sucesso"}, status: :ok
+    else
+      render json: {error: true, message: "Email não encontrado"}, status: :bad_request
     end
-    render json: {message: "Email enviado com sucesso"}, status: :ok
   end
 
   def show_reset_token
