@@ -18,6 +18,9 @@ class FlexibleAnswersController < ApplicationController
     @flexible_answer = FlexibleAnswer.new(flexible_answer_params)
 
     if @flexible_answer.save
+      if @flexible_answer.flexible_form.form_type == 'signal'
+        @flexible_answer.report_ephem()
+      end
       render json: @flexible_answer, status: :created, location: @flexible_answer
     else
       render json: @flexible_answer.errors, status: :unprocessable_entity
