@@ -3,48 +3,51 @@ class FlexibleAnswer < ApplicationRecord
   has_one :flexible_form, through: :flexible_form_version
   belongs_to :user
 
-  def auth_ephem()
-    uri = URI("#{ENV['EPHEM_API_URL']}/oauth/token")
-    res = HTTParty.post(uri, body: { grant_type: 'password', username: ENV['EPHEM_API_USER'], password: ENV['EPHEM_API_PASS'] })
-    token = res['access_token']
-    return token
-  end
+  DEFAULT_MOCK_ID_VALUE = 1
+  DEFAULT_NOT_SELECTED_VALUE = 0
 
   def report_ephem()
-    # Get parsed data
-    parsed_data = JSON.parse(self.data)
+    begin
+      parsed_data = JSON.parse(data)
+    rescue JSON::ParserError => e
+      Rails.logger.error "erro ao converter respostas do gds em json: #{e.message}"
+    end
 
-    eventData = {
-      'eventoIntegracaoTemplate' => '/1',
-      'userId' => self.user.id,
-      'userEmail' => self.user.email,
-      'eventSourceId' => 1,
-      'eventSourceLocation' => 'comunidade B',
-      'eventSourceLocationId' => 1,
-      'data' => {
-          'general_hazard_id' => 7,
-          'confidentiality' => 'everyone',
-          'specific_hazard_id' => 7,
-          'state_id' => 77,
-          'country_id' => 31,
-          'district_ids' => [
-            1
-          ],
-          'signal_type' => 'opening',
-          'report_date' => '{{today}}',
-          'incident_date' => '{{today}}'
+    Rails.logger.info "respostas recebidas #{parsed_data}"
+
+    additional_data = parsed_data.map { |entry| { entry['field'] => entry['value'] } }.reduce({}, :merge)
+
+    event_data = {
+      'eventoIntegracaoTemplate': '/1',
+      'userId': user.id,
+      'userEmail': user.email,
+      'eventSourceId': DEFAULT_MOCK_ID_VALUE,
+      'eventSourceLocation': additional_data['evento_data_ocorrencia'],
+      'eventSourceLocationId': DEFAULT_MOCK_ID_VALUE,
+      'data': {
+        'general_hazard_id': DEFAULT_NOT_SELECTED_VALUE,
+        'confidentiality': 'everyone',
+        'specific_hazard_id': DEFAULT_NOT_SELECTED_VALUE,
+        'state_id': DEFAULT_NOT_SELECTED_VALUE,
+        'country_id': DEFAULT_NOT_SELECTED_VALUE,
+        'district_ids': [],
+        'signal_type': 'opening',
+        'report_date': Date.strptime(additional_data['evento_data_ocorrencia'], "%d-%m-%Y").strftime("%Y-%m-%d"),
+        'incident_date': Date.strptime(additional_data['evento_data_ocorrencia'], "%d-%m-%Y").strftime("%Y-%m-%d")
       },
-      'aditionalData' => {
-          'Tipo de Notificação' => 'Coletiva',
-          'Tipo de Ocorrência' => 'Em Humanos',
-          'Quantos Envolvidos' => 'Mais de 5',
-          'Exemplo 2' => 'Valor 2',
-          'TesteX' => 'Valor 3'
-      }
+      'aditionalData': additional_data
     }
 
-    # Report case
+    Rails.logger.info "dados a serem enviados para o ephem #{event_data} #{event_data.class}"
+
+    headers = { Authorization: '', Accept: 'application/json', 'Content-Type': 'application/json' }
     uri = URI("#{ENV['EPHEM_API_URL']}/api-integracao/v1/eventos")
-    res = HTTParty.post(uri, body: eventData, headers: { Authorization: '' })
+    res = HTTParty.post(uri, body: event_data.to_json, headers: headers, debug_logger: Logger.new(STDOUT))
+
+    if res.success?
+      Rails.logger.info "sucesso na integracao com ephem. status code #{res.code} body #{res.body}"
+    else
+      Rails.logger.error "erro na integracao com ephem. status code #{res.code} body #{res.body}"
+    end
   end
 end
