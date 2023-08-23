@@ -87,6 +87,17 @@ class UsersController < ApplicationController
       render json: {error: true, message: "Token invalido"}, status: :bad_request
     end
   end
+
+  def request_deletion
+    @user = User.find(params[:id])
+
+    if @user.present?
+      UserMailer.request_deletion_email(@user).deliver
+      render json: {message: "Email enviado com sucesso"}, status: :ok
+    else
+      render json: {error: true, message: "Usuário não encontrado"}, status: :bad_request
+    end
+  end
   
   def destroy
     @user = User.find(params[:id])
