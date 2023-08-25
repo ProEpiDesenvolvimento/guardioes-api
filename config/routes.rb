@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     get "/panel", to: "users#panel_list"
     post "/filtered_list", to: "users#filtered_list"
     get "/ranking", to: "users#ranking"
+    get "/request_deletion/:id", to: "users#request_deletion"
   end
 
   scope "/admin" do 

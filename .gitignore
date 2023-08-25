@@ -52,3 +52,6 @@
 /client/yarn-error.log*
 
 /config/.env
+
+# para IDE RubyMine
+.idea
