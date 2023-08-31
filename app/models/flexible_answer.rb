@@ -3,8 +3,9 @@ class FlexibleAnswer < ApplicationRecord
   has_one :flexible_form, through: :flexible_form_version
   belongs_to :user
 
-  DEFAULT_MOCK_ID_VALUE = 1
   DEFAULT_NOT_SELECTED_VALUE = 0
+
+  EMPTY_STRING = ''.freeze
 
   def report_ephem
     begin
@@ -23,16 +24,16 @@ class FlexibleAnswer < ApplicationRecord
         'eventoIntegracaoTemplate': '/1',
         'userId': user.id,
         'userEmail': user.email,
-        'eventSourceId': DEFAULT_MOCK_ID_VALUE,
-        'eventSourceLocation': field_value_map['evento_data_ocorrencia'],
-        'eventSourceLocationId': DEFAULT_MOCK_ID_VALUE,
+        'eventSourceId': id,
+        'eventSourceLocation': EMPTY_STRING,
+        'eventSourceLocationId': DEFAULT_NOT_SELECTED_VALUE,
         'data': field_value_map,
         'aditionalData': aditional_data
       }
 
       Rails.logger.info "dados a serem enviados para o ephem #{event_data} #{event_data.class}"
 
-      headers = { Authorization: '', Accept: 'application/json', 'Content-Type': 'application/json' }
+      headers = { Authorization: EMPTY_STRING, Accept: 'application/json', 'Content-Type': 'application/json' }
       uri = URI("#{ENV['EPHEM_API_URL']}/api-integracao/v1/eventos")
       res = HTTParty.post(uri, body: event_data.to_json, headers: headers, debug_logger: Logger.new(STDOUT))
 
