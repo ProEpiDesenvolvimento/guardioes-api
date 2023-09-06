@@ -3,7 +3,7 @@ class FlexibleAnswersController < ApplicationController
 
   # GET /flexible_answers
   def index
-    @flexible_answers = FlexibleAnswer.all
+    @flexible_answers = FlexibleAnswer.where(user_id: current_user.id)
 
     render json: @flexible_answers
   end
