@@ -5,7 +5,7 @@ class FlexibleAnswersController < ApplicationController
   def index
     @flexible_answers = FlexibleAnswer.all
 
-    render json: @flexible_answers
+    render json: @flexible_answers, each_serializer: FlexibleAnswerSerializer
   end
 
   # GET /flexible_answers/1
