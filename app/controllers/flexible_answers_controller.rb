@@ -5,7 +5,7 @@ class FlexibleAnswersController < ApplicationController
   def index
     @flexible_answers = FlexibleAnswer.where(user_id: current_user.id)
 
-    render json: @flexible_answers
+    render json: @flexible_answers, each_serializer: FlexibleAnswerSerializer
   end
 
   # GET /flexible_answers/1
@@ -19,7 +19,8 @@ class FlexibleAnswersController < ApplicationController
 
     if @flexible_answer.save
       if @flexible_answer.flexible_form.form_type == 'signal'
-        @flexible_answer.report_ephem()
+        external_system_integration_id = @flexible_answer.report_ephem
+        @flexible_answer.update_attribute(:external_system_integration_id, external_system_integration_id)
       end
       render json: @flexible_answer, status: :created, location: @flexible_answer
     else
@@ -49,6 +50,6 @@ class FlexibleAnswersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def flexible_answer_params
-      params.require(:flexible_answer).permit(:flexible_form_version_id, :data, :user_id)
+      params.require(:flexible_answer).permit(:flexible_form_version_id, :data, :user_id, :external_system_integration_id)
     end
 end
