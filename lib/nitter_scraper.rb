@@ -3,10 +3,17 @@ require 'open-uri'
 require 'uri'
 
 class NitterScraper
-  def rss_tweets(username)
+  def rss_tweets(username, with_replies=false)
     # Returns an array of 20 tweets
     begin
-      xml_data = open("#{ENV['NITTER_URL']}/#{username}/rss").read
+      url = ''
+      if with_replies
+        url = "#{ENV['NITTER_URL']}/#{username}/with_replies/rss"
+      else
+        url = "#{ENV['NITTER_URL']}/#{username}/rss"
+      end
+
+      xml_data = open(url).read
       doc = Nokogiri::XML(xml_data)
 
       title = doc.xpath('//channel/title').text
@@ -51,12 +58,17 @@ class NitterScraper
     end
   end
 
-  def scrape_tweets(username, count=20)
+  def scrape_tweets(username, count=20, with_replies=false)
     # Returns an array of 20-count tweets
     begin
-      start_time = Time.now
+      url = ''
+      if with_replies
+        url = "#{ENV['NITTER_URL']}/#{username}/with_replies"
+      else
+        url = "#{ENV['NITTER_URL']}/#{username}"
+      end
 
-      response = HTTParty.get("#{ENV['NITTER_URL']}/#{username}")
+      response = HTTParty.get(url)
       html_data = response.body
       page = Nokogiri::HTML(html_data)
 
@@ -67,16 +79,13 @@ class NitterScraper
       pages = (count.to_f / 20.0).ceil
       next_page = page.at('.show-more a')
 
-      puts "Pages: #{pages}"
-
       pages.times do |i|
-        puts "Page: #{i}"
         if i > 0
-          response = HTTParty.get("#{ENV['NITTER_URL']}/#{username}#{next_page['href']}")
+          response = HTTParty.get("#{url}#{next_page['href']}")
           html_data = response.body
           page = Nokogiri::HTML(html_data)
 
-          next_page = page.at('.show-more a')
+          next_page = page.at('.show-more:not(.timeline-item) a')
         end
 
         page.css('.timeline-item').each do |tweet_element|
@@ -111,13 +120,8 @@ class NitterScraper
           end
         end
       end
-
-      end_time = Time.now
-      elapsed_time = end_time - start_time
-      puts "Elapsed time: #{elapsed_time}"
       
-      puts tweets.count
-      tweets.to_json
+      tweets.slice(0, count)
     rescue StandardError => e
       { error: e.message }
     end
