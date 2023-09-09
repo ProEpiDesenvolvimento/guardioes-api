@@ -1,5 +1,6 @@
 class FlexibleFormsController < ApplicationController
   before_action :set_flexible_form, only: [:show, :update, :destroy]
+  authorize_resource :except => [:registration, :signal, :quizzes]
 
   # GET /flexible_forms
   def index
@@ -44,6 +45,43 @@ class FlexibleFormsController < ApplicationController
   # DELETE /flexible_forms/1
   def destroy
     @flexible_form.destroy
+  end
+
+  # GET /flexible_forms/registration/:group_manager_id
+  def registration
+    @flexible_form = FlexibleForm.find_by(form_type: "registration", group_manager_id: params[:group_manager_id])
+
+    render json: @flexible_form
+  end
+
+  # GET /flexible_forms/signal
+  def signal
+    if current_group_manager
+      group_manager_id = current_group_manager.id
+    elsif current_group_manager_team
+      group_manager_id = current_group_manager_team.group_manager.id
+    elsif current_user
+      group_manager_id = current_user.group.group_manager.id
+    end
+
+    @flexible_form = FlexibleForm.find_by(form_type: "signal", group_manager_id: group_manager_id)
+    
+    render json: @flexible_form
+  end
+
+  # GET /flexible_forms/quizzes
+  def quizzes
+    if current_group_manager
+      group_manager_id = current_group_manager.id
+    elsif current_group_manager_team
+      group_manager_id = current_group_manager_team.group_manager.id
+    elsif current_user
+      group_manager_id = current_user.group.group_manager.id
+    end
+
+    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id)
+
+    render json: @flexible_forms
   end
 
   private

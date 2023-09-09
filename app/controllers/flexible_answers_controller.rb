@@ -1,9 +1,10 @@
 class FlexibleAnswersController < ApplicationController
   before_action :set_flexible_answer, only: [:show, :update, :destroy]
+  authorize_resource
 
   # GET /flexible_answers
   def index
-    @flexible_answers = FlexibleAnswer.all
+    @flexible_answers = FlexibleAnswer.where(user_id: current_user.id)
 
     render json: @flexible_answers
   end
@@ -16,6 +17,7 @@ class FlexibleAnswersController < ApplicationController
   # POST /flexible_answers
   def create
     @flexible_answer = FlexibleAnswer.new(flexible_answer_params)
+    @flexible_answer.user_id = current_user.id
 
     if @flexible_answer.save
       render json: @flexible_answer, status: :created, location: @flexible_answer
