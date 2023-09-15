@@ -45,4 +45,16 @@ class GroupManager < ApplicationRecord
     end
     return nil
   end
+
+  def has_quiz
+    if self != nil
+      @quiz = FlexibleForm.where(form_type: "quiz", group_manager_id: self.id)
+      if @quiz.any?
+        return true
+      else
+        return false
+      end
+    end
+    return nil
+  end      
 end
