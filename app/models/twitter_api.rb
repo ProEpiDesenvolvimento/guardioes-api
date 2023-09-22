@@ -1,5 +1,7 @@
+require 'nitter_scraper'
+
 class TwitterApi < ApplicationRecord
-  # Each twitter api instance is an object with a string 'handle' and a string 'twitterdata'
+  # Each twitter (now x) api instance is an object with a string 'handle' and a string 'twitterdata'
 
   # 'twitterdata' holds tweets as a json array
 
@@ -13,61 +15,18 @@ class TwitterApi < ApplicationRecord
   # | name          | string          |
   # | screen_name   | string          |
 
-  # 'twitterdata' holds up to the last 200 tweets of a certain handle
+  # 'twitterdata' holds up to the last 80 tweets of a certain handle
 
   # A 'handle' is unique
   validates :handle, :presence => true, :uniqueness => true
 
-  def self.get_twitter_client
-    # Your must put the ENV secrets into the .env file
-    Twitter::REST::Client.new do |config|
-      config.consumer_key        = ENV["TWITTER_API_CONSUMER_KEY"]
-      config.consumer_secret     = ENV["TWITTER_API_CONSUMER_SECRET"]
-      config.access_token        = ENV["TWITTER_API_ACCESS_TOKEN"]
-      config.access_token_secret = ENV["TWITTER_API_ACESS_TOKEN_SECRET"]
-    end
-  end
-
   def update_tweets
-    client = TwitterApi::get_twitter_client()
-    current_tweets = get_tweets
+    client = NitterScraper.new
+    tweets = client.scrape_tweets(self.handle, 80, false)
 
-    tweets = []
-
-    client.user_timeline(self.handle, count: 200, exclude_replies: true, tweet_mode: 'extended').each do |tweet|
-      data = JSON.parse(tweet.attrs.to_json)
-      
-      tweet_data = {
-        created_at: data['created_at'],
-        id: data['id'],
-        id_str: data['id_str'],
-        name: data['user']['name'],
-        screen_name: data['user']['screen_name'],
-        text: data['text']
-      }
-
-      is_retweet = !data['retweeted_status'].nil?
-
-      images = []
-
-      if is_retweet && media = data['retweeted_status']['entities']['media']
-        media.each do |x|
-          images << x['media_url']
-        end
-      end
-
-      if media = data['entities']['media']
-        media.each do |x|
-          images << x['media_url']
-        end
-      end
-
-      tweet_data['images'] = images
-
-      tweets << tweet_data
+    if not tweets.include?(:error)
+      self.update_attribute(:twitterdata, tweets.to_json)
     end
-
-    self.update_attribute(:twitterdata, tweets.to_json())
   end
 
   def get_tweets

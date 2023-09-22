@@ -90,10 +90,10 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    :address              => ENV['MAILER_ADRESS'],
+    :address              => ENV['MAILER_SMTP_ADDRESS'],
     :port                 => 587,
     :user_name            => ENV['MAILER_EMAIL'],
-    :password             => ENV['MAILER_EMAIL_PASSWORD'],
+    :password             => ENV['MAILER_PASSWORD'],
     :authentication       => "plain",
     :enable_starttls_auto => true
   }

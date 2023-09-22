@@ -7,7 +7,7 @@ class TwitterApiUpdate
       begin
         t.update_tweets
       rescue
-        File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, "TWITTER API: Failed to rescue twitter id=#{t.id}") }
+        File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, "TWITTER API: Failed to rescue nitter handle=#{t.handle}") }
       end
     end
   end

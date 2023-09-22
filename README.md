@@ -23,13 +23,10 @@ Usamos nessa API:
 2. Crie um arquivo '.env' na pasta raiz do projeto, esse arquivo deve conter as seguintes variáveis de ambiente e seus valores:
 
 ```
-TWITTER_API_CONSUMER_KEY=
-TWITTER_API_CONSUMER_SECRET=
-TWITTER_API_ACCESS_TOKEN=
-TWITTER_API_ACCESS_TOKEN_SECRET=
-MAILER_ADRESS=
+NITTER_URL=
+MAILER_SMTP_ADDRESS=
 MAILER_EMAIL=
-MAILER_EMAIL_PASSWORD=
+MAILER_PASSWORD=
 GODATA_KEY=
 CSV_DATA_KEY=
 METABASE_SITE_URL=
