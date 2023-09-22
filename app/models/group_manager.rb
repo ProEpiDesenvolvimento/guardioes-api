@@ -8,10 +8,11 @@ class GroupManager < ApplicationRecord
 
   has_many :manager_group_permission, :class_name => 'ManagerGroupPermission', dependent: :delete_all
   has_many :groups, :through => :manager_group_permission 
-  has_many :contents, dependent: :destroy
-  has_one :form, dependent: :destroy
   has_many :group_manager_teams, dependent: :destroy
   has_one :permission, dependent: :destroy
+  has_many :contents, dependent: :destroy
+  has_one :form, dependent: :destroy
+  has_many :flexible_forms, dependent: :destroy
 
   serialize :vigilance_syndromes, Array
   
@@ -44,4 +45,16 @@ class GroupManager < ApplicationRecord
     end
     return nil
   end
+
+  def has_quiz
+    if self != nil
+      @quiz = FlexibleForm.where(form_type: "quiz", group_manager_id: self.id)
+      if @quiz.any?
+        return true
+      else
+        return false
+      end
+    end
+    return nil
+  end      
 end
