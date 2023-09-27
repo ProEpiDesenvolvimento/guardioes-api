@@ -7,6 +7,11 @@ class FlexibleAnswerSerializer < ActiveModel::Serializer
   def external_system_data
     if object.flexible_form.form_type == 'signal' and !object.external_system_integration_id.nil?
       begin
+        parsed_data = JSON.parse(object.data)
+        if parsed_data.is_a?(Hash) && parsed_data.key?('report_type') && parsed_data['report_type'] == 'negative'
+          Rails.logger.info 'report_type negative, ephem api will not be called'
+          return nil
+        end
         Rails.logger.info "buscando sinais do evento #{object.external_system_integration_id}"
         url = "#{ENV['EPHEM_API_URL']}/api-integracao/v1/eventos/#{object.external_system_integration_id}/signals"
         response = HTTParty.get(url)

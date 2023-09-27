@@ -15,7 +15,17 @@ class FlexibleAnswer < ApplicationRecord
 
       parsed_data = JSON.parse(data)
 
-      Rails.logger.info "respostas recebidas #{parsed_data}"
+      Rails.logger.info "received data #{parsed_data}"
+
+      if parsed_data.is_a?(Hash) && parsed_data.key?('report_type') && parsed_data['report_type'] == 'negative'
+        Rails.logger.info 'response with report_type negative, will not be sent to ephem'
+        return nil
+      end
+
+      if parsed_data.is_a?(Hash) && parsed_data.key?('answers')
+        Rails.logger.info 'response with answers key, will be sent to ephem'
+        parsed_data = parsed_data['answers']
+      end
 
       field_value_map = parsed_data.map { |entry| { entry['field'] => entry['value'] } }.reduce({}, :merge)
       aditional_data = parsed_data.map { |entry| { field_text_map.fetch(entry['field'], entry['field']) => entry['value'] } }.reduce({}, :merge)
