@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :vaccines
   resources :doses
 
-  get "flexible_forms/registration/:group_manager_id", to: "flexible_forms#registration"
+  get "flexible_forms/registration/:app_id", to: "flexible_forms#registration"
   get "flexible_forms/signal", to: "flexible_forms#signal"
   get "flexible_forms/quizzes", to: "flexible_forms#quizzes"
   resources :flexible_answers
