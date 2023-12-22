@@ -88,29 +88,47 @@ class User < ApplicationRecord
     obj.update_attribute(:streak, obj.streak)
   end
 
-  def update_ranking
+  def update_tags
     obj = self
-    last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
 
     current_week = Time.zone.now.strftime('%U').to_i
+    last_flexible_answer_week = -1
     last_survey_week = -1
+    tagsData = {}
 
-    if last_survey
-      if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
+    if obj.is_professional
+      last_flexible_answer = FlexibleAnswer.where("user_id = ?", obj.id).order("id DESC").limit(1).first
+
+      if last_flexible_answer
+        last_flexible_answer_week = last_flexible_answer.created_at.strftime('%U').to_i
+      end
+
+      tagsData = {
+        "tags" => {
+          "reported_this_week": current_week == last_flexible_answer_week ? 1 : 0
+        }
+      }
+    else
+      last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
+
+      if last_survey
+        if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
+          obj.streak = 0
+        end
+        last_survey_week = last_survey.created_at.strftime('%U').to_i
+      else
         obj.streak = 0
       end
-      last_survey_week = last_survey.created_at.strftime('%U').to_i
-    else
-      obj.streak = 0
-    end
-    obj.update_attribute(:streak, obj.streak)
+      obj.update_attribute(:streak, obj.streak)
 
-    tagsData = {
-      "tags" => {
-        "streak": obj.streak,
-        "reported_this_week": current_week == last_survey_week ? 1 : 0
+      tagsData = {
+        "tags" => {
+          "streak": obj.streak,
+          "reported_this_week": current_week == last_survey_week ? 1 : 0
+        }
       }
-    }
+    end
+
     uri = URI("#{ENV["ONESIGNAL_API_URL"]}/apps/#{ENV["ONESIGNAL_APP_ID"]}/users/#{obj.id}")
     res = HTTParty.put(uri, body: tagsData, headers: { 'Content-Type' => 'application/json' })
   end
