@@ -2,6 +2,8 @@ version: "3.6"
 services:
   db:
     image: postgres:13
+    ports:
+     - "5432:5432"
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
 
@@ -41,3 +43,4 @@ services:
       METABASE_SECRET_KEY: $METABASE_SECRET_KEY
       ONESIGNAL_API_URL: $ONESIGNAL_API_URL
       ONESIGNAL_APP_ID: $ONESIGNAL_APP_ID
+      EPHEM_API_URL: $EPHEM_API_URL
