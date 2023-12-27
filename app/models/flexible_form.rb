@@ -1,8 +1,9 @@
 class FlexibleForm < ApplicationRecord
-  belongs_to :group_manager
+  belongs_to :app
+  belongs_to :group_manager, optional: true
   has_many :flexible_form_versions, -> { order(created_at: :desc) }, dependent: :destroy
 
-  def latest_version
+  def flexible_form_version
     flexible_form_versions.first
   end
 end

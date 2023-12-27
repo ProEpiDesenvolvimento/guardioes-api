@@ -1,18 +1,18 @@
 class FlexibleAnswerSerializer < ActiveModel::Serializer
-  attributes :id, :data, :created_at, :updated_at, :external_system_integration_id, :external_system_data
-  has_one :flexible_form_version
+  attributes :id, :data, :external_system_integration_id, :external_system_data, :created_at, :updated_at
+  belongs_to :flexible_form_version
   has_one :flexible_form, through: :flexible_form_version
-  has_one :user
+  belongs_to :user
 
   def external_system_data
     if object.flexible_form.form_type == 'signal' and !object.external_system_integration_id.nil?
       begin
         parsed_data = JSON.parse(object.data)
         if parsed_data.is_a?(Hash) && parsed_data.key?('report_type') && parsed_data['report_type'] == 'negative'
-          Rails.logger.info 'report_type negative, ephem api will not be called'
+          # report_type negative, ephem api will not be called
           return nil
         end
-        Rails.logger.info "buscando sinais do evento #{object.external_system_integration_id}"
+
         url = "#{ENV['EPHEM_API_URL']}/api-integracao/v1/eventos/#{object.external_system_integration_id}/signals"
         response = HTTParty.get(url)
         response.parsed_response

@@ -1,5 +1,6 @@
 class FlexibleAnswersController < ApplicationController
   before_action :set_flexible_answer, only: [:show, :update, :destroy]
+  authorize_resource
 
   # GET /flexible_answers
   def index
@@ -16,6 +17,7 @@ class FlexibleAnswersController < ApplicationController
   # POST /flexible_answers
   def create
     @flexible_answer = FlexibleAnswer.new(flexible_answer_params)
+    @flexible_answer.user_id = current_user.id
 
     if @flexible_answer.save
       if @flexible_answer.flexible_form.form_type == 'signal'

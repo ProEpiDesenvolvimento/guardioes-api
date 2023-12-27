@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  resources :flexible_answers
-  resources :flexible_form_versions
-  resources :flexible_forms
   resources :categories
   resources :form_answers
   resources :form_options
@@ -14,6 +11,13 @@ Rails.application.routes.draw do
   resources :permissions, only: [:create, :update, :show, :destroy]
   resources :vaccines
   resources :doses
+
+  get "flexible_forms/registration/:app_id", to: "flexible_forms#registration"
+  get "flexible_forms/signal", to: "flexible_forms#signal"
+  get "flexible_forms/quizzes", to: "flexible_forms#quizzes"
+  resources :flexible_answers
+  resources :flexible_form_versions
+  resources :flexible_forms
 
   get "groups/root", to: "groups#root"
   post "groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
@@ -61,6 +65,7 @@ Rails.application.routes.draw do
     get "/panel", to: "users#panel_list"
     post "/filtered_list", to: "users#filtered_list"
     get "/ranking", to: "users#ranking"
+    get "/request_deletion/:id", to: "users#request_deletion"
   end
 
   scope "/admin" do 

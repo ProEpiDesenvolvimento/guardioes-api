@@ -1,5 +1,6 @@
 class FlexibleFormsController < ApplicationController
   before_action :set_flexible_form, only: [:show, :update, :destroy]
+  authorize_resource :except => [:registration, :signal, :quizzes]
 
   # GET /flexible_forms
   def index
@@ -46,6 +47,45 @@ class FlexibleFormsController < ApplicationController
     @flexible_form.destroy
   end
 
+  # GET /flexible_forms/registration/:app_id
+  def registration
+    @app = App.find(params[:app_id])
+    
+    @flexible_form = FlexibleForm.find_by(form_type: "registration", app_id: @app.id)
+
+    render json: @flexible_form
+  end
+
+  # GET /flexible_forms/signal
+  def signal
+    if current_group_manager
+      group_manager_id = current_group_manager.id
+    elsif current_group_manager_team
+      group_manager_id = current_group_manager_team.group_manager.id
+    elsif current_user
+      group_manager_id = current_user.group.group_manager.id
+    end
+
+    @flexible_form = FlexibleForm.find_by(form_type: "signal", group_manager_id: group_manager_id)
+    
+    render json: @flexible_form
+  end
+
+  # GET /flexible_forms/quizzes
+  def quizzes
+    if current_group_manager
+      group_manager_id = current_group_manager.id
+    elsif current_group_manager_team
+      group_manager_id = current_group_manager_team.group_manager.id
+    elsif current_user
+      group_manager_id = current_user.group.group_manager.id
+    end
+
+    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id)
+
+    render json: @flexible_forms
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_flexible_form
@@ -54,6 +94,6 @@ class FlexibleFormsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def flexible_form_params
-      params.require(:flexible_form).permit(:title, :description, :form_type, :data, :group_manager_id)
+      params.require(:flexible_form).permit(:title, :description, :form_type, :data, :group_manager_id, :app_id)
     end
 end

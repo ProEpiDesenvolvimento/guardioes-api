@@ -1,5 +1,6 @@
 class FlexibleFormVersionsController < ApplicationController
   before_action :set_flexible_form_version, only: [:show, :update, :destroy]
+  authorize_resource
 
   # GET /flexible_form_versions
   def index
