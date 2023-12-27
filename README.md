@@ -31,6 +31,8 @@ GODATA_KEY=
 CSV_DATA_KEY=
 METABASE_SITE_URL=
 METABASE_SECRET_KEY=
+ONESIGNAL_API_URL=
+ONESIGNAL_APP_ID=
 ```
 
 O passo 2 pode ser pulado se sua intenção for **apenas** de rodar a API.
