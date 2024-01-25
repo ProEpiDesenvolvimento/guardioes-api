@@ -74,6 +74,7 @@ class User < ApplicationRecord
     else
       obj = self
       last_survey = Survey.where("user_id = ?", self.id).order("id DESC").offset(1).first
+      obj.update_attribute(:reported_this_week, true)
     end
 
     if last_survey
@@ -90,17 +91,48 @@ class User < ApplicationRecord
 
   def update_ranking
     obj = self
-    last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
 
-    if last_survey
-      if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
+    current_week = Time.zone.now.strftime('%U').to_i
+    last_flexible_answer_week = -1
+    last_survey_week = -1
+
+    if obj.is_professional
+      last_flexible_answer = FlexibleAnswer.where("user_id = ?", obj.id).order("id DESC").limit(1).first
+
+      if last_flexible_answer
+        last_flexible_answer_week = last_flexible_answer.created_at.strftime('%U').to_i
+      end
+      reported_this_week = (current_week == last_flexible_answer_week)
+      
+      obj.update_attribute(:reported_this_week, reported_this_week)
+    else
+      last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
+
+      if last_survey
+        if last_survey.created_at.beginning_of_day < Time.zone.now.prev_day.beginning_of_day
+          obj.streak = 0
+        end
+        last_survey_week = last_survey.created_at.strftime('%U').to_i
+      else
         obj.streak = 0
       end
-    else
-      obj.streak = 0
-    end
+      reported_this_week = (current_week == last_survey_week)
 
-    obj.update_attribute(:streak, obj.streak)
+      obj.update_attributes(streak: obj.streak, reported_this_week: reported_this_week)
+    end
+  end
+
+  def update_onesignal_tags
+    obj = self
+
+    tagsData = {
+      "tags" => {
+        "streak": obj.streak.to_s,
+        "reported_this_week": obj.reported_this_week ? '1' : '0'
+      }
+    }
+    uri = URI("#{ENV["ONESIGNAL_API_URL"]}/apps/#{ENV["ONESIGNAL_APP_ID"]}/users/#{obj.id}")
+    res = HTTParty.put(uri, body: tagsData, headers: { 'Content-Type' => 'application/json' })
   end
 
   def get_feedback_message(survey)

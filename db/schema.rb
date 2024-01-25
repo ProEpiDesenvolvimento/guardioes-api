@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_02_123557) do
+ActiveRecord::Schema.define(version: 2024_01_24_215248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 2023_08_02_123557) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "external_system_integration_id"
     t.index ["flexible_form_version_id"], name: "index_flexible_answers_on_flexible_form_version_id"
     t.index ["user_id"], name: "index_flexible_answers_on_user_id"
   end
@@ -148,6 +149,8 @@ ActiveRecord::Schema.define(version: 2023_08_02_123557) do
     t.bigint "group_manager_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "app_id"
+    t.index ["app_id"], name: "index_flexible_forms_on_app_id"
     t.index ["group_manager_id"], name: "index_flexible_forms_on_group_manager_id"
   end
 
@@ -495,6 +498,7 @@ ActiveRecord::Schema.define(version: 2023_08_02_123557) do
     t.datetime "second_dose_date"
     t.bigint "vaccine_id"
     t.bigint "category_id"
+    t.boolean "reported_this_week", default: false
     t.index ["app_id"], name: "index_users_on_app_id"
     t.index ["category_id"], name: "index_users_on_category_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
@@ -528,6 +532,7 @@ ActiveRecord::Schema.define(version: 2023_08_02_123557) do
   add_foreign_key "flexible_answers", "flexible_form_versions"
   add_foreign_key "flexible_answers", "users"
   add_foreign_key "flexible_form_versions", "flexible_forms"
+  add_foreign_key "flexible_forms", "apps"
   add_foreign_key "flexible_forms", "group_managers"
   add_foreign_key "form_answers", "form_options"
   add_foreign_key "form_answers", "form_questions"

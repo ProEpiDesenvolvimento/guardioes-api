@@ -47,9 +47,11 @@ class FlexibleFormsController < ApplicationController
     @flexible_form.destroy
   end
 
-  # GET /flexible_forms/registration/:group_manager_id
+  # GET /flexible_forms/registration/:app_id
   def registration
-    @flexible_form = FlexibleForm.find_by(form_type: "registration", group_manager_id: params[:group_manager_id])
+    @app = App.find(params[:app_id])
+    
+    @flexible_form = FlexibleForm.find_by(form_type: "registration", app_id: @app.id)
 
     render json: @flexible_form
   end
@@ -92,6 +94,6 @@ class FlexibleFormsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def flexible_form_params
-      params.require(:flexible_form).permit(:title, :description, :form_type, :data, :group_manager_id)
+      params.require(:flexible_form).permit(:title, :description, :form_type, :data, :group_manager_id, :app_id)
     end
 end
