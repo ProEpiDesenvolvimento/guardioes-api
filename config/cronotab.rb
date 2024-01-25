@@ -13,14 +13,23 @@ class TwitterApiUpdate
   end
 end
 
-Crono.perform(TwitterApiUpdate).every 1.hour
+Crono.perform(TwitterApiUpdate).every 1.hour, at: {min: 00}
 
-class UserTagsUpdate
+class UserUpdate
   def perform
+    File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, 'Perform UserRanking') }
+    User.all.each do |u|
+      begin
+        u.update_ranking
+      rescue
+        File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, "USER RANKING: Failed to update user ranking id=#{u.id}") }
+      end
+    end
+
     File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, 'Perform UserTagsUpdate') }
     User.all.each do |u|
       begin
-        u.update_tags
+        u.update_onesignal_tags
       rescue
         File.open('log/crono.log' ,'a') {|f| f.puts(Time.now.getutc, "USER TAGS: Failed to update user id=#{u.id}") }
       end
@@ -28,4 +37,4 @@ class UserTagsUpdate
   end
 end
 
-Crono.perform(UserTagsUpdate).every 1.day, at: {hour: 00, min: 00}
+Crono.perform(UserUpdate).every 1.day, at: {hour: 00, min: 00}

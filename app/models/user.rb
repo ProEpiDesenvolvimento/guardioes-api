@@ -74,6 +74,7 @@ class User < ApplicationRecord
     else
       obj = self
       last_survey = Survey.where("user_id = ?", self.id).order("id DESC").offset(1).first
+      obj.update_attribute(:reported_this_week, true)
     end
 
     if last_survey
@@ -88,13 +89,12 @@ class User < ApplicationRecord
     obj.update_attribute(:streak, obj.streak)
   end
 
-  def update_tags
+  def update_ranking
     obj = self
 
     current_week = Time.zone.now.strftime('%U').to_i
     last_flexible_answer_week = -1
     last_survey_week = -1
-    tagsData = {}
 
     if obj.is_professional
       last_flexible_answer = FlexibleAnswer.where("user_id = ?", obj.id).order("id DESC").limit(1).first
@@ -102,12 +102,9 @@ class User < ApplicationRecord
       if last_flexible_answer
         last_flexible_answer_week = last_flexible_answer.created_at.strftime('%U').to_i
       end
-
-      tagsData = {
-        "tags" => {
-          "reported_this_week": current_week == last_flexible_answer_week ? 1 : 0
-        }
-      }
+      reported_this_week = (current_week == last_flexible_answer_week)
+      
+      obj.update_attribute(:reported_this_week, reported_this_week)
     else
       last_survey = Survey.where("user_id = ?", obj.id).order("id DESC").limit(1).first
 
@@ -119,16 +116,21 @@ class User < ApplicationRecord
       else
         obj.streak = 0
       end
-      obj.update_attribute(:streak, obj.streak)
+      reported_this_week = (current_week == last_survey_week)
 
-      tagsData = {
-        "tags" => {
-          "streak": obj.streak,
-          "reported_this_week": current_week == last_survey_week ? 1 : 0
-        }
-      }
+      obj.update_attributes(streak: obj.streak, reported_this_week: reported_this_week)
     end
+  end
 
+  def update_onesignal_tags
+    obj = self
+
+    tagsData = {
+      "tags" => {
+        "streak": obj.streak.to_s,
+        "reported_this_week": obj.reported_this_week ? '1' : '0'
+      }
+    }
     uri = URI("#{ENV["ONESIGNAL_API_URL"]}/apps/#{ENV["ONESIGNAL_APP_ID"]}/users/#{obj.id}")
     res = HTTParty.put(uri, body: tagsData, headers: { 'Content-Type' => 'application/json' })
   end
