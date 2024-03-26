@@ -81,7 +81,7 @@ class FlexibleFormsController < ApplicationController
       group_manager_id = current_user.group.group_manager.id
     end
 
-    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id)
+    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id).order(created_at: :desc)
 
     render json: @flexible_forms
   end
