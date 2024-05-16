@@ -23,69 +23,6 @@ class Survey < ApplicationRecord
       obj.postal_code = geo.postal_code
     end
   end
-  
-  def get_message(user)
-    @user_symptoms = []
-    symptom.map { |symptom|
-      if Symptom.where(:code=>symptom).any?
-        @user_symptoms.append(Symptom.where(:code=>symptom)[0])
-      end
-    }
-    symptoms_and_syndromes_data = {}
-    symptom_messages = get_symptoms_messages
-    if symptom_messages.any?
-      symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
-    end
-    top_3 = get_top_3_syndromes
-    if top_3.any?
-      if user.group_id
-        group = Group.where("id = ?", user.group_id).first
-        group_manager = GroupManager.where("id = ?", group.group_manager_id).first
-      end
-      symptoms_and_syndromes_data[:top_3] = top_3.map do |obj|
-        if user.group_id and user.is_vigilance == true and group_manager[:vigilance_syndromes] != ""
-          group_manager[:vigilance_syndromes].each do |vs|
-            if vs[:syndrome_id] == obj[:syndrome].id
-              self.update_attribute(:syndrome_id, vs[:syndrome_id])
-
-              if vs[:surto_id]
-                if self.household_id == nil
-                  token = auth_go_data(group_manager)
-                  date = DateTime.now.utc.beginning_of_day - obj[:syndrome].days_period.days
-
-                  if !token.nil?
-                    user_cases = get_user_cases_go_data(token, date, vs, group_manager)
-
-                    if !is_user_already_on_case_go_data(user_cases, date)
-                      VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
-                      report_go_data(token, user_cases, vs, group_manager)
-                    end
-                  end
-                else
-                  surveys_with_syndrome = Survey.filter_by_user(user.id).where("created_at >= ?", date)
-                    .where(syndrome_id: obj[:syndrome].id)
-                    .where(household: self.household)
-
-                  if surveys_with_syndrome.length <= 1
-                    VigilanceMailer.vigilance_email(self, user, obj[:syndrome]).deliver
-                  end
-                end
-              end
-            end
-          end
-        end
-        
-        { name: obj[:syndrome].description, percentage: obj[:likelyhood] }
-      end
-
-      syndrome_message = top_3[0][:syndrome].message
-      if !syndrome_message.nil?
-        symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message || ''
-      end
-    end
-    
-    return symptoms_and_syndromes_data
-  end
 
   scope :filter_by_user, ->(user) { where(user_id: user) }
 
@@ -128,19 +65,94 @@ class Survey < ApplicationRecord
     return data 
   end
 
-  def auth_go_data(group_manager)
-    # Login on GO.Data API
-    begin 
-      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
-      password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
-    rescue
+  def get_syndromes_data(user)
+    symptoms_and_syndromes_data = {}
+
+    @survey_symptoms = []
+    symptom.each do |s|
+      symptom = Symptom.where(:code => s)
+      if symptom.any?
+        @survey_symptoms.append(symptom.first)
+      end
     end
-    uri = URI("#{group_manager.url_godata}/api/oauth/token")
-    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
-    if (res.code != 200)
-      return nil
+    
+    symptom_messages = get_symptoms_messages
+    if symptom_messages.any?
+      symptoms_and_syndromes_data[:symptom_messages] = symptom_messages
     end
-    return JSON.parse(res.body.gsub('=>', ':'))['access_token']
+
+    top_3_syndromes = get_top_3_syndromes
+    if top_3_syndromes.any?
+      symptoms_and_syndromes_data[:top_3] = top_3_syndromes.map do |obj|
+        { name: obj[:syndrome].description, percentage: obj[:likelyhood] }
+      end
+
+      match_synd = top_3_syndromes.first
+      date = DateTime.now.utc.beginning_of_day - match_synd[:syndrome].days_period.days
+
+      syndrome_message = match_synd[:syndrome].message
+      if !syndrome_message.nil?
+        symptoms_and_syndromes_data[:top_syndrome_message] = syndrome_message
+      end
+
+      reported = false
+
+      if user.group_id
+        group = Group.find_by(id: user.group_id)
+        group_manager = GroupManager.find_by(id: group.group_manager_id)
+
+        if user.is_vigilance == true and group_manager[:vigilance_syndromes].any?
+          group_manager[:vigilance_syndromes].each do |vigilance_synd|
+            if vigilance_synd[:syndrome_id] == match_synd[:syndrome].id
+              if self.household_id == nil
+                token = auth_go_data(group_manager)
+
+                if !token.nil? and vigilance_synd[:surto_id]
+                  user_cases = get_user_cases_go_data(token, date, vigilance_synd, group_manager)
+
+                  if !is_user_already_on_case_go_data(user_cases, date)
+                    self.update_attribute(:syndrome_id, match_synd[:syndrome].id)
+                    VigilanceMailer.vigilance_email(self, user, match_synd[:syndrome]).deliver
+                    report_go_data(token, user_cases, vigilance_synd, group_manager)
+                    reported = true
+                  end
+                end
+              end
+
+              if !reported
+                user_cases = get_user_cases_database(user, date, match_synd)
+                
+                if !user_cases.any?
+                  self.update_attribute(:syndrome_id, match_synd[:syndrome].id)
+                  VigilanceMailer.vigilance_email(self, user, match_synd[:syndrome]).deliver
+                  reported = true
+                end
+              end
+              # break loop after match syndrome is found
+              break
+            end
+          end
+        end
+      end
+      
+      if !reported
+        user_cases = get_user_cases_database(user, date, match_synd)
+   
+        if !user_cases.any?
+          self.update_attribute(:syndrome_id, match_synd[:syndrome].id)
+          reported = true
+        end
+      end
+    end
+    
+    return symptoms_and_syndromes_data
+  end
+
+  def get_user_cases_database(user, date, match_synd)
+    cases = Survey.filter_by_user(user.id).where("created_at >= ?", date)
+              .where(syndrome_id: match_synd[:syndrome].id)
+              .where(household: self.household)
+    return cases
   end
 
   def get_user_cases_go_data(token, date, vigilance_syndrome, group_manager)
@@ -370,6 +382,21 @@ class Survey < ApplicationRecord
 
   private
 
+  def auth_go_data(group_manager)
+    # Login on GO.Data API
+    begin 
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['GODATA_KEY'])
+      password_godata = crypt.decrypt_and_verify(group_manager.password_godata)
+    rescue
+    end
+    uri = URI("#{group_manager.url_godata}/api/oauth/token")
+    res = HTTParty.post(uri, body: { username: group_manager.username_godata, password: password_godata })
+    if (res.code != 200)
+      return nil
+    end
+    return JSON.parse(res.body.gsub('=>', ':'))['access_token']
+  end
+
   def get_top_3_syndromes
     syndrome_list = []
     syndromes = Syndrome.all
@@ -393,9 +420,9 @@ class Survey < ApplicationRecord
     sum = 0
     modulus_division = 0
     syndrome.symptoms.each do |symptom|
-      percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome)[0]
+      percentage = SyndromeSymptomPercentage.where(symptom:symptom, syndrome:syndrome).first
       if percentage
-        if @user_symptoms.include?(symptom)
+        if @survey_symptoms.include?(symptom)
           sum += percentage.percentage
         end
         modulus_division += percentage.percentage
@@ -410,7 +437,7 @@ class Survey < ApplicationRecord
 
   def get_symptoms_messages
     messages = []
-    @user_symptoms.each do |symptom|
+    @survey_symptoms.each do |symptom|
       unless symptom.message.nil?
         messages.append(symptom.message)
       end

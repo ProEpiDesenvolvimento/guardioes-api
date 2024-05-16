@@ -8,6 +8,7 @@ class App < ApplicationRecord
   has_many :vaccines
   has_many :categories
   has_many :rumors
+  has_many :flexible_forms
 
   validates :app_name,
     presence: true,

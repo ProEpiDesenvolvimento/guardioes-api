@@ -1,6 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :user_name, :email, :birthdate, :gender, :race, :is_professional, :risk_group,
-             :country, :state, :city, :group, :group_id, :identification_code, :streak,
+             :country, :state, :city, :group, :group_id, :identification_code, :streak, :reported_this_week,
              :policy_version, :is_vigilance, :phone, :doses, :created_at, :updated_at, :updated_by
 
   has_many :households

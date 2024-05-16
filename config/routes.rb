@@ -12,6 +12,13 @@ Rails.application.routes.draw do
   resources :vaccines
   resources :doses
 
+  get "flexible_forms/registration/:app_id", to: "flexible_forms#registration"
+  get "flexible_forms/signal", to: "flexible_forms#signal"
+  get "flexible_forms/quizzes", to: "flexible_forms#quizzes"
+  resources :flexible_answers
+  resources :flexible_form_versions
+  resources :flexible_forms
+
   get "groups/root", to: "groups#root"
   post "groups/build_country_city_state_groups", to: "groups#build_country_city_state_groups"
   post "groups/upload_group_file", to: "groups#upload_group_file"
