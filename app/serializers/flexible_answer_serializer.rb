@@ -4,22 +4,17 @@ class FlexibleAnswerSerializer < ActiveModel::Serializer
   has_one :flexible_form, through: :flexible_form_version
   belongs_to :user
 
-  def external_system_data
-    if object.flexible_form.form_type == 'signal' and !object.external_system_integration_id.nil?
-      begin
-        parsed_data = JSON.parse(object.data)
-        if parsed_data.is_a?(Hash) && parsed_data.key?('report_type') && parsed_data['report_type'] == 'negative'
-          # report_type negative, ephem api will not be called
-          return nil
-        end
+  def signals_dict
+    scope
+  end
 
-        url = "#{ENV['EPHEM_API_URL']}/api-integracao/v1/eventos/#{object.external_system_integration_id}/signals"
-        response = HTTParty.get(url)
-        response.parsed_response
-      rescue StandardError => e
-        Rails.logger.error "erro na integracao com ephem. #{e.message}"
-        nil
-      end
+  def external_system_data
+    if object.external_system_integration_id.nil?
+      nil
+    else
+      external_system_integration_id = object.external_system_integration_id.to_s
+      signals_dict.fetch(external_system_integration_id,
+                         ExternalIntegrationService.default_event_value(external_system_integration_id))
     end
   end
 end

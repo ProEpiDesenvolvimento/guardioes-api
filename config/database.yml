@@ -87,3 +87,12 @@ production:
   database: myapp_production
   username: myapp
   password: <%= ENV['DATABASE_PASSWORD'] %>
+
+# to run locally, without docker and with ruby on rails installed on your machine
+# you can use the following configuration.
+# the only difference is the host, which is localhost
+local:
+  <<: *default
+  database: myapp_development
+  host: localhost
+  port: 5432

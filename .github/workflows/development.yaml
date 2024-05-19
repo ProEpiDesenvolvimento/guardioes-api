@@ -25,7 +25,7 @@ jobs:
       METABASE_SECRET_KEY: "fake_metabase_secret_key"
       ONESIGNAL_API_URL: "fake_onesignal_api_url"
       ONESIGNAL_APP_ID: "fake_onesignal_app_id"
-      EPHEM_API_URL: "fake_ephem_api_url"
+      EPHEM_API_URL: "http://fake_ephem_api_url"
 
     steps:
       - name: Checkout repository
