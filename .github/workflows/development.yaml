@@ -1,0 +1,70 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - development
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: guardioes-api
+    env:
+      NITTER_URL: "fake_nitter_url"
+      MAILER_SMTP_ADDRESS: "fake_mailer_smtp_address"
+      MAILER_EMAIL: "fake_mailer_email"
+      MAILER_PASSWORD: "fake_mailer_password"
+      GODATA_KEY: "fake_godata_key"
+      CSV_DATA_KEY: "fake_csv_data_key"
+      METABASE_SITE_URL: "fake_metabase_site_url"
+      METABASE_SECRET_KEY: "fake_metabase_secret_key"
+      ONESIGNAL_API_URL: "fake_onesignal_api_url"
+      ONESIGNAL_APP_ID: "fake_onesignal_app_id"
+      EPHEM_API_URL: "http://fake_ephem_api_url"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Start application for testing
+        run: |
+          echo "Creating master.key file..."
+          echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
+          echo "Running docker-compose..."
+          docker-compose up -d --build
+
+      - name: Execute tests
+        run: |
+          echo "Waiting for the database to be ready..."
+          sleep 10
+          docker ps
+          docker-compose logs --tail 100
+          docker-compose exec -T web bundle exec rake db:drop RAILS_ENV=test
+          docker-compose exec -T web bundle exec rake db:create RAILS_ENV=test
+          docker-compose exec -T web bundle exec rake db:schema:load RAILS_ENV=test
+          docker-compose exec -T -e MIN_COVERAGE=60 web rspec --exclude-pattern "spec/models/dose_spec.rb,spec/models/twitter_api_spec.rb"
+
+  deploy-development:
+    runs-on: ubuntu-latest
+    environment: guardioes-api
+    needs: test
+    if: success() && github.ref == 'refs/heads/development'
+    steps:
+      - name: restart app on digital ocean
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST_HOMOLOG }}
+          username: ${{ secrets.SSH_USERNAME_HOMOLOG }}
+          password: ${{ secrets.SSH_KEY_HOMOLOG }}
+          port: ${{ secrets.SSH_PORT_HOMOLOG }}
+          script: |
+            cd gds
+            git pull

@@ -28,7 +28,7 @@ gem 'puma', '~> 4.3'
 gem "roo", "~> 2.8.0"
 gem 'roo-xls'
 gem 'cancancan'
-gem 'kaminari' 
+gem 'kaminari'
 gem 'pager_api'
 gem 'pagy'
 gem 'ransack'
@@ -86,6 +86,8 @@ group :test do
   gem 'factory_bot_rails', '~> 4.0'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'database_cleaner'
+  # For stubbing HTTP requests
+  gem 'webmock'
 end
 
 

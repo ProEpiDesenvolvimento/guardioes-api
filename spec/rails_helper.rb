@@ -1,5 +1,8 @@
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start do
+  minimum_coverage ENV.fetch('MIN_COVERAGE', 0).to_i
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'database_cleaner'
