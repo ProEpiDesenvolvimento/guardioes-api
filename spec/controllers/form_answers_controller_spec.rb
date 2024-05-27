@@ -126,4 +126,24 @@ RSpec.describe FormAnswersController, type: :controller do
     end
   end
 
+  describe "GET #signal_comments" do
+    it "returns a success response" do
+      flexible_answer = FlexibleAnswer.create! valid_attributes
+      allow(ExternalIntegrationService).to receive(:get_messages).and_return([].to_json)
+
+      get :signal_comments, params: {id: flexible_answer.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST #create_signal_comments" do
+    it "returns a success response" do
+      flexible_answer = FlexibleAnswer.create! valid_attributes
+      allow(ExternalIntegrationService).to receive(:send_message).and_return({ message: "Test message" }.to_json)
+
+      post :create_signal_comments, params: {id: flexible_answer.to_param, message: "Test message"}, session: valid_session
+      expect(response).to have_http_status(:created)
+    end
+  end
+
 end

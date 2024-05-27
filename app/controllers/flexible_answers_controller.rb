@@ -1,5 +1,5 @@
 class FlexibleAnswersController < ApplicationController
-  before_action :set_flexible_answer, only: [:show, :update, :destroy]
+  before_action :set_flexible_answer, only: [:show, :update, :destroy, :create_signal_comments, :signal_comments]
   authorize_resource
   # GET /flexible_answers
   NUMERO_SINAIS_RETORNADOS = 999
@@ -48,6 +48,18 @@ class FlexibleAnswersController < ApplicationController
   # DELETE /flexible_answers/1
   def destroy
     @flexible_answer.destroy
+  end
+
+  def signal_comments
+    messages = ExternalIntegrationService.get_messages(@flexible_answer.external_system_integration_id)
+    final_messages = messages || [].to_json
+    render json: final_messages
+  end
+
+  def create_signal_comments
+    response = ExternalIntegrationService.send_message(@flexible_answer.external_system_integration_id, params[:message])
+    response = JSON.parse(response) unless response.is_a?(Hash)
+    render json: response, status: :created
   end
 
   private
