@@ -13,8 +13,13 @@ class FlexibleAnswerSerializer < ActiveModel::Serializer
       nil
     else
       external_system_integration_id = object.external_system_integration_id.to_s
-      signals_dict.fetch(external_system_integration_id,
-                         ExternalIntegrationService.default_event_value(external_system_integration_id))
+      result = signals_dict.fetch(external_system_integration_id,
+                                  ExternalIntegrationService.default_event_value(external_system_integration_id))
+      {
+        "_embedded": {
+          "signals": [result]
+        }
+      }
     end
   end
 end
