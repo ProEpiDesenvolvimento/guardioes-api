@@ -5,7 +5,7 @@ class FlexibleAnswerSerializer < ActiveModel::Serializer
   belongs_to :user
 
   def signals_dict
-    scope
+    scope.is_a?(Hash) ? scope : {}
   end
 
   def external_system_data
