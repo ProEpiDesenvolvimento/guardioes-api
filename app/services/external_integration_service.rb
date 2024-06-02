@@ -60,6 +60,10 @@ class ExternalIntegrationService
     Rails.logger.info "dados a serem enviados para o ephem #{event_data} #{event_data.class}"
 
     uri = URI("#{EPHEM_API_URL}#{API_PATH}/eventos")
+
+    if true
+      return { 'id' => 1 }
+    end
     res = HTTParty.post(uri, body: event_data.to_json, headers: HEADERS, debug_logger: Logger.new(STDOUT))
 
     parsed_response = handle_response(res)
@@ -106,6 +110,9 @@ class ExternalIntegrationService
       'eventoIntegracaoTemplate': DEFAULT_INTEGRATION_TEMPLE_ID,
       'userId': user.id,
       'userEmail': user.email,
+      'userName': user.user_name,
+      'userPhone': user.phone,
+      'userCountry': user.country,
       'eventSourceId': id,
       'eventSourceLocation': EMPTY_STRING,
       'eventSourceLocationId': DEFAULT_NOT_SELECTED_VALUE,
