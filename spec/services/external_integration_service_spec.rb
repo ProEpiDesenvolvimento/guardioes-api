@@ -7,7 +7,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
   let(:flexible_answer) {
     double('FlexibleAnswer',
            id: 1,
-           user: double('User', id: 1, email: 'mock@mock.com'),
+           user: double('User', id: 1, email: 'mock@mock.com', user_name: 'User', phone: '9912345678', country: 'Brasil'),
            data: '{}',
            flexible_form_version: double('FlexibleFormVersion',
                                          extract_data_as_map_field_text: { 'data' => '{}' }))
@@ -105,6 +105,9 @@ RSpec.describe ExternalIntegrationService, type: :service do
         'eventoIntegracaoTemplate' => '/1',
         'userId' => 1,
         'userEmail' => 'mock@mock.com',
+        'userName' => 'User',
+        'userPhone' => '9912345678',
+        'userCountry' => 'Brasil',
         'eventSourceId' => 1,
         'eventSourceLocation' => '',
         'eventSourceLocationId' => 0,
