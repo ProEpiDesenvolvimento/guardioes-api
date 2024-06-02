@@ -68,3 +68,4 @@ jobs:
           script: |
             cd gds
             git pull
+            docker-compose restart web
