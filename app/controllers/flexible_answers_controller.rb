@@ -52,8 +52,8 @@ class FlexibleAnswersController < ApplicationController
 
   def signal_comments
     messages = ExternalIntegrationService.get_messages(@flexible_answer.external_system_integration_id)
-    final_messages = messages || [].to_json
-    render json: final_messages
+    final_messages = messages || []
+    render json: { messages: final_messages }
   end
 
   def create_signal_comments

@@ -20,8 +20,10 @@ class ExternalIntegrationService
   end
 
   def self.convert_to_dict(signals_list)
-    signals_list['_embedded']['signals'].each_with_object({}) do |signal, hash|
-      hash[signal['eventId'].to_s] = signal
+    if signals_list['_embedded']
+      signals_list['_embedded']['signals'].each_with_object({}) do |signal, hash|
+        hash[signal['eventId'].to_s] = signal
+      end
     end
   end
 
