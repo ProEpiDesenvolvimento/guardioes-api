@@ -179,4 +179,6 @@ Rails.application.routes.draw do
 
     root to: "admin#index"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/flexible_answers/:id/signal_comments', to: 'flexible_answers#signal_comments'
+  post '/flexible_answers/:id/signal_comments', to: 'flexible_answers#create_signal_comments'
 end

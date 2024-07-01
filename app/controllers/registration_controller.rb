@@ -130,6 +130,7 @@ class RegistrationController < Devise::RegistrationsController
         :picture,
         :state,
         :city,
+        :phone,
         :identification_code,
         :group_id,
         :risk_group,
