@@ -3,9 +3,7 @@ class Household < ApplicationRecord
   
   validates_presence_of :description, 
                         :birthdate, 
-                        :country, 
-                        :gender, 
-                        :race,
+                        :country,
                         :user_id,
                         :kinship
 
