@@ -7,10 +7,12 @@ class FlexibleAnswersController < ApplicationController
 
   def index
     @flexible_answers = FlexibleAnswer.where(user_id: current_user.id)
-    @signals_list = ExternalIntegrationService.list_signals_by_user_id(NUMERO_PAGIN,
+
+    integration_service = ExternalIntegrationService.new(current_user)
+    @signals_list = integration_service.list_signals_by_user_id(NUMERO_PAGIN,
                                                                        NUMERO_SINAIS_RETORNADOS,
                                                                        current_user.id)
-    @signals_dict = ExternalIntegrationService.convert_to_dict(@signals_list)
+    @signals_dict = integration_service.convert_to_dict(@signals_list)
 
     render json: @flexible_answers, each_serializer: FlexibleAnswerSerializer, scope: @signals_dict
   end
@@ -26,8 +28,10 @@ class FlexibleAnswersController < ApplicationController
     @flexible_answer.user_id = current_user.id
 
     if @flexible_answer.save
-      if @flexible_answer.flexible_form.form_type == 'signal'
-        external_system_integration_id = ExternalIntegrationService.create_event(@flexible_answer)
+      if @flexible_answer.flexible_form.form_type == 'signal' && current_user.is_vbe
+        integration_service = ExternalIntegrationService.new(current_user)
+        external_system_integration_id = integration_service.create_event(@flexible_answer)
+        
         @flexible_answer.update_attribute(:external_system_integration_id, external_system_integration_id)
       end
       render json: @flexible_answer, status: :created, location: @flexible_answer
@@ -51,14 +55,18 @@ class FlexibleAnswersController < ApplicationController
   end
 
   def signal_comments
-    messages = ExternalIntegrationService.get_messages(@flexible_answer.external_system_integration_id)
+    integration_service = ExternalIntegrationService.new(current_user)
+    messages = integration_service.get_messages(@flexible_answer.external_system_integration_id)
+    
     final_messages = messages || []
     render json: { messages: final_messages }
   end
 
   def create_signal_comments
-    response = ExternalIntegrationService.send_message(@flexible_answer.external_system_integration_id, params[:message])
+    integration_service = ExternalIntegrationService.new(current_user)
+    response = integration_service.send_message(@flexible_answer.external_system_integration_id, params[:message])
     response = JSON.parse(response) unless response.is_a?(Hash)
+    
     render json: response, status: :created
   end
 
