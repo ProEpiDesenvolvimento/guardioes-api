@@ -167,14 +167,20 @@ class UsersController < ApplicationController
   def filtered_list
     @current_user = current_devise_user
 
-    if !current_group_manager.nil?
+    if !current_admin.nil?
+      if current_admin.is_god
+        @user = User.ransack(params[:filters]).result
+      else
+        @user = User.user_by_app_id(@current_user.app_id).ransack(params[:filters]).result
+      end
+    elsif !current_group_manager.nil?
       @groups = Group.where(group_manager_id: @current_user.id).ids
       @user = User.where(group_id: @groups).ransack(params[:filters]).result
     elsif !current_group_manager_team.nil?
       @groups = Group.where(group_manager_id: @current_user.group_manager_id).ids
       @user = User.where(group_id: @groups).ransack(params[:filters]).result
     else 
-      @user =  User.user_by_app_id(@current_user.app_id).ransack(params[:filters]).result
+      @user = User.user_by_app_id(@current_user.app_id).ransack(params[:filters]).result
     end
 
     paginate @user, per_page: 50
