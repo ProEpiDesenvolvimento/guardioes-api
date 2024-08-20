@@ -42,7 +42,7 @@ class ExternalIntegrationService
   end
 
   def list_signals_by_user_id(page, size, user_id)
-    url = build_url("/signals?page=#{page}&size=#{size}&user_id=#{user_id}")
+    url = build_url("signals?page=#{page}&size=#{size}&user_id=#{user_id}")
     response = HTTParty.get(url)
     if response.success?
       Rails.logger.info "sucesso na integracao com ephem. status code #{response.code} body #{response.body}"
