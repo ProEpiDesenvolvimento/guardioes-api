@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :authenticate_group_manager!, only: [:group_data]
   before_action :set_user_update, only: [:update, :admin_update]
   before_action :set_group, only: [:group_data]
-  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token] 
+  load_and_authorize_resource :except => [:email_reset_password, :reset_password, :show_reset_token, :change_password] 
 
   # GET /user
   def index
@@ -85,6 +85,20 @@ class UsersController < ApplicationController
       end
     else
       render json: {error: true, message: "Token invalido"}, status: :bad_request
+    end
+  end
+
+  def change_password
+    @user = User.find(current_user.id)
+
+    if @user.valid_password?(params[:old_password])
+      if @user.reset_password(params[:password], params[:password_confirmation])
+        render json: {error: false, message: "Senha redefinida com sucesso"}, status: :ok
+      else
+        render json: {error: true, data: @user.errors}, status: :bad_request
+      end
+    else
+      render json: {error: true, message: "Senha antiga incorreta"}, status: :unauthorized
     end
   end
 
