@@ -1,5 +1,6 @@
 class CommunityGroupsController < ApplicationController
   before_action :set_community_group, only: [:show, :update, :destroy]
+  load_and_authorize_resource
 
   # GET /community_groups
   def index
