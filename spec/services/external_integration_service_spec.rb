@@ -7,11 +7,15 @@ RSpec.describe ExternalIntegrationService, type: :service do
   let(:flexible_answer) {
     double('FlexibleAnswer',
            id: 1,
-           user: double('User', id: 1, email: 'mock@mock.com', user_name: 'User', phone: '9912345678', country: 'Brasil'),
+           user: double('User', id: 1, email: 'mock@mock.com', user_name: 'User', phone: '9912345678', country: 'Brasil', birthdate: '1994-12-14', in_training: true),
            data: '{}',
            flexible_form_version: double('FlexibleFormVersion',
                                          extract_data_as_map_field_text: { 'data' => '{}' }))
   }
+
+  before do
+    @service_instance = described_class.new(flexible_answer.user)
+  end
 
   describe '.convert_to_dict' do
     it 'converts signals list to a dictionary' do
@@ -24,7 +28,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
         }
       }
 
-      result = described_class.convert_to_dict(signals_list)
+      result = @service_instance.convert_to_dict(signals_list)
 
       expect(result).to eq({
                              '1' => { 'eventId' => 1, 'name' => 'Signal 1' },
@@ -43,7 +47,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
         }
       }
 
-      result = described_class.default_event_value(event_id)
+      result = @service_instance.default_event_value(event_id)
 
       expect(result).to eq(expected_result)
     end
@@ -56,7 +60,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
     end
 
     it 'fetches system data' do
-      result = described_class.list_signals_by_user_id(0, 999, 1)
+      result = @service_instance.list_signals_by_user_id(0, 999, 1)
       expect(result).to eq({ '_embedded' => { 'signals' => [] } })
     end
 
@@ -68,7 +72,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns empty signals' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. status code 500 body error message')
-        result = described_class.list_signals_by_user_id(0, 999, 1)
+        result = @service_instance.list_signals_by_user_id(0, 999, 1)
         expect(result).to eq({ '_embedded' => { 'signals' => [] } })
       end
     end
@@ -80,7 +84,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns empty signals' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. error message')
-        result = described_class.list_signals_by_user_id(0, 999, 1)
+        result = @service_instance.list_signals_by_user_id(0, 999, 1)
         expect(result).to eq({ '_embedded' => { 'signals' => [] } })
       end
     end
@@ -93,13 +97,13 @@ RSpec.describe ExternalIntegrationService, type: :service do
     end
 
     it 'reports to ephem and returns the response id' do
-      result = described_class.create_event(flexible_answer)
+      result = @service_instance.create_event(flexible_answer)
       expect(result).to eq('123')
     end
 
     it 'report to ephem the anwers key as data' do
       allow(flexible_answer).to receive(:data).and_return('{"report_type": "positive", "answers": [{"field": "field1", "value": "value1"}]}')
-      result = described_class.create_event(flexible_answer)
+      result = @service_instance.create_event(flexible_answer)
       expect(result).to eq('123')
       expect(WebMock).to have_requested(:post, /api-integracao/).with(body: {
         'eventoIntegracaoTemplate' => '/1',
@@ -118,7 +122,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
     it 'does not report to ephem if the report type is negative' do
       allow(flexible_answer).to receive(:data).and_return('{"report_type": "negative"}')
-      result = described_class.create_event(flexible_answer)
+      result = @service_instance.create_event(flexible_answer)
       expect(result).to be_nil
     end
 
@@ -130,7 +134,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. status code 500 body error message')
-        result = described_class.create_event(flexible_answer)
+        result = @service_instance.create_event(flexible_answer)
         expect(result).to be_nil
       end
     end
@@ -142,7 +146,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. error message')
-        result = described_class.create_event(flexible_answer)
+        result = @service_instance.create_event(flexible_answer)
         expect(result).to be_nil
       end
     end
@@ -189,7 +193,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
     end
 
     it 'gets messages and returns the response' do
-      result = described_class.get_messages(event_id)
+      result = @service_instance.get_messages(event_id)
       expect(result).to eq(response_body['_embedded']['mensagens'])
     end
 
@@ -201,7 +205,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. status code 500 body error message')
-        result = described_class.get_messages(event_id)
+        result = @service_instance.get_messages(event_id)
         expect(result).to be_nil
       end
     end
@@ -213,7 +217,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. error message')
-        result = described_class.get_messages(event_id)
+        result = @service_instance.get_messages(event_id)
         expect(result).to be_nil
       end
     end
@@ -233,7 +237,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
     end
 
     it 'send message and returns the response' do
-      result = described_class.send_message(event_id, 'Testando novamente do Integrador')
+      result = @service_instance.send_message(event_id, 'Testando novamente do Integrador')
       expect(result).to eq(response_body)
     end
 
@@ -245,7 +249,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. status code 500 body error message')
-        result = described_class.send_message(event_id, 'Any')
+        result = @service_instance.send_message(event_id, 'Any')
         expect(result).to be_nil
       end
     end
@@ -257,7 +261,7 @@ RSpec.describe ExternalIntegrationService, type: :service do
 
       it 'logs the error and returns nil' do
         expect(Rails.logger).to receive(:error).with('erro na integracao com ephem. error message')
-        result = described_class.send_message(event_id, 'Any')
+        result = @service_instance.send_message(event_id, 'Any')
         expect(result).to be_nil
       end
     end

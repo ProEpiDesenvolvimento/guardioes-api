@@ -30,9 +30,7 @@ class User < ApplicationRecord
   belongs_to :group, optional: true
 
   validates_presence_of :birthdate, 
-                        :country,
-                        :is_professional,
-                        :policy_version
+                        :country
     
   validates :user_name,
     presence: true,

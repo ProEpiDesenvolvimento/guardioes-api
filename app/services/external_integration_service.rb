@@ -77,6 +77,16 @@ class ExternalIntegrationService
 
     uri = URI("#{@ephem_api_url}/#{API_PATH}/eventos")
     res = HTTParty.post(uri, body: event_data.to_json, headers: HEADERS, debug_logger: Logger.new(STDOUT))
+    
+    if res.success?
+      city = event_data[:aditionalData]["Cidade/Concelho"]
+      if city.present?
+        community_group = CommunityGroup.where("LOWER(city) = ?", city.downcase).first
+        if community_group.present?
+          CommunityGroupMailer.new_signal_email(community_group, event_data).deliver
+        end
+      end
+    end
 
     parsed_response = handle_response(res)
     parsed_response&.dig('id')

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :community_groups
   resources :categories
   resources :form_answers
   resources :form_options
