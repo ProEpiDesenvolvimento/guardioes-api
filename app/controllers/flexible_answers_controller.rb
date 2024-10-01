@@ -31,8 +31,12 @@ class FlexibleAnswersController < ApplicationController
       if @flexible_answer.flexible_form.form_type == 'signal' && current_user.is_vbe
         integration_service = ExternalIntegrationService.new(current_user)
         external_system_integration_id = integration_service.create_event(@flexible_answer)
+
+        data = JSON.parse(@flexible_answer.data)
+        data['in_training'] = current_user.in_training
         
         @flexible_answer.update_attribute(:external_system_integration_id, external_system_integration_id)
+        @flexible_answer.update_attribute(:data, data.to_json)
       end
       render json: @flexible_answer, status: :created, location: @flexible_answer
     else
