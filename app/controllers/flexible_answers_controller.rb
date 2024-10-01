@@ -27,6 +27,12 @@ class FlexibleAnswersController < ApplicationController
     @flexible_answer = FlexibleAnswer.new(flexible_answer_params)
     @flexible_answer.user_id = current_user.id
 
+    if @flexible_answer.flexible_form.form_type == 'signal' && current_user.is_vbe
+      data = JSON.parse(@flexible_answer.data)
+      data['in_training'] = current_user.in_training
+      @flexible_answer.data = data.to_json
+    end
+
     if @flexible_answer.save
       if @flexible_answer.flexible_form.form_type == 'signal' && current_user.is_vbe
         integration_service = ExternalIntegrationService.new(current_user)
