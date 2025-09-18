@@ -28,7 +28,8 @@ class FlexibleAnswersController < ApplicationController
     @flexible_answer.user_id = current_user.id
 
     if @flexible_answer.save
-      if @flexible_answer.flexible_form.form_type == 'signal' && current_user.is_vbe
+      if @flexible_answer.flexible_form.form_type == 'signal'
+        # essa condicao foi removida: && current_user.is_vbe
         integration_service = ExternalIntegrationService.new(current_user)
         external_system_integration_id = integration_service.create_event(@flexible_answer)
 
