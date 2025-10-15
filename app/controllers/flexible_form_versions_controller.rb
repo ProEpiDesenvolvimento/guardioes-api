@@ -36,7 +36,13 @@ class FlexibleFormVersionsController < ApplicationController
 
   # DELETE /flexible_form_versions/1
   def destroy
-    @flexible_form_version.destroy
+    flexible_form = @flexible_form_version.flexible_form
+    
+    if flexible_form.flexible_form_versions.count <= 1
+      render json: { error: 'Cannot delete the last version of a form' }, status: :unprocessable_entity
+    else
+      @flexible_form_version.destroy
+    end
   end
 
   private

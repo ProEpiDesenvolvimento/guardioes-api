@@ -51,7 +51,9 @@ class FlexibleFormsController < ApplicationController
   def registration
     @app = App.find(params[:app_id])
     
-    @flexible_form = FlexibleForm.find_by(form_type: "registration", app_id: @app.id)
+    @flexible_form = FlexibleForm.joins(:flexible_form_versions)
+                                  .distinct
+                                  .find_by(form_type: "registration", app_id: @app.id)
 
     render json: @flexible_form
   end
@@ -66,7 +68,9 @@ class FlexibleFormsController < ApplicationController
       group_manager_id = current_user.group.group_manager.id
     end
 
-    @flexible_form = FlexibleForm.find_by(form_type: "signal", group_manager_id: group_manager_id)
+    @flexible_form = FlexibleForm.joins(:flexible_form_versions)
+                                  .distinct
+                                  .find_by(form_type: "signal", group_manager_id: group_manager_id)
     
     render json: @flexible_form
   end
@@ -81,7 +85,10 @@ class FlexibleFormsController < ApplicationController
       group_manager_id = current_user.group.group_manager.id
     end
 
-    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id).order(created_at: :desc)
+    @flexible_forms = FlexibleForm.where(form_type: "quiz", group_manager_id: group_manager_id)
+                                   .joins(:flexible_form_versions)
+                                   .distinct
+                                   .order(created_at: :desc)
 
     render json: @flexible_forms
   end
