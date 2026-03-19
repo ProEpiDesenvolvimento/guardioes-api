@@ -10,70 +10,64 @@ end
 #################################################
 RSpec.describe User, type: :model do
 
-  # before :all do
-  #   App.new(:app_name=>"brasil", :owner_country=>"brasil").save()
-  # end
+  let(:app) { FactoryBot.create(:app) }
 
-  # let (:valid_user) {
-  #   User.new(
-  #     :user_name => "Clebin",
-  #     :email => "clebinlolo@business.com",
-  #     :password => "12369420",
-  #     :app_id => 1
-  #   )
-  # }
+  let(:valid_attributes) do
+    {
+      user_name: "TestUser",
+      email: "test@example.com",
+      password: "Test@1234",
+      birthdate: Date.new(1990, 1, 1),
+      country: "Brasil",
+      app: app
+    }
+  end
 
-  # describe "basic user model functions" do
-  #   context "valid input" do
-  #     it "creates valid user" do
-  #       expect(valid_user.save()).to be true
-  #     end
-  #     it "deletes user" do
-  #       valid_user.save()
-  #       test_user_count(1)
-  #       User.all[0].delete()
-  #       test_user_count(0)
-  #     end
-  #     it "updates user" do
-  #       valid_user.save()
-  #       expect(User.all[0].user_name).to eq(valid_user.user_name)
-  #       valid_user.update(:user_name=>"Clebao")
-  #       expect(User.all[0].user_name).to eq("Clebao")
-  #     end
-  #   end
-  #   context "invalid input" do
-  #     it "fails to update with invalid fields" do
-  #       valid_user.save()
-  #       User.all[0].update(:user_name=>"Clebao", :app_id=>2)
-  #       expect(User.all[0].app_id).to eq(valid_user.app_id)
-  #       expect(User.all[0].user_name).to eq(valid_user.user_name)
-  #     end
-  #     it "fails to create user not tied to any app" do
-  #       invalid_user = valid_user
-  #       invalid_user.app_id = 200
-  #       invalid_user.save()
-  #       test_user_count(0)
-  #     end
-  #     it "fails to create user with same email as other user" do
-  #       valid_user.save()
-  #       invalid_user = valid_user
-  #       invalid_user.user_name = "vitin"
-  #       invalid_user.password = "dark psytrance"
-  #       invalid_user.save()
-  #       test_user_count(1)
-  #     end
-  #     it "fails to create user without password" do
-  #       user = valid_user
-  #       user.password = nil
-  #       user.save()
-  #       test_user_count(0)
-  #     end
-  #     it "fails to create user with invalid email" do
-  #       user = valid_user
-  #       user.email = "cebolinha"
-  #       user.save()
-  #       test_user_count(0)
-  #     end
-  #   end
-  # end
+  describe "password validations" do
+    context "valid password" do
+      it "accepts a password with uppercase, lowercase, digit and special character" do
+        user = User.new(valid_attributes)
+        expect(user.valid?).to be true
+      end
+    end
+
+    context "invalid password" do
+      it "rejects a password shorter than 8 characters" do
+        user = User.new(valid_attributes.merge(password: "Ab@1"))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+
+      it "rejects a password without uppercase letter" do
+        user = User.new(valid_attributes.merge(password: "test@1234"))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+
+      it "rejects a password without lowercase letter" do
+        user = User.new(valid_attributes.merge(password: "TEST@1234"))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+
+      it "rejects a password without digit" do
+        user = User.new(valid_attributes.merge(password: "Test@abcd"))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+
+      it "rejects a password without special character" do
+        user = User.new(valid_attributes.merge(password: "Test12345"))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+
+      it "rejects a blank password" do
+        user = User.new(valid_attributes.merge(password: ""))
+        user.valid?
+        expect(user.errors[:password]).not_to be_empty
+      end
+    end
+  end
+
 end

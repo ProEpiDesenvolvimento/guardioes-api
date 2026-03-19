@@ -22,6 +22,7 @@ pt-BR:
       password:
         too_short: "A senha é muito pequena, mínimo de 8 caracteres."
         too_long: "A senha é muito grande, máximo de 255 caracteres."
+        invalid: "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial."
       user_name:
         too_short: "Nome de usuário é muito pequeno, mínimo de 8 caracteres."
         too_long: "Nome de usuário é muito grande, máximo de 255 caracteres." 
