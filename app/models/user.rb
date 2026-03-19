@@ -46,6 +46,11 @@ class User < ApplicationRecord
       in: 8..255,
       too_long: I18n.translate("user.validations.password.too_long"),
       too_short: I18n.translate("user.validations.password.too_short")
+    },
+    format: {
+      with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).+\z/,
+      message: I18n.translate("user.validations.password.invalid"),
+      allow_blank: true
     }
 
   validates :email,

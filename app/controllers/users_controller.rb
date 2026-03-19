@@ -54,8 +54,8 @@ class UsersController < ApplicationController
     @user = User.find_by_email(params[:email])
 
     if @user.present?
-      aux_code = rand(36**4).to_s(36)
-      reset_password_token = rand(36**10).to_s(36)
+      aux_code = SecureRandom.hex(4)
+      reset_password_token = SecureRandom.hex(20)
 
       @user.update_attribute(:aux_code, aux_code)
       @user.update_attribute(:reset_password_token, reset_password_token)

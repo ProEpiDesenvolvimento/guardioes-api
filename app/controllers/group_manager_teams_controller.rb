@@ -48,8 +48,8 @@ class GroupManagerTeamsController < ApplicationController
     @group_manager_team = GroupManagerTeam.find_by_email(params[:email])
 
     if @group_manager_team.present?
-      aux_code = rand(36**4).to_s(36)
-      reset_password_token = rand(36**10).to_s(36)
+      aux_code = SecureRandom.hex(4)
+      reset_password_token = SecureRandom.hex(20)
 
       @group_manager_team.update_attribute(:aux_code, aux_code)
       @group_manager_team.update_attribute(:reset_password_token, reset_password_token)
